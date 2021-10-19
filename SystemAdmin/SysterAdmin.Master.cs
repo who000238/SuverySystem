@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace SuverySystem.SystemAdmin
 {
-    public partial class Detail1 : System.Web.UI.Page
+    public partial class SysterAdmin : System.Web.UI.MasterPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

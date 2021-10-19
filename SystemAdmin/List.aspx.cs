@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace SuverySystem.SystemAdmin
 {
-    public partial class List : System.Web.UI.Page
+    public partial class List1 : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
