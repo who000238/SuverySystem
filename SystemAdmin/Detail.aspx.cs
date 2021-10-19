@@ -13,5 +13,24 @@ namespace SuverySystem.SystemAdmin
         {
 
         }
+
+        protected void btnSubmit_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected void btnCancle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnAdd_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
