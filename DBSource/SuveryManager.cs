@@ -36,5 +36,30 @@ namespace DBSource
                 return null;
             }
         }
+        public static DataTable SearchSuvery(string txtInput, DateTime SDate, DateTime EDate)
+        {
+            string connStr = DBHelper.GetConnectionString();
+            string dbCommand =
+                 $@" SELECT *FROM  SuveryList
+                       WHERE Title Like @Title
+                        AND StartDate >= @StartDate
+                        AND EndDate <= @EndDate
+                ";
+
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@Title", "%"+txtInput+"%"));
+            list.Add(new SqlParameter("@StartDate", SDate));
+            list.Add(new SqlParameter("@EndDate", EDate));
+
+            try
+            {
+                return DBHelper.ReadDataTable(connStr, dbCommand, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
     }
 }
