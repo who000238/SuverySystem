@@ -24,15 +24,6 @@ namespace SuverySystem
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// testarea 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl testarea;
-
-        /// <summary>
         /// txtSuveryTitle 控制項。
         /// </summary>
         /// <remarks>
@@ -69,12 +60,12 @@ namespace SuverySystem
         protected global::System.Web.UI.WebControls.Button btnSreach;
 
         /// <summary>
-        /// gvSuveryList 控制項。
+        /// Repeater1 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvSuveryList;
+        protected global::System.Web.UI.WebControls.Repeater Repeater1;
     }
 }

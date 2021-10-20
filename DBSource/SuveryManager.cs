@@ -22,7 +22,7 @@ namespace DBSource
                       StartDate,
                         EndDate,
                     Status
-                    FROM SuveryNo1
+                    FROM SuveryList
                     ORDER BY No DESC
                 ";
             List<SqlParameter> list = new List<SqlParameter>();

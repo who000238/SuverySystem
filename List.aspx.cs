@@ -16,11 +16,14 @@ namespace SuverySystem
             DateTime today = DateTime.Today;
             var dt = SuveryManager.GetSuveryList();
 
-            if (dt.Rows.Count > 0) // check is empty data
-            {
-                this.gvSuveryList.DataSource = dt;
-                this.gvSuveryList.DataBind();
-            }
+            //if (dt.Rows.Count > 0) // check is empty data
+            //{
+            //    this.gvSuveryList.DataSource = dt;
+            //    this.gvSuveryList.DataBind();
+            //}
+
+            this.Repeater1.DataSource = dt;
+            this.Repeater1.DataBind();
         }
 
         protected void btnSreach_Click(object sender, EventArgs e)
@@ -42,36 +45,36 @@ namespace SuverySystem
                 return 0;
         }
 
-        protected void gvSuveryList_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            var row = e.Row;
-            if (row.RowType == DataControlRowType.DataRow)
-            {
-                Label lbl = row.FindControl("lblStatus") as Label;
-                var dr = row.DataItem as DataRowView;
-                int StatusType = dr.Row.Field<int>("Status");
+        //protected void gvSuveryList_RowDataBound(object sender, GridViewRowEventArgs e)
+        //{
+        //    var row = e.Row;
+        //    if (row.RowType == DataControlRowType.DataRow)
+        //    {
+        //        Label lbl = row.FindControl("lblStatus") as Label;
+        //        var dr = row.DataItem as DataRowView;
+        //        int StatusType = dr.Row.Field<int>("Status");
 
-                if (StatusType == 0)
-                {
-                    lbl.Text = "關閉中";
-                }
-                else
-                {
-                    lbl.Text = "開放中";
-                }
-            }
-        }
+        //        if (StatusType == 0)
+        //        {
+        //            lbl.Text = "關閉中";
+        //        }
+        //        else
+        //        {
+        //            lbl.Text = "開放中";
+        //        }
+        //    }
+        //}
 
-        protected void gvSuveryList_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            var dt = SuveryManager.GetSuveryList();
+        //protected void gvSuveryList_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        //{
+        //    var dt = SuveryManager.GetSuveryList();
 
-            //if (dt.Rows.Count > 0) // check is empty data
-            //{
-            gvSuveryList.PageIndex = e.NewPageIndex;
-            this.gvSuveryList.DataSource = dt;
-            this.gvSuveryList.DataBind();
-            //}
-        }
+        //    //if (dt.Rows.Count > 0) // check is empty data
+        //    //{
+        //    gvSuveryList.PageIndex = e.NewPageIndex;
+        //    this.gvSuveryList.DataSource = dt;
+        //    this.gvSuveryList.DataBind();
+        //    //}
+        //}
     }
 }
