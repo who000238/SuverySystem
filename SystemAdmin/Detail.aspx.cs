@@ -11,7 +11,8 @@ namespace SuverySystem.SystemAdmin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            DateTime today = DateTime.Today;
+            this.txtStartDate.Text = today.ToString();
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)
@@ -29,6 +30,16 @@ namespace SuverySystem.SystemAdmin
         }
 
         protected void btnDelete_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnCancle2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnSubmit2_Click(object sender, EventArgs e)
         {
 
         }
