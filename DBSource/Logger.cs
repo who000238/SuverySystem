@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DBSource
 {
-    class Logger
+    public class Logger
     {
         public static void WriteLog(Exception ex)
         {

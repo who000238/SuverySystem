@@ -111,6 +111,7 @@
     <Compile Include="ConfirmPage.aspx.designer.cs">
       <DependentUpon>ConfirmPage.aspx</DependentUpon>
     </Compile>
+    <Compile Include="datarow.cs" />
     <Compile Include="Form.aspx.cs">
       <DependentUpon>Form.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
