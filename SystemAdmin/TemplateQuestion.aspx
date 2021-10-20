@@ -1,20 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/SystemAdmin/SysterAdmin.Master" AutoEventWireup="true" CodeBehind="TemplateQuestion.aspx.cs" Inherits="SuverySystem.SystemAdmin.TemplateQuestion" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <script>
-        $(function () {
-            $("#btnAdd").click(function () {
-                var QuestionName = $("#txtQuestionName").val();
-                var QuestionType = $("#dllQuestionType").val();
-                var isRequire = $("#isRequire").val();
-                alert("Hello");
-            })
-        });
-    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h2>常用問題管理</h2>
-    問題集名稱<asp:TextBox ID="txtQuestionName" runat="server"></asp:TextBox><br />
+    問題集名稱<asp:TextBox ID="txtQuestionName" runat="server" TextMode="SingleLine"></asp:TextBox><br />
     問題種類<asp:DropDownList ID="dllQuestionType" runat="server">
         <asp:ListItem Value="1">文字方塊-文字</asp:ListItem>
         <asp:ListItem Value="2">文字方塊-數字</asp:ListItem>
@@ -44,4 +34,21 @@
     </asp:Repeater>
     <asp:Button ID="btnCancle" runat="server" Text="取消" OnClick="btnCancle_Click" />
     <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click" />
+    <script>
+        $(function () {
+            $("#btnAdd").click(function () {
+                var QuestionName = $("#txtQuestionName").val();
+                var QuestionType = $("#dllQuestionType").val();
+                var isRequire = $("#isRequire").val();
+                var span1 = document.createElement("span");
+                span1.innerHTML = QuestionName;
+                var span2 = document.createElement("span");
+                span2.innerHTML = QuestionType;
+                var span3 = document.createElement("span");
+                span3.innerHTML = isRequire;
+                var container = document.getElementById('NewQ')
+                container.appendChild(span1)
+            })
+        });
+    </script>
 </asp:Content>
