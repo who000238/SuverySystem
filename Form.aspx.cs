@@ -18,8 +18,7 @@ namespace SuverySystem
             Guid guid = Guid.Parse(StringGuid);
 
             var dr = GetSuveryData(guid);
-            //string SuveryName = GetSuveryName(guid);
-            //var dr = GetSuveryData(SuveryName);
+
             string SuveryStatus;
             int intStatus = Convert.ToInt32(dr["Status"]);
             if (intStatus == 0)
@@ -38,9 +37,9 @@ namespace SuverySystem
                 string[] NameOrderArray = NameOrderString.Split(',');
                 string[] isRequiredArray = isRequiredString.Split(',');
 
-                for (int i = 1; i < TypeOrderArray.Length; i++)
+                for (int i = 0; i < TypeOrderArray.Length; i++)
                 {
-                    int QuestionOrder = i;
+                    int QuestionOrder = i + 1;
                     bool isRequired = isRequiredArray[i] == "1" ? true : false;
                     Label lblForbr = new Label();
                     lblForbr.Text = "</br>";
@@ -51,7 +50,7 @@ namespace SuverySystem
                     this.QuestionArea.Controls.Add(label);
                     switch (TypeOrderArray[i])
                     {
-                        
+
                         case "1":
                             TextBox textBox = new TextBox();
                             textBox.ID = "Q" + QuestionOrder.ToString();
@@ -256,7 +255,26 @@ namespace SuverySystem
             string StringGuid = Request.QueryString["ID"];
             Guid guid = Guid.Parse(StringGuid);
             var dr = GetSuveryData(guid);
+            string TypeOrderString = dr["TypeOrder"].ToString();
+            string[] TypeOrderArray = TypeOrderString.Split(',');
+            int QuestionCount = TypeOrderArray.Length;
+            string[] AnswerArray = new string[QuestionCount];
+            for (int i = 1; i <= QuestionCount; i++)
+            {
+                string ControlName = "Q" + i.ToString();
+                List<string> tempAnswerList = Request.Form.GetValues($"{ControlName}").ToList();
+                if (tempAnswerList == null )
+                {
+                    tempAnswerList[i] = "0";
+                    AnswerArray[i - 1] = tempAnswerList[i];
+                    break;
+                }
+                AnswerArray[i - 1] = tempAnswerList[0];
+            }
 
+            string ansString = string.Join(",", AnswerArray);
+            Response.Write($"<script>alert('{ansString}')</script>");
+            
         }
     }
 }
