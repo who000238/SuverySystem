@@ -35,23 +35,21 @@ namespace SuverySystem
                 this.ltlInnerText.Text = dr["InnerText"].ToString();
                 string TypeOrderString = dr["TypeOrder"].ToString();
                 string NameOrderString = dr["NameOrder"].ToString();
-                string isRequiredString = dr["isRequired"].ToString(); //
+                string ItemNameString = dr["ItemName"].ToString();
                 string[] TypeOrderArray = TypeOrderString.Split(',');
                 string[] NameOrderArray = NameOrderString.Split(',');
-                string[] isRequiredArray = isRequiredString.Split(','); //
+                string[] ItemNameArray = ItemNameString.Split(',');
 
                 for (int i = 0; i < TypeOrderArray.Length; i++)
                 {
                     int QuestionOrder = i + 1;
-                    bool isRequired = isRequiredArray[i] == "1" ? true : false; //
                     Label lblForbr = new Label();
                     lblForbr.Text = "</br>";
 
-                    Label label = new Label();
-                    label.Text = NameOrderArray[i];
-                    //if (isRequired) //
-                    //    label.Text += "(必填)";//
-                    this.QuestionArea.Controls.Add(label);
+                    Label lblQuestionName = new Label();
+                    lblQuestionName.Text = NameOrderArray[i];
+                 
+                    this.QuestionArea.Controls.Add(lblQuestionName);
                     switch (TypeOrderArray[i])
                     {
 
@@ -109,7 +107,7 @@ namespace SuverySystem
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
                         case "7":
-                            label.Text += "(必填)";
+                            lblQuestionName.Text += "(必填)";
                             TextBox textBox5 = new TextBox();
                             textBox5.ID = "Q" + QuestionOrder.ToString();
                             textBox5.TextMode = TextBoxMode.SingleLine;
@@ -118,7 +116,7 @@ namespace SuverySystem
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
                         case "8":
-                            label.Text += "(必填)";
+                            lblQuestionName.Text += "(必填)";
                             TextBox textBox6 = new TextBox();
                             textBox6.ID = "Q" + QuestionOrder.ToString();
                             textBox6.TextMode = TextBoxMode.Number;
@@ -127,7 +125,7 @@ namespace SuverySystem
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
                         case "9":
-                            label.Text += "(必填)";
+                            lblQuestionName.Text += "(必填)";
                             TextBox textBox7 = new TextBox();
                             textBox7.ID = "Q" + QuestionOrder.ToString();
                             textBox7.TextMode = TextBoxMode.Email;
@@ -137,7 +135,7 @@ namespace SuverySystem
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
                         case "A":
-                            label.Text += "(必填)";
+                            lblQuestionName.Text += "(必填)";
                             TextBox textBox8 = new TextBox();
                             textBox8.ID = "Q" + QuestionOrder.ToString();
                             textBox8.TextMode = TextBoxMode.Date;
@@ -147,19 +145,34 @@ namespace SuverySystem
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
                         case "B":
-                            label.Text += "(必填)";
+                            lblQuestionName.Text += "(必填)";
                             RadioButtonList radioButtonList2 = new RadioButtonList();
                             radioButtonList2.ID = "Q" + QuestionOrder.ToString();
                             radioButtonList2.CssClass = "isRequired";
-                            for (int j = 0; j < NameOrderArray.Length; j++)
+
+
+                            //string tempString = ItemNameArray[i-1];
+                            //string[] tempStringArray = tempString.Split('|');
+                            //for (int k = 0; k < tempStringArray.Length; k++)
+                            //{
+                            //    radioButtonList2.Items.Add(tempStringArray[k]);
+                            //}
+
+                            int count = 0;
+                            string tempString = ItemNameArray[count];
+                            string[] tempStringArray = tempString.Split('|');
+                            while (count < tempStringArray.Length)
                             {
-                                radioButtonList2.Items.Add(NameOrderArray[j]);
+                                radioButtonList2.Items.Add(tempStringArray[count]);
+                                count++;
                             }
+
+
                             this.QuestionArea.Controls.Add(radioButtonList2);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
                         case "C":
-                            label.Text += "(必填)";
+                            lblQuestionName.Text += "(必填)";
                             CheckBoxList checkBoxList2 = new CheckBoxList();
                             checkBoxList2.ID = "Q" + QuestionOrder.ToString();
                             checkBoxList2.CssClass = "isRequired";
@@ -184,7 +197,7 @@ namespace SuverySystem
         {
             string connectionString = DBHelper.GetConnectionString();
             string dbCommandString =
-                 @" SELECT TOP(1) * FROM SuveryData
+                 @" SELECT TOP(1) * FROM [SuverySystem].[dbo].[SuveryData]
                      WHERE Guid = @Guid
                      ORDER BY [SuverySystem].[dbo].[SuveryData].[No]
                     
