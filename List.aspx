@@ -20,6 +20,7 @@
     <form id="form1" runat="server">
         <div class="container">
             <h1>前台</h1>
+            <div runat="server" id="TestArea"></div>
             <div style="border: dashed 1px">
                 <asp:TextBox ID="txtSuveryTitle" runat="server" placeholder="問卷標題" Width="408px" TextMode="Search"></asp:TextBox><br />
                 <asp:TextBox ID="txtStartDate" runat="server" placeholder="開始日期" TextMode="Date"></asp:TextBox>

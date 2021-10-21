@@ -54,7 +54,39 @@ namespace SuverySystem
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
+            string StringGuid = Request.QueryString["ID"];
+            Guid guid = Guid.Parse(StringGuid);
+            string AnsString = this.Session["ansString"].ToString();
+            SaveSuveryAnswer(guid, AnsString);
+            
+        }
 
+        public static void SaveSuveryAnswer(Guid guid, string AnswerString)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                                            @"
+                                            INSERT INTO [dbo].[SuveryAnswer]
+                                                       (
+                                                        [Guid]
+                                                       ,[Answer]
+                                                        )
+                                                         VALUES
+                                                       (@Guid
+                                                       ,@AnswerString
+                                                        )
+                                            ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@Guid", guid));
+            list.Add(new SqlParameter("@AnswerString", AnswerString));
+            try
+            {
+                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+            }
         }
 
         public static DataRow GetSuveryData(Guid guid)

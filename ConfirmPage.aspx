@@ -35,7 +35,7 @@
                 <div class="col-12">
                     <asp:Button ID="btnModify" runat="server" Text="修改" OnClick="btnModify_Click" />
                     <input type="button" onclick="javascript:history.back();" value="修改JS"/>
-                    <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click" />
+                    <asp:Button ID="btnSubmit" runat="server" Text="送出" onclientclick="javascript:return confirm('確定執行？');" OnClick="btnSubmit_Click" />
                 </div>
             </div>
         </div>
