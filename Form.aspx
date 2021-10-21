@@ -12,7 +12,7 @@
     <script src="Scripts/jQuery-min-3.6.0.js"></script>
     <style>
         div{
-            border:5px solid
+            border:1px solid
         }
     </style>
 </head>
@@ -33,11 +33,11 @@
                     <asp:Literal ID="ltlInnerText" runat="server"></asp:Literal>
                 </div>
                 <div class="col-12" runat="server" id="QuestionArea">
-                    <span>問題區</span>
+                    <span>問題區</span><br />
                 </div>
                 <div class="col-12">
-                    <asp:Button ID="btnCancle" runat="server" Text="取消" />
-                    <asp:Button ID="btnSubmit" runat="server" Text="送出" />
+                    <asp:Button ID="btnCancle" runat="server" Text="取消" OnClick="btnCancle_Click" />
+                    <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click" />
                 </div>
             </div>
         </div>
