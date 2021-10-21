@@ -14,104 +14,168 @@ namespace SuverySystem
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            //問題種類共六種 文字方塊共四種1.文字 2.數字 3.電郵 4.日期 第五、六種單選和複選方塊 且 必填與否兩分法 共有12種模式 這邊用數字1~9 與羅馬字ABC 來代表這12種類的問題   
             //if (this.Session["ansString"] == null)
             //{
-                string StringGuid = Request.QueryString["ID"];
-                Guid guid = Guid.Parse(StringGuid);
+            string StringGuid = Request.QueryString["ID"];
+            Guid guid = Guid.Parse(StringGuid);
 
-                var dr = GetSuveryData(guid);
+            var dr = GetSuveryData(guid);
 
-                string SuveryStatus;
-                int intStatus = Convert.ToInt32(dr["Status"]);
-                if (intStatus == 0)
-                    SuveryStatus = "關閉中";
-                else
-                    SuveryStatus = "開放中";
-                if (dr != null)
+            string SuveryStatus;
+            int intStatus = Convert.ToInt32(dr["Status"]);
+            if (intStatus == 0)
+                SuveryStatus = "關閉中";
+            else
+                SuveryStatus = "開放中";
+            if (dr != null)
+            {
+                this.ltlStatusAndDate.Text = $"{SuveryStatus}</br>{dr["StartDate"]}~{dr["EndDate"]}";
+                this.h3Title.InnerText = dr["Title"].ToString();
+                this.ltlInnerText.Text = dr["InnerText"].ToString();
+                string TypeOrderString = dr["TypeOrder"].ToString();
+                string NameOrderString = dr["NameOrder"].ToString();
+                string isRequiredString = dr["isRequired"].ToString(); //
+                string[] TypeOrderArray = TypeOrderString.Split(',');
+                string[] NameOrderArray = NameOrderString.Split(',');
+                string[] isRequiredArray = isRequiredString.Split(','); //
+
+                for (int i = 0; i < TypeOrderArray.Length; i++)
                 {
-                    this.ltlStatusAndDate.Text = $"{SuveryStatus}</br>{dr["StartDate"]}~{dr["EndDate"]}";
-                    this.h3Title.InnerText = dr["Title"].ToString();
-                    this.ltlInnerText.Text = dr["InnerText"].ToString();
-                    string TypeOrderString = dr["TypeOrder"].ToString();
-                    string NameOrderString = dr["NameOrder"].ToString();
-                    string isRequiredString = dr["isRequired"].ToString();
-                    string[] TypeOrderArray = TypeOrderString.Split(',');
-                    string[] NameOrderArray = NameOrderString.Split(',');
-                    string[] isRequiredArray = isRequiredString.Split(',');
+                    int QuestionOrder = i + 1;
+                    bool isRequired = isRequiredArray[i] == "1" ? true : false; //
+                    Label lblForbr = new Label();
+                    lblForbr.Text = "</br>";
 
-                    for (int i = 0; i < TypeOrderArray.Length; i++)
+                    Label label = new Label();
+                    label.Text = NameOrderArray[i];
+                    //if (isRequired) //
+                    //    label.Text += "(必填)";//
+                    this.QuestionArea.Controls.Add(label);
+                    switch (TypeOrderArray[i])
                     {
-                        int QuestionOrder = i + 1;
-                        bool isRequired = isRequiredArray[i] == "1" ? true : false;
-                        Label lblForbr = new Label();
-                        lblForbr.Text = "</br>";
-                        
-                        Label label = new Label();
-                        label.Text = NameOrderArray[i];
-                        if (isRequired)
-                            label.Text += "(必填)";
-                        this.QuestionArea.Controls.Add(label);
-                        switch (TypeOrderArray[i])
-                        {
 
-                            case "1":
-                                TextBox textBox = new TextBox();
-                                textBox.ID = "Q" + QuestionOrder.ToString();
-                                textBox.TextMode = TextBoxMode.SingleLine;
-                                if (isRequired)
-                                {
-                                    textBox.CssClass = "isRequired";
-                                }
-                                this.QuestionArea.Controls.Add(textBox);
-                                this.QuestionArea.Controls.Add(lblForbr);
-                                break;
-                            case "2":
-                                TextBox textBox2 = new TextBox();
-                                textBox2.ID = "Q" + QuestionOrder.ToString();
-                                textBox2.TextMode = TextBoxMode.Number;
-                                if (isRequired)
-                                {
-                                    textBox2.CssClass = "isRequired";
-                                }
-                                this.QuestionArea.Controls.Add(textBox2);
-                                this.QuestionArea.Controls.Add(lblForbr);
-                                break;
-                            case "3":
-                                TextBox textBox3 = new TextBox();
-                                textBox3.ID = "Q" + QuestionOrder.ToString();
-                                textBox3.TextMode = TextBoxMode.Email;
-                                if (isRequired)
-                                {
-                                    textBox3.CssClass = "isRequired";
-                                }
-                                this.QuestionArea.Controls.Add(textBox3);
-                                this.QuestionArea.Controls.Add(lblForbr);
-                                break;
-                            case "4":
-                                TextBox textBox4 = new TextBox();
-                                textBox4.ID = "Q" + QuestionOrder.ToString();
-                                textBox4.TextMode = TextBoxMode.Date;
-                                if (isRequired)
-                                {
-                                    textBox4.CssClass = "isRequired";
-                                }
-                                this.QuestionArea.Controls.Add(textBox4);
-                                this.QuestionArea.Controls.Add(lblForbr);
-                                break;
-                            case "5":
-                            case "6":
-                                CheckBox checkBox = new CheckBox();
-                                checkBox.ID = "Q" + QuestionOrder.ToString();
-                                if (isRequired)
-                                {
-                                    checkBox.CssClass = "isRequired";
-                                }
-                                this.QuestionArea.Controls.Add(checkBox);
-                                this.QuestionArea.Controls.Add(lblForbr);
-                                break;
-                        }
+                        case "1":
+                            TextBox textBox1 = new TextBox();
+                            textBox1.ID = "Q" + QuestionOrder.ToString();
+                            textBox1.TextMode = TextBoxMode.SingleLine;
+                      
+                            this.QuestionArea.Controls.Add(textBox1);
+                            this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                        case "2":
+                            TextBox textBox2 = new TextBox();
+                            textBox2.ID = "Q" + QuestionOrder.ToString();
+                            textBox2.TextMode = TextBoxMode.Number;
+                       
+                            this.QuestionArea.Controls.Add(textBox2);
+                            this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                        case "3":
+                            TextBox textBox3 = new TextBox();
+                            textBox3.ID = "Q" + QuestionOrder.ToString();
+                            textBox3.TextMode = TextBoxMode.Email;
+                        
+                            this.QuestionArea.Controls.Add(textBox3);
+                            this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                        case "4":
+                            TextBox textBox4 = new TextBox();
+                            textBox4.ID = "Q" + QuestionOrder.ToString();
+                            textBox4.TextMode = TextBoxMode.Date;
+                       
+                            this.QuestionArea.Controls.Add(textBox4);
+                            this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                        case "5":
+                            RadioButtonList radioButtonList = new RadioButtonList();
+                            radioButtonList.ID = "Q" + QuestionOrder.ToString();
+                            for (int j = 0; j < NameOrderArray.Length; j++)
+                            {
+                                radioButtonList.Items.Add(NameOrderArray[j]);
+                            }
+                            this.QuestionArea.Controls.Add(radioButtonList);
+                            this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                        case "6":
+                            CheckBoxList checkBoxList = new CheckBoxList();
+                            checkBoxList.ID = "Q" + QuestionOrder.ToString();
+                            for (int j = 0; j < NameOrderArray.Length; j++)
+                            {
+                                checkBoxList.Items.Add(NameOrderArray[j]);
+                            }
+                       
+                            this.QuestionArea.Controls.Add(checkBoxList);
+                            this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                        case "7":
+                            label.Text += "(必填)";
+                            TextBox textBox5 = new TextBox();
+                            textBox5.ID = "Q" + QuestionOrder.ToString();
+                            textBox5.TextMode = TextBoxMode.SingleLine;
+                            textBox5.CssClass = "isRequired";
+                            this.QuestionArea.Controls.Add(textBox5);
+                            this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                        case "8":
+                            label.Text += "(必填)";
+                            TextBox textBox6 = new TextBox();
+                            textBox6.ID = "Q" + QuestionOrder.ToString();
+                            textBox6.TextMode = TextBoxMode.Number;
+                            textBox6.CssClass = "isRequired";
+                            this.QuestionArea.Controls.Add(textBox6);
+                            this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                        case "9":
+                            label.Text += "(必填)";
+                            TextBox textBox7 = new TextBox();
+                            textBox7.ID = "Q" + QuestionOrder.ToString();
+                            textBox7.TextMode = TextBoxMode.Email;
+                            textBox7.CssClass = "isRequired";
+
+                            this.QuestionArea.Controls.Add(textBox7);
+                            this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                        case "A":
+                            label.Text += "(必填)";
+                            TextBox textBox8 = new TextBox();
+                            textBox8.ID = "Q" + QuestionOrder.ToString();
+                            textBox8.TextMode = TextBoxMode.Date;
+                            textBox8.CssClass = "isRequired";
+
+                            this.QuestionArea.Controls.Add(textBox8);
+                            this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                        case "B":
+                            label.Text += "(必填)";
+                            RadioButtonList radioButtonList2 = new RadioButtonList();
+                            radioButtonList2.ID = "Q" + QuestionOrder.ToString();
+                            radioButtonList2.CssClass = "isRequired";
+                            for (int j = 0; j < NameOrderArray.Length; j++)
+                            {
+                                radioButtonList2.Items.Add(NameOrderArray[j]);
+                            }
+                            this.QuestionArea.Controls.Add(radioButtonList2);
+                            this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                        case "C":
+                            label.Text += "(必填)";
+                            CheckBoxList checkBoxList2 = new CheckBoxList();
+                            checkBoxList2.ID = "Q" + QuestionOrder.ToString();
+                            checkBoxList2.CssClass = "isRequired";
+                            for (int j = 0; j < NameOrderArray.Length; j++)
+                            {
+                                checkBoxList2.Items.Add(NameOrderArray[j]);
+                            }
+
+                            this.QuestionArea.Controls.Add(checkBoxList2);
+                            this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                  
+
                     }
                 }
+            }
             //}
         }
 
