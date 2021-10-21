@@ -14,101 +14,105 @@ namespace SuverySystem
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            string StringGuid = Request.QueryString["ID"];
-            Guid guid = Guid.Parse(StringGuid);
+            //if (this.Session["ansString"] == null)
+            //{
+                string StringGuid = Request.QueryString["ID"];
+                Guid guid = Guid.Parse(StringGuid);
 
-            var dr = GetSuveryData(guid);
+                var dr = GetSuveryData(guid);
 
-            string SuveryStatus;
-            int intStatus = Convert.ToInt32(dr["Status"]);
-            if (intStatus == 0)
-                SuveryStatus = "關閉中";
-            else
-                SuveryStatus = "開放中";
-            if (dr != null)
-            {
-                this.ltlStatusAndDate.Text = $"{SuveryStatus}</br>{dr["StartDate"]}~{dr["EndDate"]}";
-                this.h3Title.InnerText = dr["Title"].ToString();
-                this.ltlInnerText.Text = dr["InnerText"].ToString();
-                string TypeOrderString = dr["TypeOrder"].ToString();
-                string NameOrderString = dr["NameOrder"].ToString();
-                string isRequiredString = dr["isRequired"].ToString();
-                string[] TypeOrderArray = TypeOrderString.Split(',');
-                string[] NameOrderArray = NameOrderString.Split(',');
-                string[] isRequiredArray = isRequiredString.Split(',');
-
-                for (int i = 0; i < TypeOrderArray.Length; i++)
+                string SuveryStatus;
+                int intStatus = Convert.ToInt32(dr["Status"]);
+                if (intStatus == 0)
+                    SuveryStatus = "關閉中";
+                else
+                    SuveryStatus = "開放中";
+                if (dr != null)
                 {
-                    int QuestionOrder = i + 1;
-                    bool isRequired = isRequiredArray[i] == "1" ? true : false;
-                    Label lblForbr = new Label();
-                    lblForbr.Text = "</br>";
-                    Label label = new Label();
-                    label.Text = NameOrderArray[i];
-                    if (isRequired)
-                        label.Text += "(必填)";
-                    this.QuestionArea.Controls.Add(label);
-                    switch (TypeOrderArray[i])
-                    {
+                    this.ltlStatusAndDate.Text = $"{SuveryStatus}</br>{dr["StartDate"]}~{dr["EndDate"]}";
+                    this.h3Title.InnerText = dr["Title"].ToString();
+                    this.ltlInnerText.Text = dr["InnerText"].ToString();
+                    string TypeOrderString = dr["TypeOrder"].ToString();
+                    string NameOrderString = dr["NameOrder"].ToString();
+                    string isRequiredString = dr["isRequired"].ToString();
+                    string[] TypeOrderArray = TypeOrderString.Split(',');
+                    string[] NameOrderArray = NameOrderString.Split(',');
+                    string[] isRequiredArray = isRequiredString.Split(',');
 
-                        case "1":
-                            TextBox textBox = new TextBox();
-                            textBox.ID = "Q" + QuestionOrder.ToString();
-                            textBox.TextMode = TextBoxMode.SingleLine;
-                            if (isRequired)
-                            {
-                                textBox.CssClass = "isRequired";
-                            }
-                            this.QuestionArea.Controls.Add(textBox);
-                            this.QuestionArea.Controls.Add(lblForbr);
-                            break;
-                        case "2":
-                            TextBox textBox2 = new TextBox();
-                            textBox2.ID = "Q" + QuestionOrder.ToString();
-                            textBox2.TextMode = TextBoxMode.Number;
-                            if (isRequired)
-                            {
-                                textBox2.CssClass = "isRequired";
-                            }
-                            this.QuestionArea.Controls.Add(textBox2);
-                            this.QuestionArea.Controls.Add(lblForbr);
-                            break;
-                        case "3":
-                            TextBox textBox3 = new TextBox();
-                            textBox3.ID = "Q" + QuestionOrder.ToString();
-                            textBox3.TextMode = TextBoxMode.Email;
-                            if (isRequired)
-                            {
-                                textBox3.CssClass = "isRequired";
-                            }
-                            this.QuestionArea.Controls.Add(textBox3);
-                            this.QuestionArea.Controls.Add(lblForbr);
-                            break;
-                        case "4":
-                            TextBox textBox4 = new TextBox();
-                            textBox4.ID = "Q" + QuestionOrder.ToString();
-                            textBox4.TextMode = TextBoxMode.Date;
-                            if (isRequired)
-                            {
-                                textBox4.CssClass = "isRequired";
-                            }
-                            this.QuestionArea.Controls.Add(textBox4);
-                            this.QuestionArea.Controls.Add(lblForbr);
-                            break;
-                        case "5":
-                        case "6":
-                            CheckBox checkBox = new CheckBox();
-                            checkBox.ID = "Q" + QuestionOrder.ToString();
-                            if (isRequired)
-                            {
-                                checkBox.CssClass = "isRequired";
-                            }
-                            this.QuestionArea.Controls.Add(checkBox);
-                            this.QuestionArea.Controls.Add(lblForbr);
-                            break;
+                    for (int i = 0; i < TypeOrderArray.Length; i++)
+                    {
+                        int QuestionOrder = i + 1;
+                        bool isRequired = isRequiredArray[i] == "1" ? true : false;
+                        Label lblForbr = new Label();
+                        lblForbr.Text = "</br>";
+                        
+                        Label label = new Label();
+                        label.Text = NameOrderArray[i];
+                        if (isRequired)
+                            label.Text += "(必填)";
+                        this.QuestionArea.Controls.Add(label);
+                        switch (TypeOrderArray[i])
+                        {
+
+                            case "1":
+                                TextBox textBox = new TextBox();
+                                textBox.ID = "Q" + QuestionOrder.ToString();
+                                textBox.TextMode = TextBoxMode.SingleLine;
+                                if (isRequired)
+                                {
+                                    textBox.CssClass = "isRequired";
+                                }
+                                this.QuestionArea.Controls.Add(textBox);
+                                this.QuestionArea.Controls.Add(lblForbr);
+                                break;
+                            case "2":
+                                TextBox textBox2 = new TextBox();
+                                textBox2.ID = "Q" + QuestionOrder.ToString();
+                                textBox2.TextMode = TextBoxMode.Number;
+                                if (isRequired)
+                                {
+                                    textBox2.CssClass = "isRequired";
+                                }
+                                this.QuestionArea.Controls.Add(textBox2);
+                                this.QuestionArea.Controls.Add(lblForbr);
+                                break;
+                            case "3":
+                                TextBox textBox3 = new TextBox();
+                                textBox3.ID = "Q" + QuestionOrder.ToString();
+                                textBox3.TextMode = TextBoxMode.Email;
+                                if (isRequired)
+                                {
+                                    textBox3.CssClass = "isRequired";
+                                }
+                                this.QuestionArea.Controls.Add(textBox3);
+                                this.QuestionArea.Controls.Add(lblForbr);
+                                break;
+                            case "4":
+                                TextBox textBox4 = new TextBox();
+                                textBox4.ID = "Q" + QuestionOrder.ToString();
+                                textBox4.TextMode = TextBoxMode.Date;
+                                if (isRequired)
+                                {
+                                    textBox4.CssClass = "isRequired";
+                                }
+                                this.QuestionArea.Controls.Add(textBox4);
+                                this.QuestionArea.Controls.Add(lblForbr);
+                                break;
+                            case "5":
+                            case "6":
+                                CheckBox checkBox = new CheckBox();
+                                checkBox.ID = "Q" + QuestionOrder.ToString();
+                                if (isRequired)
+                                {
+                                    checkBox.CssClass = "isRequired";
+                                }
+                                this.QuestionArea.Controls.Add(checkBox);
+                                this.QuestionArea.Controls.Add(lblForbr);
+                                break;
+                        }
                     }
                 }
-            }
+            //}
         }
 
 
@@ -263,7 +267,7 @@ namespace SuverySystem
             {
                 string ControlName = "Q" + i.ToString();
                 List<string> tempAnswerList = Request.Form.GetValues($"{ControlName}").ToList();
-                if (tempAnswerList == null )
+                if (tempAnswerList == null)
                 {
                     tempAnswerList[i] = "0";
                     AnswerArray[i - 1] = tempAnswerList[i];
@@ -273,8 +277,10 @@ namespace SuverySystem
             }
 
             string ansString = string.Join(",", AnswerArray);
+            this.Session["ansString"] = ansString;
+            Response.Redirect($"ConfirmPage.aspx?ID={StringGuid}");
             Response.Write($"<script>alert('{ansString}')</script>");
-            
+
         }
     }
 }
