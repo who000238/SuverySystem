@@ -59,7 +59,7 @@ namespace SuverySystem
                             TextBox textBox1 = new TextBox();
                             textBox1.ID = "Q" + QuestionOrder.ToString();
                             textBox1.TextMode = TextBoxMode.SingleLine;
-
+                            textBox1.CssClass = "Answer";
                             this.QuestionArea.Controls.Add(textBox1);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
@@ -68,7 +68,7 @@ namespace SuverySystem
                             TextBox textBox2 = new TextBox();
                             textBox2.ID = "Q" + QuestionOrder.ToString();
                             textBox2.TextMode = TextBoxMode.Number;
-
+                            textBox2.CssClass = "Answer";
                             this.QuestionArea.Controls.Add(textBox2);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
@@ -76,7 +76,7 @@ namespace SuverySystem
                             TextBox textBox3 = new TextBox();
                             textBox3.ID = "Q" + QuestionOrder.ToString();
                             textBox3.TextMode = TextBoxMode.Email;
-
+                            textBox3.CssClass = "Answer";
                             this.QuestionArea.Controls.Add(textBox3);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
@@ -84,7 +84,7 @@ namespace SuverySystem
                             TextBox textBox4 = new TextBox();
                             textBox4.ID = "Q" + QuestionOrder.ToString();
                             textBox4.TextMode = TextBoxMode.Date;
-
+                            textBox4.CssClass = "Answer";
                             this.QuestionArea.Controls.Add(textBox4);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
@@ -93,7 +93,8 @@ namespace SuverySystem
                             TextBox textBox5 = new TextBox();
                             textBox5.ID = "Q" + QuestionOrder.ToString();
                             textBox5.TextMode = TextBoxMode.SingleLine;
-                            textBox5.CssClass = "isRequired";
+                            textBox5.CssClass = "isRequired Answer";
+                            
                             this.QuestionArea.Controls.Add(textBox5);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
@@ -104,7 +105,7 @@ namespace SuverySystem
                             TextBox textBox6 = new TextBox();
                             textBox6.ID = "Q" + QuestionOrder.ToString();
                             textBox6.TextMode = TextBoxMode.Number;
-                            textBox6.CssClass = "isRequired";
+                            textBox6.CssClass = "isRequired Answer";
                             this.QuestionArea.Controls.Add(textBox6);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
@@ -114,7 +115,7 @@ namespace SuverySystem
                             TextBox textBox7 = new TextBox();
                             textBox7.ID = "Q" + QuestionOrder.ToString();
                             textBox7.TextMode = TextBoxMode.Email;
-                            textBox7.CssClass = "isRequired";
+                            textBox7.CssClass = "isRequired Answer";
 
                             this.QuestionArea.Controls.Add(textBox7);
                             this.QuestionArea.Controls.Add(lblForbr);
@@ -124,7 +125,7 @@ namespace SuverySystem
                             TextBox textBox8 = new TextBox();
                             textBox8.ID = "Q" + QuestionOrder.ToString();
                             textBox8.TextMode = TextBoxMode.Date;
-                            textBox8.CssClass = "isRequired";
+                            textBox8.CssClass = "isRequired Answer";
 
                             this.QuestionArea.Controls.Add(textBox8);
                             this.QuestionArea.Controls.Add(lblForbr);
@@ -133,6 +134,7 @@ namespace SuverySystem
                         case "A":
                             RadioButtonList radioButtonList = new RadioButtonList();
                             radioButtonList.ID = "Q" + QuestionOrder.ToString();
+                            radioButtonList.CssClass = "Answer";
                             for (int j = 1; j < QTStringArray.Length; j++)
                             {
                                 radioButtonList.Items.Add(QTStringArray[j]);
@@ -143,6 +145,8 @@ namespace SuverySystem
                         case "B":
                             CheckBoxList checkBoxList = new CheckBoxList();
                             checkBoxList.ID = "Q" + QuestionOrder.ToString();
+                            checkBoxList.CssClass = "Answer";
+
                             for (int j = 1; j < QTStringArray.Length; j++)
                             {
                                 checkBoxList.Items.Add(QTStringArray[j]);
@@ -154,7 +158,7 @@ namespace SuverySystem
                                 lblQuestionName.Text += "(必填)";
                                 RadioButtonList radioButtonList2 = new RadioButtonList();
                                 radioButtonList2.ID = "Q" + QuestionOrder.ToString();
-                                radioButtonList2.CssClass = "isRequired";
+                                radioButtonList2.CssClass = "isRequired Answer";
                                 for (int j = 1; j < QTStringArray.Length; j++)
                                 {
                                     radioButtonList2.Items.Add(QTStringArray[j]);
@@ -166,7 +170,7 @@ namespace SuverySystem
                             lblQuestionName.Text += "(必填)";
                             CheckBoxList checkBoxList2 = new CheckBoxList();
                             checkBoxList2.ID = "Q" + QuestionOrder.ToString();
-                            checkBoxList2.CssClass = "isRequired";
+                            checkBoxList2.CssClass = "isRequired Answer";
                             for (int j = 1; j < QTStringArray.Length; j++)
                             {
                                 checkBoxList2.Items.Add(QTStringArray[j]);
@@ -397,6 +401,7 @@ namespace SuverySystem
             string[] TypeOrderArray = TypeOrderString.Split(',');
             int QuestionCount = TypeOrderArray.Length;
             string[] AnswerArray = new string[QuestionCount];
+
             for (int i = 1; i <= QuestionCount; i++)
             {
                 string ControlName = "Q" + i.ToString();
@@ -412,7 +417,9 @@ namespace SuverySystem
 
             string ansString = string.Join(",", AnswerArray);
             this.Session["ansString"] = ansString;
+
             Response.Redirect($"ConfirmPage.aspx?ID={StringGuid}");
+
             Response.Write($"<script>alert('{ansString}')</script>");
 
         }

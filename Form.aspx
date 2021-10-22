@@ -20,6 +20,9 @@
     <form id="form1" runat="server">
         <div class="container">
             <div class="row">
+                <div>
+                    <asp:HiddenField runat="server" ID="HFData" />
+                </div>
                 <div class="col-6">
                     <h1>前台</h1>
                 </div>
@@ -41,6 +44,42 @@
                 </div>
             </div>
         </div>
+        <script>
+    
+            //$(function () {
+            //    $("#btnSubmit").click(function () {
+            //        alert('Hello');
+            //        var QCount = document.getElementsByClassName('Answer')
+            //        alert(QCount.length);
+
+            //        //字串版本
+            //        //var AnswerData = $(".Answer").serialize(); //文字方塊可讀取，單多選無法取值
+            //        //alert(AnswerData); 
+
+            //        //陣列版本
+            //        //var AnswerData = $(".Answer").val(); //文字方塊可讀取，單多選無法取值
+            //        //for (var i = 0; i < AnswerData.length; i++) {
+            //        //    alert(AnswerData[i].value);
+            //        //}
+
+
+            //        var AnswerData = $(".Answer").val(); //文字方塊可讀取，單多選無法取值
+            //        alert(AnswerData); 
+
+            //        //var AnswerString;
+            //        //for (var i = 0; i < QCount.length; i++) {
+            //        //    AnswerString = AnswerString + ",";
+            //        //    if (QCount.length - i == 1) {
+            //        //        alert(AnswerString);
+            //        //    }
+            //        //}
+            //        //var QuestionArea = document.getElementById('QuestionArea');
+            //        //var QCount = getElementsByTagName('input');
+            //        //alert(QCount);
+              
+            //    });
+            //});
+        </script>
     </form>
 </body>
 </html>
