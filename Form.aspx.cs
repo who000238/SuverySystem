@@ -14,7 +14,7 @@ namespace SuverySystem
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //問題種類共六種 文字方塊共四種1.文字 2.數字 3.電郵 4.日期 第五、六種單選和複選方塊 且 必填與否兩分法 共有12種模式 這邊用數字1~9 與羅馬字ABC 來代表這12種類的問題   
+            //問題種類共六種 文字方塊共四種1.文字 2.數字 3.電郵 4.日期 第五、六種單選和複選方塊 且 必填與否兩分法 共有12種模式 這邊用數字1~8 與羅馬字ABCD 來代表這12種類的問題   
             //if (this.Session["ansString"] == null)
             //{
             string StringGuid = Request.QueryString["ID"];
@@ -48,24 +48,27 @@ namespace SuverySystem
 
                     Label lblQuestionName = new Label();
                     lblQuestionName.Text = NameOrderArray[i];
-                 
-                    this.QuestionArea.Controls.Add(lblQuestionName);
-                    switch (TypeOrderArray[i])
-                    {
 
+                    this.QuestionArea.Controls.Add(lblQuestionName);
+                    string QTString = TypeOrderArray[i];
+                    string[] QTStringArray = QTString.Split('|');
+                    switch (QTStringArray[0])
+                    {
+                        #region 文字方塊
                         case "1":
                             TextBox textBox1 = new TextBox();
                             textBox1.ID = "Q" + QuestionOrder.ToString();
                             textBox1.TextMode = TextBoxMode.SingleLine;
-                      
+
                             this.QuestionArea.Controls.Add(textBox1);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
+                    
                         case "2":
                             TextBox textBox2 = new TextBox();
                             textBox2.ID = "Q" + QuestionOrder.ToString();
                             textBox2.TextMode = TextBoxMode.Number;
-                       
+
                             this.QuestionArea.Controls.Add(textBox2);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
@@ -73,7 +76,7 @@ namespace SuverySystem
                             TextBox textBox3 = new TextBox();
                             textBox3.ID = "Q" + QuestionOrder.ToString();
                             textBox3.TextMode = TextBoxMode.Email;
-                        
+
                             this.QuestionArea.Controls.Add(textBox3);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
@@ -81,32 +84,11 @@ namespace SuverySystem
                             TextBox textBox4 = new TextBox();
                             textBox4.ID = "Q" + QuestionOrder.ToString();
                             textBox4.TextMode = TextBoxMode.Date;
-                       
+
                             this.QuestionArea.Controls.Add(textBox4);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
                         case "5":
-                            RadioButtonList radioButtonList = new RadioButtonList();
-                            radioButtonList.ID = "Q" + QuestionOrder.ToString();
-                            for (int j = 0; j < NameOrderArray.Length; j++)
-                            {
-                                radioButtonList.Items.Add(NameOrderArray[j]);
-                            }
-                            this.QuestionArea.Controls.Add(radioButtonList);
-                            this.QuestionArea.Controls.Add(lblForbr);
-                            break;
-                        case "6":
-                            CheckBoxList checkBoxList = new CheckBoxList();
-                            checkBoxList.ID = "Q" + QuestionOrder.ToString();
-                            for (int j = 0; j < NameOrderArray.Length; j++)
-                            {
-                                checkBoxList.Items.Add(NameOrderArray[j]);
-                            }
-                       
-                            this.QuestionArea.Controls.Add(checkBoxList);
-                            this.QuestionArea.Controls.Add(lblForbr);
-                            break;
-                        case "7":
                             lblQuestionName.Text += "(必填)";
                             TextBox textBox5 = new TextBox();
                             textBox5.ID = "Q" + QuestionOrder.ToString();
@@ -115,7 +97,9 @@ namespace SuverySystem
                             this.QuestionArea.Controls.Add(textBox5);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
-                        case "8":
+
+
+                        case "6":
                             lblQuestionName.Text += "(必填)";
                             TextBox textBox6 = new TextBox();
                             textBox6.ID = "Q" + QuestionOrder.ToString();
@@ -124,7 +108,8 @@ namespace SuverySystem
                             this.QuestionArea.Controls.Add(textBox6);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
-                        case "9":
+
+                        case "7":
                             lblQuestionName.Text += "(必填)";
                             TextBox textBox7 = new TextBox();
                             textBox7.ID = "Q" + QuestionOrder.ToString();
@@ -134,7 +119,7 @@ namespace SuverySystem
                             this.QuestionArea.Controls.Add(textBox7);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
-                        case "A":
+                        case "8":
                             lblQuestionName.Text += "(必填)";
                             TextBox textBox8 = new TextBox();
                             textBox8.ID = "Q" + QuestionOrder.ToString();
@@ -144,52 +129,124 @@ namespace SuverySystem
                             this.QuestionArea.Controls.Add(textBox8);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
-                        case "B":
-                            lblQuestionName.Text += "(必填)";
-                            RadioButtonList radioButtonList2 = new RadioButtonList();
-                            radioButtonList2.ID = "Q" + QuestionOrder.ToString();
-                            radioButtonList2.CssClass = "isRequired";
-
-
-                            //string tempString = ItemNameArray[i-1];
-                            //string[] tempStringArray = tempString.Split('|');
-                            //for (int k = 0; k < tempStringArray.Length; k++)
-                            //{
-                            //    radioButtonList2.Items.Add(tempStringArray[k]);
-                            //}
-
-                            int count = 0;
-                            string tempString = ItemNameArray[count];
-                            string[] tempStringArray = tempString.Split('|');
-                            while (count < tempStringArray.Length)
+                        #endregion
+                        case "A":
+                            RadioButtonList radioButtonList = new RadioButtonList();
+                            radioButtonList.ID = "Q" + QuestionOrder.ToString();
+                            for (int j = 1; j < QTStringArray.Length; j++)
                             {
-                                radioButtonList2.Items.Add(tempStringArray[count]);
-                                count++;
+                                radioButtonList.Items.Add(QTStringArray[j]);
                             }
-
-
-                            this.QuestionArea.Controls.Add(radioButtonList2);
+                            this.QuestionArea.Controls.Add(radioButtonList);
+                            this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                        case "B":
+                            CheckBoxList checkBoxList = new CheckBoxList();
+                            checkBoxList.ID = "Q" + QuestionOrder.ToString();
+                            for (int j = 1; j < QTStringArray.Length; j++)
+                            {
+                                checkBoxList.Items.Add(QTStringArray[j]);
+                            }
+                            this.QuestionArea.Controls.Add(checkBoxList);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
                         case "C":
+                                lblQuestionName.Text += "(必填)";
+                                RadioButtonList radioButtonList2 = new RadioButtonList();
+                                radioButtonList2.ID = "Q" + QuestionOrder.ToString();
+                                radioButtonList2.CssClass = "isRequired";
+                                for (int j = 1; j < QTStringArray.Length; j++)
+                                {
+                                    radioButtonList2.Items.Add(QTStringArray[j]);
+                                }
+                                this.QuestionArea.Controls.Add(radioButtonList2);
+                                this.QuestionArea.Controls.Add(lblForbr);
+                            break;
+                        case "D":
                             lblQuestionName.Text += "(必填)";
                             CheckBoxList checkBoxList2 = new CheckBoxList();
                             checkBoxList2.ID = "Q" + QuestionOrder.ToString();
                             checkBoxList2.CssClass = "isRequired";
-                            for (int j = 0; j < NameOrderArray.Length; j++)
+                            for (int j = 1; j < QTStringArray.Length; j++)
                             {
-                                checkBoxList2.Items.Add(NameOrderArray[j]);
+                                checkBoxList2.Items.Add(QTStringArray[j]);
                             }
-
                             this.QuestionArea.Controls.Add(checkBoxList2);
                             this.QuestionArea.Controls.Add(lblForbr);
                             break;
-                  
+                            #region 單多選
+                            //case "A":
+                            //    RadioButtonList radioButtonList = new RadioButtonList();
+                            //    radioButtonList.ID = "Q" + QuestionOrder.ToString();
+                            //    for (int j = 0; j < NameOrderArray.Length; j++)
+                            //    {
+                            //        radioButtonList.Items.Add(NameOrderArray[j]);
+                            //    }
+                            //    this.QuestionArea.Controls.Add(radioButtonList);
+                            //    this.QuestionArea.Controls.Add(lblForbr);
+                            //    break;
+                            //case "B":
+                            //    CheckBoxList checkBoxList = new CheckBoxList();
+                            //    checkBoxList.ID = "Q" + QuestionOrder.ToString();
+                            //    for (int j = 0; j < NameOrderArray.Length; j++)
+                            //    {
+                            //        checkBoxList.Items.Add(NameOrderArray[j]);
+                            //    }
 
+                            //    this.QuestionArea.Controls.Add(checkBoxList);
+                            //    this.QuestionArea.Controls.Add(lblForbr);
+                            //    break;
+                            //case "C":
+                            //    for (int j = 0; j < ItemNameArray.Length; j++)
+                            //    {
+                            //        lblQuestionName.Text += "(必填)";
+                            //        RadioButtonList radioButtonList2 = new RadioButtonList();
+                            //        radioButtonList2.ID = "Q" + QuestionOrder.ToString();
+                            //        radioButtonList2.CssClass = "isRequired";
+                            //        string tempString = ItemNameArray[j];
+                            //        string[] tempStringArray = tempString.Split('|');
+                            //        for (int k = 0; k < Convert.ToInt32(tempStringArray[0]); k++)
+                            //        {
+                            //            radioButtonList2.Items.Add(tempStringArray[k + 1]);
+                            //        }
+                            //        this.QuestionArea.Controls.Add(radioButtonList2);
+                            //        this.QuestionArea.Controls.Add(lblForbr);
+                            //    }
+
+                            //    //string tempString = ItemNameArray[i-1];
+                            //    //string[] tempStringArray = tempString.Split('|');
+                            //    //for (int k = 0; k < tempStringArray.Length; k++)
+                            //    //{
+                            //    //    radioButtonList2.Items.Add(tempStringArray[k]);
+                            //    //}
+
+                            //    //int count = 0;
+                            //    //string tempString = ItemNameArray[count];
+                            //    //string[] tempStringArray = tempString.Split('|');
+                            //    //while (count < tempStringArray.Length)
+                            //    //{
+                            //    //    radioButtonList2.Items.Add(tempStringArray[count]);
+                            //    //    count++;
+                            //    //}
+
+                            //    break;
+                            //case "D":
+                            //    lblQuestionName.Text += "(必填)";
+                            //    CheckBoxList checkBoxList2 = new CheckBoxList();
+                            //    checkBoxList2.ID = "Q" + QuestionOrder.ToString();
+                            //    checkBoxList2.CssClass = "isRequired";
+                            //    for (int j = 0; j < NameOrderArray.Length; j++)
+                            //    {
+                            //        checkBoxList2.Items.Add(NameOrderArray[j]);
+                            //    }
+
+                            //    this.QuestionArea.Controls.Add(checkBoxList2);
+                            //    this.QuestionArea.Controls.Add(lblForbr);
+                            //    break;
+                            #endregion
                     }
                 }
             }
-            //}
         }
 
 
