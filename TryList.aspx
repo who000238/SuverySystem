@@ -1,12 +1,12 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="List.aspx.cs" Inherits="SuverySystem.List" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="TryList.aspx.cs" Inherits="SuverySystem.TryList" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
-    <link rel="stylesheet" href="css/bootstrap.css" />
+      <link rel="stylesheet" href="css/bootstrap.css" />
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="js/bootstrap.js"></script>
     <script src="Scripts/jQuery-min-3.6.0.js"></script>
@@ -17,9 +17,8 @@
     </style>
 </head>
 <body>
-    <form id="form1" runat="server">
+     <form id="form1" runat="server">
         <div class="container">
-            <div><a href="TryList.aspx">前往</a></div>
             <h1>前台</h1>
             <div runat="server" id="TestArea"></div>
             <div style="border: dashed 1px">
@@ -43,12 +42,12 @@
                         </HeaderTemplate>
                         <ItemTemplate>
                             <div class="row">
-                                <div class="col-1"><%#Eval("No") %></div>
-                                <div class="col-4"><a href="Form.aspx?ID=<%#Eval("Guid") %>"><%#Eval("Title") %></a></div>
-                                <div class="col-2"><%#((int)Eval("Status")==0) ? "關閉中":"開放中" %></div>
+                                <div class="col-1"><%#Eval("SuveryNo") %></div>
+                                <div class="col-4"><a href="TryForm.aspx?ID=<%#Eval("SuveryID") %>"><%#Eval("Title") %></a></div>
+                                <div class="col-2"><%#(Eval("Status")=="N") ? "關閉中":"開放中" %></div>
                                 <div class="col-2"><%#Eval("StartDate") %></div>
                                 <div class="col-2"><%#Eval("EndDate") %></div>
-                                <div class="col-1"><a href="Statistic.aspx?ID=<%#Eval("Guid") %>">前往</a></div>
+                                <div class="col-1"><a href="Statistic.aspx?ID=<%#Eval("SuveryID") %>">前往</a></div>
                             </div>
                         </ItemTemplate>
                     </asp:Repeater>

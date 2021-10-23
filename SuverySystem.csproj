@@ -102,6 +102,8 @@
     <Content Include="SystemAdmin\List.aspx" />
     <Content Include="SystemAdmin\TemplateQuestion.aspx" />
     <Content Include="Test.aspx" />
+    <Content Include="TryForm.aspx" />
+    <Content Include="TryList.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +177,20 @@
     </Compile>
     <Compile Include="Test.aspx.designer.cs">
       <DependentUpon>Test.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TryForm.aspx.cs">
+      <DependentUpon>TryForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TryForm.aspx.designer.cs">
+      <DependentUpon>TryForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TryList.aspx.cs">
+      <DependentUpon>TryList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TryList.aspx.designer.cs">
+      <DependentUpon>TryList.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
