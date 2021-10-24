@@ -25,12 +25,28 @@ namespace SuverySystem
             label.Text = "文字";
             panel.Controls.Add(label);
             this.TestArea.Controls.Add(panel);
+            List<ListItem> selected = new List<ListItem>();
+            foreach (ListItem item in this.CheckBoxList1.Items)
+                if (item.Selected) selected.Add(item);
+            string tempString = string.Join( ",", selected.ToString());
         }
 
       
         protected void btnCheck_Click(object sender, EventArgs e)
         {
-            this.lbl.Text += Request.Form.GetValues("CBL");
+            List<ListItem> selected = new List<ListItem>();
+            foreach (ListItem item in this.CheckBoxList1.Items)
+                if (item.Selected) 
+                    selected.Add(item);
+            string[] array = new string[selected.Count];
+            for (int i = 0; i < selected.Count; i++)
+            {
+                array[i] = selected[i].ToString();
+            }
+            string tempString = string.Join(",", array);
+            Response.Write($"<script>alert('{tempString}')</script>");
         }
+
+
     }
 }
