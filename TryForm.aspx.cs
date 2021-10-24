@@ -115,12 +115,14 @@ namespace SuverySystem
                                 checkBoxList.CssClass = "Answer MustKeyIn";
                             else
                                 checkBoxList.CssClass = "Answer";
+                            checkBoxList.Attributes.Add("runat", "server");
                             for (int j = 0; j < ItemCount; j++)
                             {
                                 string ColName = "Item" + (j + 1).ToString();
                                 string ItemName = QuestionDetailDR[ColName].ToString();
                                 ListItem item = new ListItem();
                                 item.Attributes.Add("name", "Q" + QuestionNo.ToString());
+
                                 item.Text = ItemName;
                                 item.Value = ItemName;
                                 checkBoxList.Items.Add(item);

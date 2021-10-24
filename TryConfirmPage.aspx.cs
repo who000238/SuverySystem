@@ -20,9 +20,14 @@ namespace SuverySystem
             }
             string StringGuid = Request.QueryString["ID"];
             Guid guid = Guid.Parse(StringGuid);
-            string ansString = this.Session["ansString"].ToString();
+
+            string ansString = this.Session["ansString"].ToString(); //Session內存放的回答字串
+            string[] ansStringArray = ansString.Split(',');
+            
             string SuveryStatus;
-            var SuveryMasterDataRow = GetSuveryMasterData(guid);
+            var SuveryMasterDataRow = GetSuveryMasterData(guid); //取得問卷基本資料
+            var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid); //取得問題資料
+
             if (SuveryMasterDataRow!=null)
             {
             if (SuveryMasterDataRow["Status"].ToString() == "N")
@@ -31,16 +36,64 @@ namespace SuverySystem
                 SuveryStatus = "開放中";
                 this.ltlStatusAndDate.Text = $"{SuveryStatus}</br>{SuveryMasterDataRow["StartDate"]}~{SuveryMasterDataRow["EndDate"]}";
                 this.h3Title.InnerText = SuveryMasterDataRow["Title"].ToString();
-
+                for (int i = 0; i < QuestionDetailDT.Rows.Count; i++)
+                {
+                    var QuestionDetailDR = QuestionDetailDT.Rows[i];
+                    Label lblForConfirmMsg = new Label();
+                    lblForConfirmMsg.Text = (i + 1).ToString() + ".  " + QuestionDetailDR["DetailTitle"].ToString() + "</br>" + ansStringArray[i] + "</br></br>";
+                    this.AnsArea.Controls.Add(lblForConfirmMsg);
+                }
             }
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
+            string StringGuid = Request.QueryString["ID"];
+            Guid guid = Guid.Parse(StringGuid);
+            var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid); //取得問題資料
+            string ansString = this.Session["ansString"].ToString();
+            string[] ansStringArray = ansString.Split(',');
+            for (int i = 0; i < QuestionDetailDT.Rows.Count; i++)
+            {
+                var QuestionDetailDR = QuestionDetailDT.Rows[i];
+                int DetailID = (int)QuestionDetailDR["DetailID"];
+                string AnswerString = ansStringArray[i];
+                SaveSuveryAnswer(guid, DetailID, AnswerString);
+            }
+            Response.Redirect("List.aspx");
 
         }
 
         #region Method區
+
+        public static void SaveSuveryAnswer(Guid guid,int DetailID, string AnswerString)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                                            @"
+                                            INSERT INTO [dbo].[AnswerDetail]
+                                                       ([SuveryID]
+                                                       ,[DetailID]
+                                                       ,[AnswerDetail])
+                                                 VALUES
+                                                       (@Guid
+                                                       ,@DetailID
+                                                       ,@AnswerDetail)                                          
+                                            ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@Guid", guid));
+            list.Add(new SqlParameter("@DetailID", DetailID));
+            list.Add(new SqlParameter("@AnswerDetail", AnswerString));
+            try
+            {
+                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+            }
+        }
+
         /// <summary>取得問卷基本資料</summary>
         /// <param name="guid"></param>
         /// <returns></returns>
