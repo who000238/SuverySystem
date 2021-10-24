@@ -36,11 +36,11 @@ namespace SuverySystem
                 this.h3Title.InnerText = dr["Title"].ToString();
                 string NameOrderString = dr["NameOrder"].ToString();
                 string[] NameOrderArray = NameOrderString.Split(',');
-                string[] andStringArray = ansString.Split(',');
+                string[] ansStringArray = ansString.Split(',');
                 for (int i = 0; i < NameOrderArray.Length; i++)
                 {
                     Label label = new Label();
-                    label.Text = (i+1).ToString() + ".  " + NameOrderArray[i] + "</br>" + andStringArray[i] + "</br></br>";
+                    label.Text = (i+1).ToString() + ".  " + NameOrderArray[i] + "</br>" + ansStringArray[i] + "</br></br>";
                     this.AnsArea.Controls.Add(label);
                 }
             }

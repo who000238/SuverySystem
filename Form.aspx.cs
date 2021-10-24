@@ -532,7 +532,6 @@ namespace SuverySystem
                 Response.Redirect($"ConfirmPage.aspx?ID={StringGuid}");
 
                 Response.Write($"<script>alert('{ansString}')</script>");
-                }
             }
         }
     }

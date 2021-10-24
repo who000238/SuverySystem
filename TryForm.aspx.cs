@@ -148,10 +148,69 @@ namespace SuverySystem
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            string StringGuid = Request.QueryString["ID"];
+            string StringGuid = Request.QueryString["ID"]; //取得問卷ID
             Guid guid = Guid.Parse(StringGuid);
 
-            var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid); //取得問題資料
+            var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid); //取得問卷問題資料
+            int QuestionCount = QuestionDetailDT.Rows.Count; //問卷共有幾個問題
+            string[] AnswerArray = new string[QuestionCount]; //依照共有幾個問題建構出一個陣列來放回傳值
+            List<string> TempAnswerList;
+            for (int i = 0; i < QuestionCount; i++)
+            {
+                var QuestionDetailDR = QuestionDetailDT.Rows[i];
+                string QuestionType = QuestionDetailDR["DetailType"].ToString();
+                string ControlName;
+                #region 取值版本1 //多選還是取不到
+                //switch (QuestionType)
+                //{
+                //    case "QT1":
+                //    case "QT2":
+                //    case "QT3":
+                //    case "QT4":
+                //    case "QT5":
+                //        ControlName = "Q" + (i + 1).ToString();
+                //        TempAnswerList = Request.Form.GetValues($"{ControlName}").ToList();
+                //        AnswerArray[i] = TempAnswerList[0];
+                //        break;
+                //    case "QT6":
+                //        int ItemCount = (int)QuestionDetailDR["ItemCount"];
+                //        for (int j = 0; j < ItemCount; j++)
+                //        {
+                //            ControlName = "Q" + (i + 1).ToString() + "$" + j;
+                //            TempAnswerList = Request.Form.GetValues($"{ControlName}").ToList();
+                //            AnswerArray[i] = TempAnswerList[0];
+                //        }
+                //        break;
+                //}
+                #endregion
+                switch (QuestionType)
+                {
+                    case "QT1":
+                    case "QT2":
+                    case "QT3":
+                    case "QT4":
+                    case "QT5":
+                        ControlName = "Q" + (i + 1).ToString();
+                        TempAnswerList = Request.Form.GetValues($"{ControlName}").ToList();
+                        AnswerArray[i] = TempAnswerList[0];
+                        break;
+                    case "QT6":
+                        int ItemCount = (int)QuestionDetailDR["ItemCount"];
+                        for (int j = 0; j < ItemCount; j++)
+                        {
+                            ControlName = "Q" + (i + 1).ToString() + "$" + j;
+                            TempAnswerList = Request.Form.GetValues($"{ControlName}").ToList();
+                            AnswerArray[i] = TempAnswerList[0];
+                        }
+                        break;
+                }
+            }
+
+            string ansString = string.Join(",", AnswerArray);
+            this.Session["ansString"] = ansString;
+
+            Response.Redirect($"TryConfirmPage.aspx?ID={StringGuid}");
+            Response.Write($"<script>alert('{ansString}')</script>");
 
         }
         #region Method區
