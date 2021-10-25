@@ -48,7 +48,7 @@
                                 <div class="col-2"><%#((int)Eval("Status")==0) ? "關閉中":"開放中" %></div>
                                 <div class="col-2"><%#Eval("StartDate") %></div>
                                 <div class="col-2"><%#Eval("EndDate") %></div>
-                                <div class="col-1"><a href="Statistic.aspx?ID=<%#Eval("Guid") %>">前往</a></div>
+                                <%--<div class="col-1"><a href="Statistic.aspx?ID=<%#Eval("Guid") %>">前往</a></div>--%>
                             </div>
                         </ItemTemplate>
                     </asp:Repeater>

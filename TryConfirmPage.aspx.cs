@@ -74,16 +74,16 @@ namespace SuverySystem
                                             INSERT INTO [dbo].[AnswerDetail]
                                                        ([SuveryID]
                                                        ,[DetailID]
-                                                       ,[AnswerDetail])
+                                                       ,[Answer])
                                                  VALUES
                                                        (@Guid
                                                        ,@DetailID
-                                                       ,@AnswerDetail)                                          
+                                                       ,@Answer)                                          
                                             ";
             List<SqlParameter> list = new List<SqlParameter>();
             list.Add(new SqlParameter("@Guid", guid));
             list.Add(new SqlParameter("@DetailID", DetailID));
-            list.Add(new SqlParameter("@AnswerDetail", AnswerString));
+            list.Add(new SqlParameter("@Answer", AnswerString));
             try
             {
                 int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);

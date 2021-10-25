@@ -27,7 +27,7 @@
             <div class="col-12">
                 <h3 runat="server" id="h3Title"></h3>
             </div>
-            <div runat="server" id="TestArea"></div>
+            <div runat="server" id="StatisticArea"></div>
         </div>
     </form>
 </body>
