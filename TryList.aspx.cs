@@ -27,6 +27,18 @@ namespace SuverySystem
                 DateTime today = DateTime.Today;
                 //var dt = SuveryManager.GetSuveryList();
                 var dt = GetSuveryList();
+                // 測試日期字串轉換
+                //for (int i = 0; i < dt.Rows.Count; i++)
+                //{
+                //    var dr = dt.Rows[i];
+                //    DateTime tempSD = DateTime.Parse(dr["StartDate"].ToString());
+                //    DateTime tempED = DateTime.Parse(dr["EndDate"].ToString());
+                //    string SD = tempSD.ToString("yyyy-MM-dd");
+                //    string ED = tempED.ToString("yyyy-MM-dd");
+                //    dr["StartDate"] = SD;
+                //    dr["EndDate"] = ED;
+                //}
+                //
                 this.Repeater1.DataSource = dt;
                 this.Repeater1.DataBind();
             }

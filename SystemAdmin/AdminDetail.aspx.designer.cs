@@ -15,6 +15,15 @@ namespace SuverySystem.SystemAdmin
     {
 
         /// <summary>
+        /// hfSuveryID 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hfSuveryID;
+
+        /// <summary>
         /// txtSuveryTitle 控制項。
         /// </summary>
         /// <remarks>
@@ -24,13 +33,13 @@ namespace SuverySystem.SystemAdmin
         protected global::System.Web.UI.WebControls.TextBox txtSuveryTitle;
 
         /// <summary>
-        /// txtInner 控制項。
+        /// txtSummary 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtInner;
+        protected global::System.Web.UI.WebControls.TextBox txtSummary;
 
         /// <summary>
         /// txtStartDate 控制項。
@@ -51,13 +60,13 @@ namespace SuverySystem.SystemAdmin
         protected global::System.Web.UI.WebControls.TextBox txtEndDate;
 
         /// <summary>
-        /// CheckBox1 控制項。
+        /// StatusCheck 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox1;
+        protected global::System.Web.UI.WebControls.CheckBox StatusCheck;
 
         /// <summary>
         /// btnCancle 控制項。
@@ -78,13 +87,13 @@ namespace SuverySystem.SystemAdmin
         protected global::System.Web.UI.WebControls.Button btnSubmit;
 
         /// <summary>
-        /// DropDownList1 控制項。
+        /// TemplateQddl 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
+        protected global::System.Web.UI.WebControls.DropDownList TemplateQddl;
 
         /// <summary>
         /// txtQuestion 控制項。
@@ -96,22 +105,40 @@ namespace SuverySystem.SystemAdmin
         protected global::System.Web.UI.WebControls.TextBox txtQuestion;
 
         /// <summary>
-        /// DropDownList2 控制項。
+        /// ScriptManager1 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList2;
+        protected global::System.Web.UI.ScriptManager ScriptManager1;
 
         /// <summary>
-        /// CheckBox2 控制項。
+        /// QTypeddl 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox2;
+        protected global::System.Web.UI.WebControls.DropDownList QTypeddl;
+
+        /// <summary>
+        /// QMustKeyIn 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox QMustKeyIn;
+
+        /// <summary>
+        /// UpdatePanel1 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanel1;
 
         /// <summary>
         /// txtAnswer 控制項。
@@ -141,13 +168,13 @@ namespace SuverySystem.SystemAdmin
         protected global::System.Web.UI.WebControls.Button btnDelete;
 
         /// <summary>
-        /// Repeater1 控制項。
+        /// QuestionArea 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater Repeater1;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl QuestionArea;
 
         /// <summary>
         /// btnCancle2 控制項。

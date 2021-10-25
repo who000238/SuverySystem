@@ -73,7 +73,8 @@ namespace SuverySystem.SystemAdmin
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
-
+            string guid = Guid.NewGuid().ToString();
+            Response.Redirect($"AdminDetail.aspx?ID={guid}");
         }
 
         public static DataTable GetSuveryList()

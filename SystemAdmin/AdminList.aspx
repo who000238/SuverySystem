@@ -21,21 +21,23 @@
                     <HeaderTemplate>
                         <div class="row">
                             <div class="col-1">#</div>
-                            <div class="col-4">標題</div>
+                            <div class="col-3">標題</div>
                             <div class="col-2">狀態</div>
                             <div class="col-2">開始時間</div>
                             <div class="col-2">結束時間</div>
                             <div class="col-1">觀看統計</div>
+                            <div class="col-1">編輯問卷</div>
                         </div>
                     </HeaderTemplate>
                     <ItemTemplate>
                         <div class="row">
                             <div class="col-1"><%#Eval("SuveryNo") %></div>
-                            <div class="col-4"><a href="TryForm.aspx?ID=<%#Eval("SuveryID") %>"><%#Eval("Title") %></a></div>
-                            <div class="col-2"><%#(Eval("Status")=="N") ? "關閉中":"開放中" %></div>
+                            <div class="col-3"><a href="TryForm.aspx?ID=<%#Eval("SuveryID") %>"><%#Eval("Title") %></a></div>
+                            <div class="col-2"><%#(Eval("Status").ToString() =="N") ? "關閉中":"開放中" %></div>
                             <div class="col-2"><%#Eval("StartDate") %></div>
                             <div class="col-2"><%#Eval("EndDate") %></div>
                             <div class="col-1"><a href="Statistic.aspx?ID=<%#Eval("SuveryID") %>">前往</a></div>
+                            <div class="col-1"><a href="AdminDetail.aspx?ID=<%#Eval("SuveryID") %>">前往</a></div>
                         </div>
                     </ItemTemplate>
                 </asp:Repeater>

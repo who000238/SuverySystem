@@ -10,6 +10,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="../js/bootstrap.js"></script>
     <script src="../Scripts/jQuery-min-3.6.0.js"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
     <style>
         div {
             border: 1px solid;
@@ -23,7 +29,6 @@
         <div class="container">
             <h1>後台 - 問卷管理</h1>
             <div>
-                <a href="/SystemAdmin/Detail.aspx">問卷管理</a><br />
                 <a href="/SystemAdmin/TemplateQuestion.aspx">常用問題管理</a>
             </div>
             <div>
