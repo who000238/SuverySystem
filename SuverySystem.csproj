@@ -98,9 +98,9 @@
     <Content Include="Scripts\jQuery-min-3.6.0.js" />
     <Content Include="Scripts\WebForm1.js" />
     <Content Include="Statistic.aspx" />
-    <Content Include="SystemAdmin\Detail.aspx" />
-    <Content Include="SystemAdmin\List.aspx" />
-    <Content Include="SystemAdmin\TemplateQuestion.aspx" />
+    <Content Include="SystemAdmin\AdminDetail.aspx" />
+    <Content Include="SystemAdmin\AdminList.aspx" />
+    <Content Include="SystemAdmin\AdminTemplateQuestion.aspx" />
     <Content Include="Test.aspx" />
     <Content Include="TryConfirmPage.aspx" />
     <Content Include="TryForm.aspx" />
@@ -140,19 +140,19 @@
     <Compile Include="Statistic.aspx.designer.cs">
       <DependentUpon>Statistic.aspx</DependentUpon>
     </Compile>
-    <Compile Include="SystemAdmin\Detail.aspx.cs">
-      <DependentUpon>Detail.aspx</DependentUpon>
+    <Compile Include="SystemAdmin\AdminDetail.aspx.cs">
+      <DependentUpon>AdminDetail.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="SystemAdmin\Detail.aspx.designer.cs">
-      <DependentUpon>Detail.aspx</DependentUpon>
+    <Compile Include="SystemAdmin\AdminDetail.aspx.designer.cs">
+      <DependentUpon>AdminDetail.aspx</DependentUpon>
     </Compile>
-    <Compile Include="SystemAdmin\List.aspx.cs">
-      <DependentUpon>List.aspx</DependentUpon>
+    <Compile Include="SystemAdmin\AdminList.aspx.cs">
+      <DependentUpon>AdminList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="SystemAdmin\List.aspx.designer.cs">
-      <DependentUpon>List.aspx</DependentUpon>
+    <Compile Include="SystemAdmin\AdminList.aspx.designer.cs">
+      <DependentUpon>AdminList.aspx</DependentUpon>
     </Compile>
     <Compile Include="SystemAdmin\SysterAdmin.Master.cs">
       <DependentUpon>SysterAdmin.Master</DependentUpon>
@@ -161,12 +161,12 @@
     <Compile Include="SystemAdmin\SysterAdmin.Master.designer.cs">
       <DependentUpon>SysterAdmin.Master</DependentUpon>
     </Compile>
-    <Compile Include="SystemAdmin\TemplateQuestion.aspx.cs">
-      <DependentUpon>TemplateQuestion.aspx</DependentUpon>
+    <Compile Include="SystemAdmin\AdminTemplateQuestion.aspx.cs">
+      <DependentUpon>AdminTemplateQuestion.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="SystemAdmin\TemplateQuestion.aspx.designer.cs">
-      <DependentUpon>TemplateQuestion.aspx</DependentUpon>
+    <Compile Include="SystemAdmin\AdminTemplateQuestion.aspx.designer.cs">
+      <DependentUpon>AdminTemplateQuestion.aspx</DependentUpon>
     </Compile>
     <Compile Include="SystemAdmin\TemplateQuestionHandler.ashx.cs">
       <DependentUpon>TemplateQuestionHandler.ashx</DependentUpon>

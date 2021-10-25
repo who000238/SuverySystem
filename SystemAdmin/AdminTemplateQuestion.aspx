@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/SystemAdmin/SysterAdmin.Master" AutoEventWireup="true" CodeBehind="TemplateQuestion.aspx.cs" Inherits="SuverySystem.SystemAdmin.TemplateQuestion" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/SystemAdmin/SysterAdmin.Master" AutoEventWireup="true" CodeBehind="AdminTemplateQuestion.aspx.cs" Inherits="SuverySystem.SystemAdmin.TemplateQuestion" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
