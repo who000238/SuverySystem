@@ -34,11 +34,10 @@ namespace SuverySystem
                     ItemCount = 0;
                 else
                     ItemCount = (int)QuestionDetailDR["ItemCount"];
+                Label lblTitle = new Label(); //問題標題的lbl
                 switch (QuestionType)
                 {
                     case "QT5":
-                    case "QT6":
-                        Label lblTitle = new Label();
                         lblTitle.Text = QuestionTitle + "</br>";
                         this.StatisticArea.Controls.Add(lblTitle);
                         for (int j = 0; j < ItemCount; j++)
@@ -52,8 +51,22 @@ namespace SuverySystem
                             this.StatisticArea.Controls.Add(lblItemTitle);
                         }
                         break;
+                    case "QT6":
+                        lblTitle.Text = QuestionTitle + "</br>";
+                        this.StatisticArea.Controls.Add(lblTitle);
+                        for (int j = 0; j < ItemCount; j++)
+                        {
+                            string ColName = "Item" + (j + 1).ToString();
+                            string ItemName = QuestionDetailDR[ColName].ToString();
+                            string ItemSelectedCount = GetItemSelectedCount(ItemName);
+                            Label lblItemTitle = new Label();
+                            lblItemTitle.Text = "&emsp;&emsp;" + ItemName + "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" + $"共 : {ItemSelectedCount} 人" + "</br>";
+                            this.StatisticArea.Controls.Add(lblItemTitle);
+                        }
+                        break;
+
                 }
- 
+
             }
             //var dt = GetSuveryAnswerData(guid);
             //GridView gridView = new GridView();
@@ -85,27 +98,27 @@ namespace SuverySystem
                 return null;
             }
         }
-        public static DataTable GetSuveryQuestionTItle (Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                 @" SELECT  * FROM 
-                            [SuverySystem].[dbo].[SuveryDetail]
-                     WHERE [SuverySystem].[dbo].[SuveryDetail].[SuveryID] = @Guid
-                    ORDER BY [SuverySystem].[dbo].[SuveryDetail].[DetailID]
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            try
-            {
-                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
+        //public static DataTable GetSuveryQuestionTItle (Guid guid)
+        //{
+        //    string connectionString = DBHelper.GetConnectionString();
+        //    string dbCommandString =
+        //         @" SELECT  * FROM 
+        //                    [SuverySystem].[dbo].[SuveryDetail]
+        //             WHERE [SuverySystem].[dbo].[SuveryDetail].[SuveryID] = @Guid
+        //            ORDER BY [SuverySystem].[dbo].[SuveryDetail].[DetailID]
+        //        ";
+        //    List<SqlParameter> list = new List<SqlParameter>();
+        //    list.Add(new SqlParameter("@Guid", guid));
+        //    try
+        //    {
+        //        return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.WriteLog(ex);
+        //        return null;
+        //    }
+        //}
 
         //
         public static DataTable GetQuestionDetailAndItemDetail(Guid guid)
@@ -140,10 +153,10 @@ namespace SuverySystem
             string dbCommandString =
                           @" SELECT COUNT([SuverySystem].[dbo].[AnswerDetail].[Answer]) AS SelectedCount
                                 FROM  AnswerDetail 
-                            WHERE Answer = @ItemName
+                            WHERE Answer LIKE @ItemName
                 ";
             List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@ItemName", ItemName));
+            list.Add(new SqlParameter("@ItemName", "%" + ItemName+ "%"));
             try
             {
                 var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
