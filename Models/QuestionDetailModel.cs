@@ -7,6 +7,7 @@ namespace SuverySystem.Models
 {
     public class QuestionDetailModel
     {
+        public int QuestionNo { get; set; }
         public string SuveryID { get; set; }
         public string DetailTitle { get; set; }
         public string DetailType { get; set; }

@@ -15,7 +15,7 @@
     <div id="tabs">
         <ul>
             <li><a href="#tabs-1">問卷</a></li>
-            <li><a href="#tabs-2">問題</a></li>
+            <%--<li><a href="#tabs-2">問題</a></li>--%>
             <li><a href="#tabs-3">填寫資料</a></li>
             <li><a href="#tabs-4">統計</a></li>
         </ul>
@@ -28,8 +28,10 @@
             <asp:CheckBox ID="StatusCheck" runat="server" Checked="True" Text="已啟用" />
             <asp:Button ID="btnCancle" runat="server" Text="取消" OnClick="btnCancle_Click" />
             <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click" />
-        </div>
-        <div id="tabs-2">
+            <br />
+            <hr />
+            <%-- </div>
+        <div id="tabs-2">--%>
             種類
             <asp:DropDownList ID="TemplateQddl" runat="server">
                 <asp:ListItem></asp:ListItem>
@@ -103,25 +105,31 @@
             <span>統計頁面</span>
         </div>
     </div>
-    
 
-    
+
+
     <script>
         $(function () {
-            $(document).on("click", "#btnAdd", function () {
-                var SuveryID = $("#hfSuveryID").val();
 
+            $("#ContentPlaceHolder1_btnAdd").click(function () {
+                var SuveryID = $("#ContentPlaceHolder1_hfSuveryID").val();
+                var DetailTitle = $("#ContentPlaceHolder1_txtQuestion").val();
+                var DetailType = $("#ContentPlaceHolder1_QTypeddl").val();
+                var DetailMustKeyin = $("#ContentPlaceHolder1_QMustKeyIn").val();
+                var ItemName = $("#ContentPlaceHolder1_txtAnswer").val();
                 $.ajax({
-                    url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=Load",
+                    url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=Create",
                     type: "POST",
                     data: {
-                        "SuveryID": SuveryID
+                        "SuveryID": SuveryID,
+                        "DetailTitle": DetailTitle,
+                        "DetailType": DetailType,
+                        "DetailMustKeyin": DetailMustKeyin,
+                        "ItemName": ItemName
+
                     },
                     success: function (result) {
-                        $("SuveryID").val(result["SuveryID"]);
-                        $("DetailTitle").val(result["DetailTitle"]);
-                        $("DetailType").val(result["DetailType"]);
-                        $("DetailMustKeyin").val(result["DetailMustKeyin"]);
+                        alert("新增成功");
                     }
                 });
             });
@@ -129,11 +137,9 @@
             $.ajax({
                 url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=Load",
                 type: "GET",
-                data: {
-                    "SuveryID": SuveryID
-                },
+                data: {},
                 success: function (result) {
-                 
+
                     var table = '<table class="table table-striped table-hover" id="QuestionTable">';
                     table += '<tr><th>勾選</th><th>編號</th><th>問題標題</th><th>種類</th><th>必填</th><th>編輯</th></tr>';
                     for (var i = 0; i < result.length; i++) {
@@ -143,21 +149,24 @@
                                     <td  style="width:5%">
                                         <asp:CheckBox  runat="server" />
                                     </td>
-                                    <td  style="width:5%">${(i+1)}</td>
+                                    <td  style="width:5%">
+                                            <input type="hidden" class="hfRowID" value="${obj.QuestionNo}"/>
+                                            <span>${obj.QuestionNo}</span>
+                                    </td>
                                     <td  style="width:50%">${obj.DetailTitle}</td>
                                     <td  style="width:25%">${obj.DetailType}</td>
                                     <td  style="width:5%">
                                         <asp:CheckBox  runat="server" />
                                     </td>
                                     <td  style="width:10%">
-                                        <a href="#">編輯</a>
+                                        <button type="button" class="Update" text="編輯">
                                     </td>
                             </tr>`;
                         table += htmlText;
                     }
                     table += "</table>";
                     $("#ContentPlaceHolder1_QuestionArea").append(table);
-                  
+
                 }
             });
         });

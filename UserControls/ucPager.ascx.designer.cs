@@ -7,74 +7,83 @@
 // </自動產生的>
 //------------------------------------------------------------------------------
 
-namespace SuverySystem
+namespace SuverySystem.UserControls
 {
 
 
-    public partial class TryList
+    public partial class ucPager
     {
 
         /// <summary>
-        /// form1 控制項。
+        /// aLinkFirst 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkFirst;
 
         /// <summary>
-        /// txtSuveryTitle 控制項。
+        /// aLink1 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSuveryTitle;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLink1;
 
         /// <summary>
-        /// txtStartDate 控制項。
+        /// aLink2 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtStartDate;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLink2;
 
         /// <summary>
-        /// txtEndDate 控制項。
+        /// ltlCurrent 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEndDate;
+        protected global::System.Web.UI.WebControls.Literal ltlCurrent;
 
         /// <summary>
-        /// btnSreach 控制項。
+        /// aLink4 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSreach;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLink4;
 
         /// <summary>
-        /// Repeater1 控制項。
+        /// aLink5 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater Repeater1;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLink5;
 
         /// <summary>
-        /// ucPager 控制項。
+        /// aLinkLast 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::SuverySystem.UserControls.ucPager ucPager;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor aLinkLast;
+
+        /// <summary>
+        /// ltPager 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltPager;
     }
 }

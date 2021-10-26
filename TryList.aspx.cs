@@ -41,6 +41,10 @@ namespace SuverySystem
                 //
                 this.Repeater1.DataSource = dt;
                 this.Repeater1.DataBind();
+
+                this.ucPager.TotalSize = dt.Rows.Count;
+                this.ucPager.Bind();
+
             }
             else
             {

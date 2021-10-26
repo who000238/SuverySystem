@@ -1,5 +1,8 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="TryList.aspx.cs" Inherits="SuverySystem.TryList" %>
 
+<%@ Register Src="~/UserControls/ucPager.ascx" TagPrefix="uc1" TagName="ucPager" %>
+
+
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -51,6 +54,9 @@
                             </div>
                         </ItemTemplate>
                     </asp:Repeater>
+                        <div style="background-color: orange; opacity: 0.8; text-align: center">
+                            <uc1:ucPager runat="server" id="ucPager"  PageSize="10" Url="/TryList.aspx"/>
+                        </div>
                 </div>
             </div>
         </div>
