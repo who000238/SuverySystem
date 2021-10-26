@@ -51,6 +51,13 @@ namespace SuverySystem
                 var dt = SearchSuvery(txtSreach, SDate, EDate);
                 this.Repeater1.DataSource = dt;
                 this.Repeater1.DataBind();
+
+                this.ucPager.TotalSize = dt.Rows.Count;
+                this.ucPager.txtSearch = txtSreach;
+                this.ucPager.StartDate = txtSDate;
+                this.ucPager.EndDate = txtEDate;
+                this.ucPager.BindWithSerach();
+
             }
 
         }
