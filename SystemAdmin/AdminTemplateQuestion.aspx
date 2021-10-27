@@ -17,7 +17,7 @@
     <asp:TextBox runat="server" ID="txtItemName" placeholder="請輸入項目名稱且用  ' , ' 隔開 " />
 
     <asp:CheckBox ID="MustKeyIn" runat="server" Text="必填" />
-    <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" />
+    <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" OnClientClick="javascript:return confirm('確定執行？');"  />
     <button type="button" id="btnDelete">刪除</button><br />
     <div id="NewQ"></div>
     <asp:Repeater ID="Repeater1" runat="server">
@@ -35,8 +35,8 @@
             </div>
         </ItemTemplate>
     </asp:Repeater>
-    <asp:Button ID="btnCancle" runat="server" Text="取消" OnClick="btnCancle_Click" />
-    <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click" />
+<%--    <asp:Button ID="btnCancle" runat="server" Text="取消" OnClick="btnCancle_Click" />
+    <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click" />--%>
     <script>
     //$(function () {
     //    $(function () {
