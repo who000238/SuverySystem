@@ -136,40 +136,40 @@ namespace SuverySystem.SystemAdmin
         {
             string actionName = context.Request.QueryString["actionName"];
             #region 自建Table
-            //create DataTable
-            DataTable QuestionDT = new DataTable();
-            DataColumn column;
-            DataRow row;
-            //create DataCol of QuestintNo
-            column = new DataColumn();
-            column.DataType = Type.GetType("System.Int32");
-            column.ColumnName = "QuestionNo";
-            QuestionDT.Columns.Add(column);
-            //create DataCol of SuveryID
-            column = new DataColumn();
-            column.DataType = Type.GetType("System.String");
-            column.ColumnName = "SuveryID";
-            QuestionDT.Columns.Add(column);
-            //create DataCol of DetailTitle
-            column = new DataColumn();
-            column.DataType = Type.GetType("System.String");
-            column.ColumnName = "DetailTitle";
-            QuestionDT.Columns.Add(column);
-            //create DataCol of DetailType
-            column = new DataColumn();
-            column.DataType = Type.GetType("System.String");
-            column.ColumnName = "DetailType";
-            QuestionDT.Columns.Add(column);
-            //create DataCol of DetailMustKeyin
-            column = new DataColumn();
-            column.DataType = Type.GetType("System.String");
-            column.ColumnName = "DetailMustKeyin";
-            QuestionDT.Columns.Add(column);
-            //create DataCol of ItemName
-            column = new DataColumn();
-            column.DataType = Type.GetType("System.String");
-            column.ColumnName = "ItemName";
-            QuestionDT.Columns.Add(column);
+            ////create DataTable
+            //DataTable QuestionDT = new DataTable();
+            //DataColumn column;
+            //DataRow row;
+            ////create DataCol of QuestintNo
+            //column = new DataColumn();
+            //column.DataType = Type.GetType("System.Int32");
+            //column.ColumnName = "QuestionNo";
+            //QuestionDT.Columns.Add(column);
+            ////create DataCol of SuveryID
+            //column = new DataColumn();
+            //column.DataType = Type.GetType("System.String");
+            //column.ColumnName = "SuveryID";
+            //QuestionDT.Columns.Add(column);
+            ////create DataCol of DetailTitle
+            //column = new DataColumn();
+            //column.DataType = Type.GetType("System.String");
+            //column.ColumnName = "DetailTitle";
+            //QuestionDT.Columns.Add(column);
+            ////create DataCol of DetailType
+            //column = new DataColumn();
+            //column.DataType = Type.GetType("System.String");
+            //column.ColumnName = "DetailType";
+            //QuestionDT.Columns.Add(column);
+            ////create DataCol of DetailMustKeyin
+            //column = new DataColumn();
+            //column.DataType = Type.GetType("System.String");
+            //column.ColumnName = "DetailMustKeyin";
+            //QuestionDT.Columns.Add(column);
+            ////create DataCol of ItemName
+            //column = new DataColumn();
+            //column.DataType = Type.GetType("System.String");
+            //column.ColumnName = "ItemName";
+            //QuestionDT.Columns.Add(column);
             #endregion
 
             if (string.IsNullOrEmpty(actionName))
@@ -180,54 +180,80 @@ namespace SuverySystem.SystemAdmin
                 context.Response.End();
             }
 
-             if (actionName == "Create")
+            if (actionName == "Create")
             {
                 string SuveryID = context.Request.Form["SuveryID"];
                 string DetailTitle = context.Request.Form["DetailTitle"];
                 string DetailType = context.Request.Form["DetailType"];
-                string DetailMustKeyin = context.Request.Form["DetailMustKeyin"];
+                switch (DetailType)
+                {
+                    case"QT1":
+                        DetailType ="文字方塊(文字)";
+                        break;
+                    case"QT2":
+                        DetailType = "文字方塊(數字)";
+                        break;
+                    case "QT3":
+                        DetailType ="文字方塊(E-Mail)";
+                        break;
+                    case "QT4":
+                        DetailType ="文字方塊(日期)";
+                        break;
+                    case "QT5":
+                        DetailType ="單選方塊";
+                        break;
+                    case "QT6":
+                        DetailType ="多選方塊";
+                        break;
+                }
+                string DetailMustKeyin;
+                if (context.Request.Form["DetailMustKeyin"] == "on")
+                {
+                    DetailMustKeyin = "Y";
+                }
+                else
+                {
+                    DetailMustKeyin = "N";
+                }
                 string ItemName = context.Request.Form["ItemName"];
 
-                row = QuestionDT.NewRow();
-                row["QuestionNo"] = 1;
-                row["SuveryID"] = SuveryID;
-                row["DetailTitle"] = DetailTitle;
-                row["DetailType"] = DetailType;
-                row["DetailMustKeyin"] = DetailMustKeyin;
-                row["ItemName"] = ItemName;
-                QuestionDT.Rows.Add(row);
+
+                QuestionDetailModel model = new QuestionDetailModel()
+                {
+                    SuveryID = SuveryID,
+                    DetailTitle = DetailTitle,
+                    DetailType = DetailType,
+                    DetailMustKeyin = DetailMustKeyin,
+                    ItemName = ItemName
+                };
+                if (HttpContext.Current.Session["QuestionDetail"] == null)
+                {
+                    List<QuestionDetailModel> list = new List<QuestionDetailModel>();
+                    list.Add(model);
+                    HttpContext.Current.Session["QuestionDetail"] = list;
+
+                }
+                else
+                {
+                    List<QuestionDetailModel> list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
+                    list.Add(model);
+                    HttpContext.Current.Session["QuestionDetail"] = list;
+                }
+
+
             }
             else if (actionName == "Load")
             {
 
                 if (HttpContext.Current.Session["QuestionDetail"] != null)
                 {
-                    QuestionDetailModel model = (QuestionDetailModel)HttpContext.Current.Session["QuestionDetail"];
-                    row = QuestionDT.NewRow();
-                    row["QuestionNo"] = model.QuestionNo;
-                    row["SuveryID"] = model.SuveryID;
-                    row["DetailTitle"] = model.DetailTitle;
-                    row["DetailType"] = model.DetailType;
-                    row["DetailMustKeyin"] = model.DetailMustKeyin;
-                    row["ItemName"] = model.ItemName;
-                    QuestionDT.Rows.Add(row);
+                    var list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
+
+                    string jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(list);
+                    context.Response.ContentType = "application/json";
+                    context.Response.Write(jsonText);
                 }
 
-                List<QuestionDetailModel> list = new List<QuestionDetailModel>();
-                foreach (DataRow dr in QuestionDT.Rows)
-                {
-                    QuestionDetailModel doc = new QuestionDetailModel();
-                    doc.QuestionNo = QuestionDT.Rows.Count;
-                    doc.SuveryID = dr.Field<string>("SuveryID");
-                    doc.DetailTitle = dr.Field<string>("DetailTitle");
-                    doc.DetailType = dr.Field<string>("DetailType");
-                    doc.DetailMustKeyin = dr.Field<string>("DetailMustKeyin");
-                    doc.ItemName = dr.Field<string>("ItemName");
-                    list.Add(doc);
-                }
-                string jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(list);
-                context.Response.ContentType = "application/json";
-                context.Response.Write(jsonText);
             }
             else
             {

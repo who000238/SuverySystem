@@ -17,6 +17,13 @@ namespace SuverySystem.SystemAdmin
             this.txtAnswer.Enabled = false;
             string SuveryID = Request.QueryString["ID"].ToString();
             this.hfSuveryID.Value = SuveryID;
+
+            //if (HttpContext.Current.Session["QuestionDetail"] != null)
+            //{
+            //    Response.Write("<script>alert('QuestionDetail is exist !')</script>");
+            //}
+            //else
+            //    Response.Write("<script>alert('QuestionDetail is null !')</script>");
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)
@@ -81,24 +88,41 @@ namespace SuverySystem.SystemAdmin
             else
                 QuestionDetail = QuestionTitle + QuestionType + QuestionIsMustKeyIn + ItemName;
 
-            QuestionDetailModel model = new QuestionDetailModel()
+     
+            if (HttpContext.Current.Session["QuestionDetail"] == null)
             {
-                SuveryID = guidString,
-                DetailTitle = QuestionTitle,
-                DetailType = QuestionType,
-                DetailMustKeyin = QuestionIsMustKeyIn,
-                ItemName = ItemName
+                QuestionDetailModel model = new QuestionDetailModel()
+                {
+                    SuveryID = guidString,
+                    DetailTitle = QuestionTitle,
+                    DetailType = QuestionType,
+                    DetailMustKeyin = QuestionIsMustKeyIn,
+                    ItemName = ItemName
+                };
+                List<QuestionDetailModel> list = new List<QuestionDetailModel>();
+                list.Add(model);
+                HttpContext.Current.Session["QuestionDetail"] = list;
+            }
+            else
+            {
+                List<QuestionDetailModel> sourceList = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
 
-            };
+                QuestionDetailModel model = new QuestionDetailModel()
+                {
+                    SuveryID = guidString,
+                    DetailTitle = QuestionTitle,
+                    DetailType = QuestionType,
+                    DetailMustKeyin = QuestionIsMustKeyIn,
+                    ItemName = ItemName
+                };
 
-            HttpContext.Current.Session["QuestionDetail"] = model;
-            //Response.Write($"<script>alert('{model.SuveryID}')</script>");
-            //Response.Write($"<script>alert('{model.DetailTitle}')</script>");
-            //Response.Write($"<script>alert('{model.DetailType}')</script>");
-            //Response.Write($"<script>alert('{model.DetailMustKeyin}')</script>");
-            //Response.Write($"<script>alert('{model.ItemName}')</script>");
 
-        
+                List<QuestionDetailModel> list = new List<QuestionDetailModel>();
+                list.Add(model);
+                HttpContext.Current.Session["QuestionDetail"] = sourceList;
+
+            }
+
         }
 
         protected void btnDelete_Click(object sender, EventArgs e)

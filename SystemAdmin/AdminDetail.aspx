@@ -129,7 +129,6 @@
 
                     },
                     success: function (result) {
-                        alert("新增成功");
                     }
                 });
             });
