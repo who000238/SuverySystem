@@ -29,7 +29,9 @@
         <div class="container">
             <h1>後台 - 問卷管理</h1>
             <div>
-                <a href="/SystemAdmin/TemplateQuestion.aspx">常用問題管理</a>
+                <a href="/SystemAdmin/AdminTemplateQuestion.aspx">常用問題管理</a>
+                <br />
+                <a href="/SystemAdmin/AdminList.aspx">後台列表頁</a>
             </div>
             <div>
                 <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">

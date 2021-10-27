@@ -33,7 +33,7 @@
             <%-- </div>
         <div id="tabs-2">--%>
             種類
-            <asp:DropDownList ID="TemplateQddl" runat="server">
+            <asp:DropDownList ID="TemplateQddl" runat="server" OnSelectedIndexChanged="TemplateQddl_SelectedIndexChanged" AutoPostBack="true">
                 <asp:ListItem></asp:ListItem>
             </asp:DropDownList><br />
             問題<asp:TextBox ID="txtQuestion" runat="server"></asp:TextBox>

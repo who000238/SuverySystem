@@ -15,6 +15,15 @@ namespace SuverySystem.SystemAdmin
     {
 
         /// <summary>
+        /// hfBool 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfBool;
+
+        /// <summary>
         /// txtQuestionName 控制項。
         /// </summary>
         /// <remarks>
@@ -24,22 +33,40 @@ namespace SuverySystem.SystemAdmin
         protected global::System.Web.UI.WebControls.TextBox txtQuestionName;
 
         /// <summary>
-        /// dllQuestionType 控制項。
+        /// ddlQuestionType 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList dllQuestionType;
+        protected global::System.Web.UI.WebControls.DropDownList ddlQuestionType;
 
         /// <summary>
-        /// isRequire 控制項。
+        /// txtItemName 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox isRequire;
+        protected global::System.Web.UI.WebControls.TextBox txtItemName;
+
+        /// <summary>
+        /// MustKeyIn 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox MustKeyIn;
+
+        /// <summary>
+        /// btnAdd 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAdd;
 
         /// <summary>
         /// Repeater1 控制項。

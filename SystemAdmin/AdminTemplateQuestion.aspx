@@ -3,18 +3,21 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <asp:HiddenField ID="hfBool" runat="server" />
     <h2>常用問題管理</h2>
-    問題集名稱<asp:TextBox ID="txtQuestionName" runat="server" TextMode="SingleLine"></asp:TextBox><br />
-    問題種類<asp:DropDownList ID="dllQuestionType" runat="server">
-        <asp:ListItem Value="1">文字方塊-文字</asp:ListItem>
-        <asp:ListItem Value="2">文字方塊-數字</asp:ListItem>
-        <asp:ListItem Value="3">文字方塊-Email</asp:ListItem>
-        <asp:ListItem Value="4">文字方塊-日期</asp:ListItem>
-        <asp:ListItem Value="5">單選方塊</asp:ListItem>
-        <asp:ListItem Value="6">複選方塊</asp:ListItem>
+    <asp:TextBox ID="txtQuestionName" runat="server" TextMode="SingleLine" placeholder="問題集名稱"></asp:TextBox>
+    <asp:DropDownList ID="ddlQuestionType" runat="server" OnSelectedIndexChanged="dllQuestionType_SelectedIndexChanged" AutoPostBack="true" placeholder="問題種類">
+        <asp:ListItem Value="QT1">文字方塊-文字</asp:ListItem>
+        <asp:ListItem Value="QT2">文字方塊-數字</asp:ListItem>
+        <asp:ListItem Value="QT3">文字方塊-Email</asp:ListItem>
+        <asp:ListItem Value="QT4">文字方塊-日期</asp:ListItem>
+        <asp:ListItem Value="QT5">單選方塊</asp:ListItem>
+        <asp:ListItem Value="QT6">複選方塊</asp:ListItem>
     </asp:DropDownList>
-    <asp:CheckBox ID="isRequire" runat="server" Text="必填" />
-    <button type="button" id="btnAdd">加入</button><br />
+    <asp:TextBox runat="server" ID="txtItemName" placeholder="請輸入項目名稱且用  ' , ' 隔開 " />
+
+    <asp:CheckBox ID="MustKeyIn" runat="server" Text="必填" />
+    <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" />
     <button type="button" id="btnDelete">刪除</button><br />
     <div id="NewQ"></div>
     <asp:Repeater ID="Repeater1" runat="server">
@@ -35,20 +38,57 @@
     <asp:Button ID="btnCancle" runat="server" Text="取消" OnClick="btnCancle_Click" />
     <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click" />
     <script>
-        $(function () {
-            $("#btnAdd").click(function () {
-                var QuestionName = $("#txtQuestionName").val();
-                var QuestionType = $("#dllQuestionType").val();
-                var isRequire = $("#isRequire").val();
-                var span1 = document.createElement("span");
-                span1.innerHTML = QuestionName;
-                var span2 = document.createElement("span");
-                span2.innerHTML = QuestionType;
-                var span3 = document.createElement("span");
-                span3.innerHTML = isRequire;
-                var container = document.getElementById('NewQ')
-                container.appendChild(span1)
-            })
-        });
+    //$(function () {
+    //    $(function () {
+    //        $("#ContentPlaceHolder1_btnAdd").click(function () {
+    //            var QuestionName = $("#ContentPlaceHolder1_txtQuestionName").val();
+    //            var QuestionType = $("#ContentPlaceHolder1_dllQuestionType").val();
+    //            switch (QuestionType) {
+    //                case "QT1":
+    //                    QuestionType = "文字方塊-文字";
+    //                    break;
+    //                case "QT2":
+    //                    QuestionType = "文字方塊-數字";
+    //                    break;
+    //                case "QT3":
+    //                    QuestionType = "文字方塊-E-Mail";
+    //                    break;
+    //                case "QT4":
+    //                    QuestionType = "文字方塊-日期";
+    //                    break;
+    //                case "QT5":
+    //                    QuestionType = "單選方塊";
+    //                    break;
+    //                case "QT6":
+    //                    QuestionType = "多選方塊";
+    //                    break;
+    //                default:
+    //            }
+    //            var MustKeyIn = $("#ContentPlaceHolder1_MustKeyIn").val();
+    //            if (MustKeyIn) {
+    //                MustKeyIn = "Yes";
+    //            }
+    //            else {
+    //                MustKeyIn = "No";
+    //            }
+    //            var ItenName = $("#ContentPlaceHolder1_txtItemName").val();
+    //            var OutputString = "";
+    //            if (ItenName) {
+    //                OutputString =`標題:${QuestionName}\n格式:${QuestionType}\n必填:${MustKeyIn}\n選項名稱:${ItenName}\n按下確定新增常用問題`;
+    //            }
+    //            else {
+    //                OutputString = `標題:${QuestionName}\n格式:${QuestionType}\n必填:${MustKeyIn}\n按下確定新增常用問題`;
+    //            }
+    //            var yes = confirm(OutputString);
+    //            if (yes) {
+    //                $("#hfBool").val = true;
+    //            }
+    //            else {
+    //                $("#hfBool").val = false;
+    //            }
+       
+    //        })
+    //    });
+    //});
     </script>
 </asp:Content>

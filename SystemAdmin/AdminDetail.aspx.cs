@@ -2,6 +2,7 @@
 using SuverySystem.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -18,6 +19,12 @@ namespace SuverySystem.SystemAdmin
             string SuveryID = Request.QueryString["ID"].ToString();
             this.hfSuveryID.Value = SuveryID;
 
+            var QuestionTemplateDT = GetQuestionTemplate();
+            for (int i = 0; i < QuestionTemplateDT.Rows.Count; i++)
+            {
+                var QuestionTemplateDR = QuestionTemplateDT.Rows[i];
+                this.TemplateQddl.Items.Add(QuestionTemplateDR["QuestionTemplateName"].ToString());
+            }
             //if (HttpContext.Current.Session["QuestionDetail"] != null)
             //{
             //    Response.Write("<script>alert('QuestionDetail is exist !')</script>");
@@ -189,7 +196,97 @@ namespace SuverySystem.SystemAdmin
                 Logger.WriteLog(ex);
             }
         }
+
+        public static DataTable GetQuestionTemplate()
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                @" 
+                    SELECT * FROM [SuverySystem].[dbo].[QuestionTemplateDetail]
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            try
+            {
+                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
+
+        public static DataRow GetQuestionTemplateDrDetail(string QuestionTemplateName)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+               @" 
+                    SELECT * FROM [SuverySystem].[dbo].[QuestionTemplateDetail]
+                    WHERE QuestionTemplateName = @QuestionTemplateName
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@QuestionTemplateName", QuestionTemplateName));
+            try
+            {
+                return DBHelper.ReadDataRow(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
         #endregion
 
+
+        protected void TemplateQddl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string QuestionTemplateName = this.TemplateQddl.SelectedItem.Text;
+            var QuestionTemplateDrDetail = GetQuestionTemplateDrDetail(QuestionTemplateName);
+            string QName = QuestionTemplateDrDetail["QuestionTemplateName"].ToString();
+            string QType = QuestionTemplateDrDetail["QuestionTemplateType"].ToString();
+            string QMustKeyIn = QuestionTemplateDrDetail["QuestionTemplateMustKeyIn"].ToString();
+            string QuestionTemplateItemName=string.Empty;
+            if (QuestionTemplateDrDetail["QuestionTemplateItemName"] != null)
+            {
+                QuestionTemplateItemName = QuestionTemplateDrDetail["QuestionTemplateItemName"].ToString();
+            }
+
+            this.txtQuestion.Text = QName;
+            switch (QType)
+            {
+                case"QT1":
+                    this.QTypeddl.SelectedIndex = 0;
+                    break;
+                case "QT2":
+
+                    this.QTypeddl.SelectedIndex = 1;
+                    break;
+                case "QT3":
+                    this.QTypeddl.SelectedIndex = 2;
+                    break;
+                case "QT4":
+                    this.QTypeddl.SelectedIndex = 3;
+                    break;
+                case"QT5":
+                    this.QTypeddl.SelectedIndex = 4;
+                    break;
+                case "QT6":
+                    this.QTypeddl.SelectedIndex = 5;
+                    break;
+            }
+            if (QMustKeyIn =="Y")
+            {
+                this.QMustKeyIn.Checked = true;
+            }
+            else
+            {
+                this.QMustKeyIn.Checked = false;
+            }
+            if (!string.IsNullOrEmpty(QuestionTemplateItemName))
+            {
+                this.txtAnswer.Text = QuestionTemplateItemName;
+            }
+        }
     }
 }
