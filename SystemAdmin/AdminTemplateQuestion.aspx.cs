@@ -1,6 +1,8 @@
 ﻿using DBSource;
+using SuverySystem.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -14,6 +16,44 @@ namespace SuverySystem.SystemAdmin
         protected void Page_Load(object sender, EventArgs e)
         {
             this.txtItemName.Visible = false;
+            var TemplateDT = GetQuestionTemplateDT();
+            List<QuestionTemplateModel> list = new List<QuestionTemplateModel>();
+
+            for (int i = 0; i < TemplateDT.Rows.Count; i++)
+            {
+                QuestionTemplateModel model = new QuestionTemplateModel();
+                var dr = TemplateDT.Rows[i];
+                model.QuestionTemplateNo = (i + 1).ToString();
+                model.QuestionTemplateName = dr["QuestionTemplateName"].ToString();
+                var QType = dr["QuestionTemplateType"].ToString();
+                switch (QType)
+                {
+                    case "QT1":
+                        QType = "文字方塊-文字";
+                        break;
+                    case "QT2":
+                        QType = "文字方塊-數字";
+                        break;
+                    case "QT3":
+                        QType = "文字方塊-E-Mail";
+                        break;
+                    case "QT4":
+                        QType = "文字方塊-日期";
+                        break;
+                    case "QT5":
+                        QType = "單選方塊";
+                        break;
+                    case "QT6":
+                        QType = "多選方塊";
+                        break;
+                }
+                model.QuestionTemplateType = QType;
+                model.QuestionTemplateMustKeyIn = dr["QuestionTemplateMustKeyIn"].ToString();
+                list.Add(model);
+            }
+         
+            this.Repeater1.DataSource = list;
+            this.Repeater1.DataBind();
         }
 
         protected void dllQuestionType_SelectedIndexChanged(object sender, EventArgs e)
@@ -30,7 +70,7 @@ namespace SuverySystem.SystemAdmin
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
-       
+
             string txtQName = this.txtQuestionName.Text;
             string txtQType = this.ddlQuestionType.SelectedItem.Value;
             //switch (txtQType)
@@ -66,7 +106,7 @@ namespace SuverySystem.SystemAdmin
             string txtItemName = string.Empty;
             switch (txtQType)
             {
-       
+
                 case "QT5":
                 case "QT6":
                     txtItemName = this.txtItemName.Text;
@@ -74,7 +114,7 @@ namespace SuverySystem.SystemAdmin
             }
             if (!string.IsNullOrWhiteSpace(txtItemName))
             {
-            CreateQuestionTemplate(txtQName, txtQType, txtMustKeyIn, txtItemName);
+                CreateQuestionTemplate(txtQName, txtQType, txtMustKeyIn, txtItemName);
             }
             else
             {
@@ -145,6 +185,31 @@ namespace SuverySystem.SystemAdmin
             {
                 Logger.WriteLog(ex);
             }
+        }
+        public static DataTable GetQuestionTemplateDT()
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                @" 
+                      SELECT * FROM [dbo].[QuestionTemplateDetail]
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+
+
+            try
+            {
+                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
+
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

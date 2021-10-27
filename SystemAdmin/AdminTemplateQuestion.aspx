@@ -3,7 +3,6 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <asp:HiddenField ID="hfBool" runat="server" />
     <h2>常用問題管理</h2>
     <asp:TextBox ID="txtQuestionName" runat="server" TextMode="SingleLine" placeholder="問題集名稱"></asp:TextBox>
     <asp:DropDownList ID="ddlQuestionType" runat="server" OnSelectedIndexChanged="dllQuestionType_SelectedIndexChanged" AutoPostBack="true" placeholder="問題種類">
@@ -17,25 +16,36 @@
     <asp:TextBox runat="server" ID="txtItemName" placeholder="請輸入項目名稱且用  ' , ' 隔開 " />
 
     <asp:CheckBox ID="MustKeyIn" runat="server" Text="必填" />
-    <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" OnClientClick="javascript:return confirm('確定執行？');"  />
-    <button type="button" id="btnDelete">刪除</button><br />
+    <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" OnClientClick="javascript:return confirm('確定執行？');" />
+    <br />
     <div id="NewQ"></div>
-    <asp:Repeater ID="Repeater1" runat="server">
-        <HeaderTemplate>
-            <div class="row">
-                <div class="row-1"></div>
-                <div class="row-1">#</div>
-                <div class="row-5">問題</div>
-                <div class="row-3">種類</div>
-                <div class="row-2">必填</div>
-            </div>
-        </HeaderTemplate>
-        <ItemTemplate>
-            <div class="row">
-            </div>
-        </ItemTemplate>
-    </asp:Repeater>
-<%--    <asp:Button ID="btnCancle" runat="server" Text="取消" OnClick="btnCancle_Click" />
+    <div class="row">
+        <asp:Repeater ID="Repeater1" runat="server">
+            <HeaderTemplate>
+                <div class="row">
+                    <div class="col-1">刪除</div>
+                    <div class="col-1">#</div>
+                    <div class="col-5">問題</div>
+                    <div class="col-3">種類</div>
+                    <div class="col-2">必填</div>
+                </div>
+            </HeaderTemplate>
+            <ItemTemplate>
+                <div class="row">
+                    <div class="col-1">
+                        <asp:HiddenField ID="HiddenField1" runat="server"/>
+                        <asp:Button Text="刪除" runat="server" OnClick="btnDelete_Click" OnClientClick="javascript:return confirm('確定刪除？')"/>
+                    </div>
+                    <div class="col-1"><%# Eval("QuestionTemplateNo") %></div>
+                    <div class="col-5"><%# Eval("QuestionTemplateName") %></div>
+                    <div class="col-3"><%# Eval("QuestionTemplateType") %></div>
+                    <div class="col-2"><%# Eval("QuestionTemplateMustKeyIn") %></div>
+                </div>
+            </ItemTemplate>
+        </asp:Repeater>
+
+    </div>
+    <%--    <asp:Button ID="btnCancle" runat="server" Text="取消" OnClick="btnCancle_Click" />
     <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click" />--%>
     <script>
     //$(function () {
@@ -86,7 +96,7 @@
     //            else {
     //                $("#hfBool").val = false;
     //            }
-       
+
     //        })
     //    });
     //});
