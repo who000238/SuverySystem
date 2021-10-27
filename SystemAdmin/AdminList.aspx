@@ -1,5 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/SystemAdmin/SysterAdmin.Master" AutoEventWireup="true" CodeBehind="AdminList.aspx.cs" Inherits="SuverySystem.SystemAdmin.List1" %>
 
+<%@ Register Src="~/UserControls/ucPager.ascx" TagPrefix="uc1" TagName="ucPager" %>
+
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 
 </asp:Content>
@@ -41,6 +44,9 @@
                         </div>
                     </ItemTemplate>
                 </asp:Repeater>
+                      <div style="background-color: orange; opacity: 0.8; text-align: center">
+                          <uc1:ucPager runat="server" ID="ucPager" PageSize="10" Url="/SystemAdmin/AdminList.aspx"/>
+                        </div>
             </div>
         </div>
 </asp:Content>
