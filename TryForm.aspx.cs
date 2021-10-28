@@ -156,7 +156,7 @@ namespace SuverySystem
             var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid); //取得問卷問題資料
             int QuestionCount = QuestionDetailDT.Rows.Count;                    //問卷共有幾個問題
             string[] AnswerArray = new string[QuestionCount];                     //依照共有幾個問題建構出一個陣列來放回傳值
-            string tempAnswer=string.Empty;                                                 //儲存多選問題時使用者選擇的項目字串
+            string tempAnswer = string.Empty;                                                 //儲存多選問題時使用者選擇的項目字串
             List<string> TempAnswerList;
             for (int i = 0; i < QuestionCount; i++)
             {
@@ -204,7 +204,8 @@ namespace SuverySystem
                             ControlName = "Q" + (i + 1).ToString() + "$" + j;
                             var inpList = HttpContext.Current.Request.Form.GetValues($"{ControlName}");
                             string[] list = inpList ?? new string[] { };
-                            if(list.Length != 0)
+                            //if(list.Length != 0)
+                            if (list != null)
                             {
                                 tempAnswer = tempAnswer + string.Join("&", list);
                             }

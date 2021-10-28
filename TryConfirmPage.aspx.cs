@@ -60,7 +60,7 @@ namespace SuverySystem
                 string AnswerString = ansStringArray[i];
                 SaveSuveryAnswer(guid, DetailID, AnswerString);
             }
-            Response.Redirect("List.aspx");
+            Response.Redirect("TryList.aspx");
 
         }
 

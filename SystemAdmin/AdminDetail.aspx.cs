@@ -15,22 +15,22 @@ namespace SuverySystem.SystemAdmin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-         
-                this.txtAnswer.Enabled = false;
-                string SuveryID = Request.QueryString["ID"].ToString();
-                this.hfSuveryID.Value = SuveryID;
 
-                var QuestionTemplateDT = GetQuestionTemplate();
-                if (!IsPostBack)
+            this.txtAnswer.Enabled = false;
+            string SuveryID = Request.QueryString["ID"].ToString();
+            this.hfSuveryID.Value = SuveryID;
+
+            var QuestionTemplateDT = GetQuestionTemplate();
+            if (!IsPostBack)
+            {
+                for (int i = 0; i < QuestionTemplateDT.Rows.Count; i++)
                 {
-                    for (int i = 0; i < QuestionTemplateDT.Rows.Count; i++)
-                    {
-                        var QuestionTemplateDR = QuestionTemplateDT.Rows[i];
-                        this.TemplateQddl.Items.Add(QuestionTemplateDR["QuestionTemplateName"].ToString());
-                    }
+                    var QuestionTemplateDR = QuestionTemplateDT.Rows[i];
+                    this.TemplateQddl.Items.Add(QuestionTemplateDR["QuestionTemplateName"].ToString());
                 }
-         
-      
+            }
+
+
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)
@@ -96,7 +96,7 @@ namespace SuverySystem.SystemAdmin
             //else
             //    QuestionDetail = QuestionTitle + QuestionType + QuestionIsMustKeyIn + ItemName;
 
-     
+
             //if (HttpContext.Current.Session["QuestionDetail"] == null)
             //{
             //    QuestionDetailModel model = new QuestionDetailModel()
@@ -147,15 +147,186 @@ namespace SuverySystem.SystemAdmin
 
         protected void btnSubmit2_Click(object sender, EventArgs e)
         {
+            string IDString = Request.QueryString["ID"];
+            Guid id = Guid.Parse(IDString);
+
             var list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
-            var count = list.Count;
-            Response.Write($"<script>alert('{count}')</script>");
+            for (int i = 0; i < list.Count; i++)
+            {
+                string QTitle = list[i].DetailTitle;
+                string QType = string.Empty;
+                var TempQType = list[i].DetailType;
+                switch (TempQType)
+                {
+                    case "文字方塊(文字)":
+                        QType = "QT1";
+                        break;
+                    case "文字方塊(數字)":
+                        QType = "QT2";
+                        break;
+                    case "文字方塊(E-Mail)":
+                        QType = "QT3";
+                        break;
+                    case "文字方塊(日期)":
+                        QType = "QT4";
+                        break;
+                    case "單選方塊":
+                        QType = "QT5";
+                        break;
+                    case "多選方塊":
+                        QType = "QT6";
+                        break;
+                }
+                string QMustKeyIn = string.Empty;
+                var TempQMustKeyIn = list[i].DetailMustKeyin;
+                switch (TempQMustKeyIn)
+                {
+                    case "Yes":
+                        QMustKeyIn = "Y";
+                        break;
+                    case "No":
+                        QMustKeyIn = "N";
+                        break;
+                }
+                CreateNewQuestion(id, QTitle, QType, QMustKeyIn);
+
+                string QItemName = string.Empty;
+                if (!string.IsNullOrEmpty(list[i].ItemName))
+                {
+                    var QDetailID = GetQuestionDetailID(id, QTitle);
+                    QItemName = list[i].ItemName;
+                    var ItemNameArray = QItemName.Split(',');
+                    string Item1 = string.Empty;
+                    string Item2 = string.Empty;
+                    string Item3 = string.Empty;
+                    string Item4 = string.Empty;
+                        switch (ItemNameArray.Length)
+                        {
+                            case 1:
+                                Item1 = ItemNameArray[0];
+                                CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                                break;
+                            case 2:
+                                Item1 = ItemNameArray[0];
+                                Item2 = ItemNameArray[1];
+                                CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                                break;
+                            case 3:
+                                Item1 = ItemNameArray[0];
+                                Item2 = ItemNameArray[1];
+                                Item3 = ItemNameArray[2];
+                                CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                                break;
+                            case 4:
+                                Item1 = ItemNameArray[0];
+                                Item2 = ItemNameArray[1];
+                                Item3 = ItemNameArray[2];
+                                Item4 = ItemNameArray[3];
+                                CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                                break;
+                        }
+                }
+            }
         }
 
-  
+
 
 
         #region Method
+        #region CreateQuestionItem(多載方法)
+        public static void CreateQuestionItem(int DetailID, Guid SuveryID, string Item1, string Item2, string Item3, string Item4, int ItemCount)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                @" 
+                    INSERT INTO [dbo].[ItemDetail]
+                               ([DetailID]
+                               ,[SuveryID]
+                               ,[Item1]
+                               ,[Item2]
+                               ,[Item3]
+                               ,[Item4]
+                               ,[ItemCount])
+                         VALUES
+                               (@DetailTitle
+                               , @SuveryID      
+                               ,@Item1       
+                               ,@Item2            
+                               ,@Item3            
+                               ,@Item4            
+                               ,@ItemCount)    
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@DetailTitle", DetailID));
+            list.Add(new SqlParameter("@SuveryID", SuveryID));
+            list.Add(new SqlParameter("@Item1", Item1));
+            list.Add(new SqlParameter("@Item2", Item2));
+            list.Add(new SqlParameter("@Item3", Item3));
+            list.Add(new SqlParameter("@Item4", Item4));
+            list.Add(new SqlParameter("@ItemCount", ItemCount));
+            try
+            {
+                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+            }
+        }
+        #endregion
+        public static int GetQuestionDetailID(Guid SuveryID, string DetailTitle)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                @" 
+                    SELECT * FROM [SuverySystem].[dbo].[SuveryDetail]
+                    WHERE SuveryID= @SuveryID AND DetailTitle= @DetailTitle                  
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@SuveryID", SuveryID));
+            list.Add(new SqlParameter("@DetailTitle", DetailTitle));
+
+            try
+            {
+                var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
+                return (int)dr["DetailID"];
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return 0;
+            }
+        }
+        public static void CreateNewQuestion(Guid SuveryID, string DetailTitle, string DetailType, string DetailMustKeyIn)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                @" 
+                    INSERT INTO [dbo].[SuveryDetail]
+                               ([SuveryID]
+                               ,[DetailTitle]
+                               ,[DetailType]
+                               ,[DetailMustKeyin])
+                         VALUES
+                               (@SuveryID
+                               ,@DetailTitle
+                               ,@DetailType
+                               ,@DetailMustKeyIn)
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@SuveryID", SuveryID));
+            list.Add(new SqlParameter("@DetailTitle", DetailTitle));
+            list.Add(new SqlParameter("@DetailType", DetailType));
+            list.Add(new SqlParameter("@DetailMustKeyIn", DetailMustKeyIn));
+            try
+            {
+                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+            }
+        }
         public static void CreateNewSuvery(Guid guid, string Title, string Summary, string StartDate, string EndDate, string Status)
         {
             string connectionString = DBHelper.GetConnectionString();
