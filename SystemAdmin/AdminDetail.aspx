@@ -71,7 +71,7 @@
 
 
             <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" /><br />
-            <asp:Button ID="btnDelete" runat="server" Text="刪除" OnClick="btnDelete_Click" />
+            <%--<asp:Button ID="btnDelete" runat="server" Text="刪除" OnClick="btnDelete_Click" />--%>
 
             <div runat="server" id="QuestionArea">
             </div>
@@ -105,9 +105,6 @@
             <span>統計頁面</span>
         </div>
     </div>
-
-
-
     <script>
         $(function () {
 
@@ -115,7 +112,13 @@
                 var SuveryID = $("#ContentPlaceHolder1_hfSuveryID").val();
                 var DetailTitle = $("#ContentPlaceHolder1_txtQuestion").val();
                 var DetailType = $("#ContentPlaceHolder1_QTypeddl").val();
-                var DetailMustKeyin = $("#ContentPlaceHolder1_QMustKeyIn").val();
+                var checkbox = document.getElementById('ContentPlaceHolder1_QMustKeyIn')
+                if (checkbox.checked) {
+                    var DetailMustKeyin = "Y";
+                }
+                else {
+                    var DetailMustKeyin = "N";
+                }
                 var ItemName = $("#ContentPlaceHolder1_txtAnswer").val();
                 $.ajax({
                     url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=Create",
@@ -132,6 +135,25 @@
                     }
                 });
             });
+
+            $(document).on("click", ".btnDelete", function () {
+                var td = $(this).closest("td");
+                var hf = td.find("input.hfRowID");
+
+                var rowID = hf.val();
+                $.ajax({
+                    url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=Delete",
+                    type: "POST",
+                    data: {
+                        "ID": rowID,
+                    },
+                    success: function (result) {
+                        alert('刪除成功');
+                    }
+                });
+            });
+
+
             var SuveryID = $("#hfSuveryID").val();
             $.ajax({
                 url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=Load",
@@ -146,19 +168,20 @@
                         var htmlText =
                             `<tr>
                                     <td  style="width:5%">
-                                        <asp:CheckBox  runat="server" />
+                                            <input type="hidden" class="hfRowID" value="${obj.QuestionNo}"/>
+                                            <input type="button" class="btnDelete" value="刪除"/>
                                     </td>
                                     <td  style="width:5%">
-                                            <input type="hidden" class="hfRowID" value="${obj.QuestionNo}"/>
                                             <span>${obj.QuestionNo}</span>
                                     </td>
                                     <td  style="width:50%">${obj.DetailTitle}</td>
                                     <td  style="width:25%">${obj.DetailType}</td>
                                     <td  style="width:5%">
-                                        <asp:CheckBox  runat="server" />
+                                            <input type="checkbox" name="name" checked="${obj.DetailMustKeyin}"/>
                                     </td>
                                     <td  style="width:10%">
-                                        <button type="button" class="Update" text="編輯">
+                                            <input type="hidden" class="hfRowID" value="${obj.QuestionNo}"/>
+                                            <input type="button" name="Update" value="編輯" />
                                     </td>
                             </tr>`;
                         table += htmlText;

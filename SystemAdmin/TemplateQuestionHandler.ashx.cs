@@ -187,27 +187,28 @@ namespace SuverySystem.SystemAdmin
                 string DetailType = context.Request.Form["DetailType"];
                 switch (DetailType)
                 {
-                    case"QT1":
-                        DetailType ="文字方塊(文字)";
+                    case "QT1":
+                        DetailType = "文字方塊(文字)";
                         break;
-                    case"QT2":
+                    case "QT2":
                         DetailType = "文字方塊(數字)";
                         break;
                     case "QT3":
-                        DetailType ="文字方塊(E-Mail)";
+                        DetailType = "文字方塊(E-Mail)";
                         break;
                     case "QT4":
-                        DetailType ="文字方塊(日期)";
+                        DetailType = "文字方塊(日期)";
                         break;
                     case "QT5":
-                        DetailType ="單選方塊";
+                        DetailType = "單選方塊";
                         break;
                     case "QT6":
-                        DetailType ="多選方塊";
+                        DetailType = "多選方塊";
                         break;
                 }
                 string DetailMustKeyin;
-                if (context.Request.Form["DetailMustKeyin"] == "on")
+                var temp = context.Request.Form["DetailMustKeyin"];
+                if (context.Request.Form["DetailMustKeyin"] == "true")
                 {
                     DetailMustKeyin = "Y";
                 }
@@ -223,12 +224,13 @@ namespace SuverySystem.SystemAdmin
                     SuveryID = SuveryID,
                     DetailTitle = DetailTitle,
                     DetailType = DetailType,
-                    DetailMustKeyin = DetailMustKeyin,
+                    DetailMustKeyin = DetailMustKeyin == "Y" ? "checked" : "",
                     ItemName = ItemName
                 };
                 if (HttpContext.Current.Session["QuestionDetail"] == null)
                 {
                     List<QuestionDetailModel> list = new List<QuestionDetailModel>();
+                    model.QuestionNo = list.Count + 1;
                     list.Add(model);
                     HttpContext.Current.Session["QuestionDetail"] = list;
 
@@ -236,10 +238,24 @@ namespace SuverySystem.SystemAdmin
                 else
                 {
                     List<QuestionDetailModel> list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
+                    model.QuestionNo = list.Count + 1;
                     list.Add(model);
                     HttpContext.Current.Session["QuestionDetail"] = list;
                 }
 
+
+            }
+            else if (actionName == "Delete")
+            {
+                string rowID = context.Request.Form["ID"];
+                int id = Convert.ToInt32(rowID);
+                List<QuestionDetailModel> list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
+                int i = list.Count;
+                list.RemoveAt(id - 1);
+
+                string jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(list);
+                context.Response.ContentType = "application/json";
+                context.Response.Write(jsonText);
 
             }
             else if (actionName == "Load")
