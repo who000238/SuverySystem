@@ -76,6 +76,7 @@ namespace SuverySystem.SystemAdmin
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
+
             //string guidString = Request.QueryString["ID"];
             //string QuestionTitle = this.txtQuestion.Text;
             //string QuestionType = this.QTypeddl.SelectedValue;
@@ -139,7 +140,9 @@ namespace SuverySystem.SystemAdmin
 
         protected void btnCancle2_Click(object sender, EventArgs e)
         {
-
+            List<QuestionDetailModel> list = (List<QuestionDetailModel>)this.Session["QuestionDetail"];
+            int count = list.Count;
+            Response.Write($"<script>alert('{count}'</script>");
         }
 
         protected void btnSubmit2_Click(object sender, EventArgs e)
@@ -230,7 +233,7 @@ namespace SuverySystem.SystemAdmin
             }
         }
         #endregion
-
+        #region DDL_SelectedIndexChange
         protected void QTypeddl_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (this.QTypeddl.SelectedItem.Value == "QT5" || this.QTypeddl.SelectedItem.Value == "QT6")
@@ -248,7 +251,7 @@ namespace SuverySystem.SystemAdmin
             string QName = QuestionTemplateDrDetail["QuestionTemplateName"].ToString();
             string QType = QuestionTemplateDrDetail["QuestionTemplateType"].ToString();
             string QMustKeyIn = QuestionTemplateDrDetail["QuestionTemplateMustKeyIn"].ToString();
-            string QuestionTemplateItemName=string.Empty;
+            string QuestionTemplateItemName = string.Empty;
             if (QuestionTemplateDrDetail["QuestionTemplateItemName"] != null)
             {
                 QuestionTemplateItemName = QuestionTemplateDrDetail["QuestionTemplateItemName"].ToString();
@@ -257,7 +260,7 @@ namespace SuverySystem.SystemAdmin
             this.txtQuestion.Text = QName;
             switch (QType)
             {
-                case"QT1":
+                case "QT1":
                     this.QTypeddl.SelectedIndex = 0;
                     break;
                 case "QT2":
@@ -270,14 +273,14 @@ namespace SuverySystem.SystemAdmin
                 case "QT4":
                     this.QTypeddl.SelectedIndex = 3;
                     break;
-                case"QT5":
+                case "QT5":
                     this.QTypeddl.SelectedIndex = 4;
                     break;
                 case "QT6":
                     this.QTypeddl.SelectedIndex = 5;
                     break;
             }
-            if (QMustKeyIn =="Y")
+            if (QMustKeyIn == "Y")
             {
                 this.QMustKeyIn.Checked = true;
             }
@@ -290,5 +293,7 @@ namespace SuverySystem.SystemAdmin
                 this.txtAnswer.Text = QuestionTemplateItemName;
             }
         }
+        #endregion
+
     }
 }

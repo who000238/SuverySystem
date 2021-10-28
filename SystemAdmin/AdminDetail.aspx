@@ -152,6 +152,7 @@
                     },
                     success: function (result) {
                         alert('刪除成功');
+                        history.go(0);
                     }
                 });
             });
@@ -192,16 +193,16 @@
                         var htmlText =
                             `<tr>
                                     <td  style="width:5%">
-                                            <input type="hidden" class="hfRowID" value="${obj.QuestionNo}"/>
+                                            <input type="hidden" class="hfRowID" value="${i}"/>
                                             <input type="button" class="btnDelete" value="刪除"/>
                                     </td>
                                     <td  style="width:5%">
-                                            <span>${obj.QuestionNo}</span>
+                                            <span>${i+1}</span>
                                     </td>
                                     <td  style="width:50%">${obj.DetailTitle}</td>
                                     <td  style="width:25%">${obj.DetailType}</td>
                                     <td  style="width:5%">
-                                            <input type="checkbox" name="name" checked="${obj.DetailMustKeyin}"/>
+                                            <span>${obj.DetailMustKeyin}</span>
                                     </td>
                                     <td  style="width:10%">
                                             <input type="hidden" class="hfRowID" value="${obj.QuestionNo}"/>

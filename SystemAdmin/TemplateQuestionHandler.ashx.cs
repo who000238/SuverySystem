@@ -207,7 +207,10 @@ namespace SuverySystem.SystemAdmin
                         break;
                 }
                 string DetailMustKeyin;
-                if (context.Request.Form["DetailMustKeyin"] == "true")
+                //
+                var temp = context.Request.Form["DetailMustKeyin"];
+                //
+                    if (context.Request.Form["DetailMustKeyin"] == "Y")
                 {
                     DetailMustKeyin = "Y";
                 }
@@ -227,7 +230,7 @@ namespace SuverySystem.SystemAdmin
                         SuveryID = SuveryID,
                         DetailTitle = DetailTitle,
                         DetailType = DetailType,
-                        DetailMustKeyin = ((DetailMustKeyin == "Y") ? "checked" : null),
+                        DetailMustKeyin = ((DetailMustKeyin == "Y") ? "Yes" : "No"),
                         ItemName = ItemName
                     };
                     List<QuestionDetailModel> list = new List<QuestionDetailModel>();
@@ -243,7 +246,7 @@ namespace SuverySystem.SystemAdmin
                         SuveryID = SuveryID,
                         DetailTitle = DetailTitle,
                         DetailType = DetailType,
-                        DetailMustKeyin = ((DetailMustKeyin == "Y") ? "checked" : null),
+                        DetailMustKeyin = ((DetailMustKeyin == "Y") ? "Yes" : "No"),
                         ItemName = ItemName
                     };
                     List<QuestionDetailModel> list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
@@ -259,8 +262,7 @@ namespace SuverySystem.SystemAdmin
                 string rowID = context.Request.Form["ID"];
                 int id = Convert.ToInt32(rowID);
                 List<QuestionDetailModel> list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
-                int i = list.Count;
-                list.RemoveAt(id - 1);
+                list.RemoveAt(id);
 
                 HttpContext.Current.Session["QuestionDetail"] = list;
 
