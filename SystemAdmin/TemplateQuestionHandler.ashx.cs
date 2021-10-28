@@ -271,8 +271,49 @@ namespace SuverySystem.SystemAdmin
                 }
 
             }
-            else
+            else if  (actionName == "query")
             {
+                string rowID = context.Request.Form["ID"];
+                int id = Convert.ToInt32(rowID);
+                List<QuestionDetailModel> list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
+
+                //QuestionDetailModel model = list[id - 1];
+                QuestionDetailModel model = new QuestionDetailModel();
+                model.DetailTitle = list[id - 1].DetailTitle;
+                var QType = list[id - 1].DetailType;
+                switch (QType)
+                {
+                    case "文字方塊(文字)":
+                        QType = "QT1";
+                        break;
+                    case "文字方塊(數字)":
+                        QType = "QT2";
+                        break;
+                    case "文字方塊(E-Mail)":
+                        QType = "QT3";
+                        break;
+                    case "文字方塊(日期)":
+                        QType = "QT4";
+                        break;
+                    case "單選方塊":
+                        QType = "QT5";
+                        break;
+                    case "多選方塊":
+                        QType = "QT6";
+                        break;
+                }
+                model.DetailType = QType;
+                model.DetailMustKeyin = list[id - 1].DetailMustKeyin;
+                if (list[id - 1].ItemName != "")
+                {
+                    model.ItemName = list[id - 1].ItemName;
+                }
+                string jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+                context.Response.ContentType = "application/json";
+                context.Response.Write(jsonText);
+            }
+            else
+                    {
                 context.Response.StatusCode = 404;
                 context.Response.ContentType = "text/plain";
                 context.Response.Write("Error");

@@ -153,6 +153,26 @@
                 });
             });
 
+            $(document).on("click", ".btnUpdate", function () {
+                var td = $(this).closest("td");
+                var hf = td.find("input.hfRowID");
+
+                var rowID = hf.val();
+                $.ajax({
+                    url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=query",
+                    type: "POST",
+                    data: {
+                        "ID": rowID,
+                    },
+                    success: function (result) {
+                        alert(result["DetailTitle"]);
+                        alert(result["DetailType"]);
+                        $("#ContentPlaceHolder1_txtQuestion").val(result["DetailTitle"]);
+                        $("#ContentPlaceHolder1_QTypeddl").val(result["DetailType"]);
+                    }
+                });
+            });
+
 
             var SuveryID = $("#hfSuveryID").val();
             $.ajax({
@@ -181,7 +201,7 @@
                                     </td>
                                     <td  style="width:10%">
                                             <input type="hidden" class="hfRowID" value="${obj.QuestionNo}"/>
-                                            <input type="button" name="Update" value="編輯" />
+                                            <input type="button" class="btnUpdate" value="編輯" />
                                     </td>
                             </tr>`;
                         table += htmlText;

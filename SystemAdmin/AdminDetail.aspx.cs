@@ -20,11 +20,15 @@ namespace SuverySystem.SystemAdmin
             this.hfSuveryID.Value = SuveryID;
 
             var QuestionTemplateDT = GetQuestionTemplate();
-            for (int i = 0; i < QuestionTemplateDT.Rows.Count; i++)
+            if (!IsPostBack)
             {
-                var QuestionTemplateDR = QuestionTemplateDT.Rows[i];
-                this.TemplateQddl.Items.Add(QuestionTemplateDR["QuestionTemplateName"].ToString());
+                for (int i = 0; i < QuestionTemplateDT.Rows.Count; i++)
+                {
+                    var QuestionTemplateDR = QuestionTemplateDT.Rows[i];
+                    this.TemplateQddl.Items.Add(QuestionTemplateDR["QuestionTemplateName"].ToString());
+                }
             }
+        
             //if (HttpContext.Current.Session["QuestionDetail"] != null)
             //{
             //    Response.Write("<script>alert('QuestionDetail is exist !')</script>");
@@ -144,7 +148,9 @@ namespace SuverySystem.SystemAdmin
 
         protected void btnSubmit2_Click(object sender, EventArgs e)
         {
-
+            var list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
+            var count = list.Count;
+            Response.Write($"<script>alert('{count}')</script>");
         }
 
         protected void QTypeddl_SelectedIndexChanged(object sender, EventArgs e)
