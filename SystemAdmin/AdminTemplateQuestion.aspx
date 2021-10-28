@@ -33,7 +33,7 @@
             <ItemTemplate>
                 <div class="row">
                     <div class="col-1">
-                        <asp:HiddenField ID="HiddenField1" runat="server"/>
+                        <input type="hidden" name="hfRowID" value="<%# Eval("QuestionTemplateNo") %>" />
                         <asp:Button Text="刪除" runat="server" OnClick="btnDelete_Click" OnClientClick="javascript:return confirm('確定刪除？')"/>
                     </div>
                     <div class="col-1"><%# Eval("QuestionTemplateNo") %></div>

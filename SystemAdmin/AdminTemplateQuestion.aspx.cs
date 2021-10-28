@@ -51,9 +51,12 @@ namespace SuverySystem.SystemAdmin
                 model.QuestionTemplateMustKeyIn = dr["QuestionTemplateMustKeyIn"].ToString();
                 list.Add(model);
             }
-         
+            if (!IsPostBack)
+            {
+
             this.Repeater1.DataSource = list;
             this.Repeater1.DataBind();
+            }
         }
 
         protected void dllQuestionType_SelectedIndexChanged(object sender, EventArgs e)
@@ -73,27 +76,7 @@ namespace SuverySystem.SystemAdmin
 
             string txtQName = this.txtQuestionName.Text;
             string txtQType = this.ddlQuestionType.SelectedItem.Value;
-            //switch (txtQType)
-            //{
-            //    case "QT1":
-            //        txtQType = "文字方塊-文字";
-            //        break;
-            //    case "QT2":
-            //        txtQType = "文字方塊-數字";
-            //        break;
-            //    case "QT3":
-            //        txtQType = "文字方塊-E-Mail";
-            //        break;
-            //    case "QT4":
-            //        txtQType = "文字方塊-日期";
-            //        break;
-            //    case "QT5":
-            //        txtQType = "單選方塊";
-            //        break;
-            //    case "QT6":
-            //        txtQType = "多選方塊";
-            //        break;
-            //}
+
             string txtMustKeyIn = string.Empty;
             if (this.MustKeyIn.Checked == true)
             {
@@ -209,7 +192,8 @@ namespace SuverySystem.SystemAdmin
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-
+            var rowID = this.Request.Form["hfRowID"];
+            Response.Write($"<script>alert('{rowID}')</script>");
         }
     }
 }
