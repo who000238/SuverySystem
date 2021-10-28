@@ -207,7 +207,6 @@ namespace SuverySystem.SystemAdmin
                         break;
                 }
                 string DetailMustKeyin;
-                var temp = context.Request.Form["DetailMustKeyin"];
                 if (context.Request.Form["DetailMustKeyin"] == "true")
                 {
                     DetailMustKeyin = "Y";
@@ -219,16 +218,18 @@ namespace SuverySystem.SystemAdmin
                 string ItemName = context.Request.Form["ItemName"];
 
 
-                QuestionDetailModel model = new QuestionDetailModel()
-                {
-                    SuveryID = SuveryID,
-                    DetailTitle = DetailTitle,
-                    DetailType = DetailType,
-                    DetailMustKeyin = DetailMustKeyin == "Y" ? "checked" : "",
-                    ItemName = ItemName
-                };
+
+
                 if (HttpContext.Current.Session["QuestionDetail"] == null)
                 {
+                    QuestionDetailModel model = new QuestionDetailModel()
+                    {
+                        SuveryID = SuveryID,
+                        DetailTitle = DetailTitle,
+                        DetailType = DetailType,
+                        DetailMustKeyin = ((DetailMustKeyin == "Y") ? "checked" : null),
+                        ItemName = ItemName
+                    };
                     List<QuestionDetailModel> list = new List<QuestionDetailModel>();
                     model.QuestionNo = list.Count + 1;
                     list.Add(model);
@@ -237,6 +238,14 @@ namespace SuverySystem.SystemAdmin
                 }
                 else
                 {
+                    QuestionDetailModel model = new QuestionDetailModel()
+                    {
+                        SuveryID = SuveryID,
+                        DetailTitle = DetailTitle,
+                        DetailType = DetailType,
+                        DetailMustKeyin = ((DetailMustKeyin == "Y") ? "checked" : null),
+                        ItemName = ItemName
+                    };
                     List<QuestionDetailModel> list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
                     model.QuestionNo = list.Count + 1;
                     list.Add(model);
@@ -252,6 +261,9 @@ namespace SuverySystem.SystemAdmin
                 List<QuestionDetailModel> list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
                 int i = list.Count;
                 list.RemoveAt(id - 1);
+
+                HttpContext.Current.Session["QuestionDetail"] = list;
+
 
                 string jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(list);
                 context.Response.ContentType = "application/json";
@@ -271,7 +283,7 @@ namespace SuverySystem.SystemAdmin
                 }
 
             }
-            else if  (actionName == "query")
+            else if (actionName == "query")
             {
                 string rowID = context.Request.Form["ID"];
                 int id = Convert.ToInt32(rowID);
@@ -313,13 +325,12 @@ namespace SuverySystem.SystemAdmin
                 context.Response.Write(jsonText);
             }
             else
-                    {
+            {
                 context.Response.StatusCode = 404;
                 context.Response.ContentType = "text/plain";
                 context.Response.Write("Error");
                 context.Response.End();
             }
-
         }
 
         public bool IsReusable

@@ -15,26 +15,22 @@ namespace SuverySystem.SystemAdmin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            this.txtAnswer.Enabled = false;
-            string SuveryID = Request.QueryString["ID"].ToString();
-            this.hfSuveryID.Value = SuveryID;
+         
+                this.txtAnswer.Enabled = false;
+                string SuveryID = Request.QueryString["ID"].ToString();
+                this.hfSuveryID.Value = SuveryID;
 
-            var QuestionTemplateDT = GetQuestionTemplate();
-            if (!IsPostBack)
-            {
-                for (int i = 0; i < QuestionTemplateDT.Rows.Count; i++)
+                var QuestionTemplateDT = GetQuestionTemplate();
+                if (!IsPostBack)
                 {
-                    var QuestionTemplateDR = QuestionTemplateDT.Rows[i];
-                    this.TemplateQddl.Items.Add(QuestionTemplateDR["QuestionTemplateName"].ToString());
+                    for (int i = 0; i < QuestionTemplateDT.Rows.Count; i++)
+                    {
+                        var QuestionTemplateDR = QuestionTemplateDT.Rows[i];
+                        this.TemplateQddl.Items.Add(QuestionTemplateDR["QuestionTemplateName"].ToString());
+                    }
                 }
-            }
-        
-            //if (HttpContext.Current.Session["QuestionDetail"] != null)
-            //{
-            //    Response.Write("<script>alert('QuestionDetail is exist !')</script>");
-            //}
-            //else
-            //    Response.Write("<script>alert('QuestionDetail is null !')</script>");
+         
+      
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)
@@ -80,59 +76,59 @@ namespace SuverySystem.SystemAdmin
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
-            string guidString = Request.QueryString["ID"];
-            string QuestionTitle = this.txtQuestion.Text;
-            string QuestionType = this.QTypeddl.SelectedValue;
-            string QuestionIsMustKeyIn;
-            if (this.QMustKeyIn.Checked)
-                QuestionIsMustKeyIn = "Y";
-            else
-                QuestionIsMustKeyIn = "N";
-            string ItemName = string.Empty;
-            string QuestionDetail;
-            if (QuestionType == "QT5" || QuestionType == "QT6")
-            {
-                ItemName = this.txtAnswer.Text;
-            }
-            if (string.IsNullOrEmpty(ItemName))
-                QuestionDetail = QuestionTitle + QuestionType + QuestionIsMustKeyIn;
-            else
-                QuestionDetail = QuestionTitle + QuestionType + QuestionIsMustKeyIn + ItemName;
+            //string guidString = Request.QueryString["ID"];
+            //string QuestionTitle = this.txtQuestion.Text;
+            //string QuestionType = this.QTypeddl.SelectedValue;
+            //string QuestionIsMustKeyIn;
+            //if (this.QMustKeyIn.Checked)
+            //    QuestionIsMustKeyIn = "Y";
+            //else
+            //    QuestionIsMustKeyIn = "N";
+            //string ItemName = string.Empty;
+            //string QuestionDetail;
+            //if (QuestionType == "QT5" || QuestionType == "QT6")
+            //{
+            //    ItemName = this.txtAnswer.Text;
+            //}
+            //if (string.IsNullOrEmpty(ItemName))
+            //    QuestionDetail = QuestionTitle + QuestionType + QuestionIsMustKeyIn;
+            //else
+            //    QuestionDetail = QuestionTitle + QuestionType + QuestionIsMustKeyIn + ItemName;
 
      
-            if (HttpContext.Current.Session["QuestionDetail"] == null)
-            {
-                QuestionDetailModel model = new QuestionDetailModel()
-                {
-                    SuveryID = guidString,
-                    DetailTitle = QuestionTitle,
-                    DetailType = QuestionType,
-                    DetailMustKeyin = QuestionIsMustKeyIn,
-                    ItemName = ItemName
-                };
-                List<QuestionDetailModel> list = new List<QuestionDetailModel>();
-                list.Add(model);
-                HttpContext.Current.Session["QuestionDetail"] = list;
-            }
-            else
-            {
-                List<QuestionDetailModel> sourceList = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
+            //if (HttpContext.Current.Session["QuestionDetail"] == null)
+            //{
+            //    QuestionDetailModel model = new QuestionDetailModel()
+            //    {
+            //        SuveryID = guidString,
+            //        DetailTitle = QuestionTitle,
+            //        DetailType = QuestionType,
+            //        DetailMustKeyin = QuestionIsMustKeyIn,
+            //        ItemName = ItemName
+            //    };
+            //    List<QuestionDetailModel> list = new List<QuestionDetailModel>();
+            //    list.Add(model);
+            //    HttpContext.Current.Session["QuestionDetail"] = list;
+            //}
+            //else
+            //{
+            //    List<QuestionDetailModel> sourceList = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
 
-                QuestionDetailModel model = new QuestionDetailModel()
-                {
-                    SuveryID = guidString,
-                    DetailTitle = QuestionTitle,
-                    DetailType = QuestionType,
-                    DetailMustKeyin = QuestionIsMustKeyIn,
-                    ItemName = ItemName
-                };
+            //    QuestionDetailModel model = new QuestionDetailModel()
+            //    {
+            //        SuveryID = guidString,
+            //        DetailTitle = QuestionTitle,
+            //        DetailType = QuestionType,
+            //        DetailMustKeyin = QuestionIsMustKeyIn,
+            //        ItemName = ItemName
+            //    };
 
 
-                List<QuestionDetailModel> list = new List<QuestionDetailModel>();
-                list.Add(model);
-                HttpContext.Current.Session["QuestionDetail"] = sourceList;
+            //    List<QuestionDetailModel> list = new List<QuestionDetailModel>();
+            //    list.Add(model);
+            //    HttpContext.Current.Session["QuestionDetail"] = sourceList;
 
-            }
+            //}
 
         }
 
@@ -153,16 +149,7 @@ namespace SuverySystem.SystemAdmin
             Response.Write($"<script>alert('{count}')</script>");
         }
 
-        protected void QTypeddl_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (this.QTypeddl.SelectedItem.Value == "QT5" || this.QTypeddl.SelectedItem.Value == "QT6")
-                this.txtAnswer.Enabled = true;
-            else
-            {
-                this.txtAnswer.Text = string.Empty;
-                this.txtAnswer.Enabled = false;
-            }
-        }
+  
 
 
         #region Method
@@ -244,7 +231,16 @@ namespace SuverySystem.SystemAdmin
         }
         #endregion
 
-
+        protected void QTypeddl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.QTypeddl.SelectedItem.Value == "QT5" || this.QTypeddl.SelectedItem.Value == "QT6")
+                this.txtAnswer.Enabled = true;
+            else
+            {
+                this.txtAnswer.Text = string.Empty;
+                this.txtAnswer.Enabled = false;
+            }
+        }
         protected void TemplateQddl_SelectedIndexChanged(object sender, EventArgs e)
         {
             string QuestionTemplateName = this.TemplateQddl.SelectedItem.Text;

@@ -121,6 +121,7 @@
                 }
                 var ItemName = $("#ContentPlaceHolder1_txtAnswer").val();
                 $.ajax({
+                    async: false,
                     url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=Create",
                     type: "POST",
                     data: {
@@ -134,6 +135,8 @@
                     success: function (result) {
                     }
                 });
+
+
             });
 
             $(document).on("click", ".btnDelete", function () {
@@ -159,6 +162,7 @@
 
                 var rowID = hf.val();
                 $.ajax({
+                    async: false,
                     url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=query",
                     type: "POST",
                     data: {
@@ -173,12 +177,12 @@
                 });
             });
 
-
-            var SuveryID = $("#hfSuveryID").val();
             $.ajax({
+                async: false,
                 url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=Load",
                 type: "GET",
                 data: {},
+
                 success: function (result) {
 
                     var table = '<table class="table table-striped table-hover" id="QuestionTable">';
