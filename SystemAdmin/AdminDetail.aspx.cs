@@ -37,13 +37,14 @@ namespace SuverySystem.SystemAdmin
                 {
                     UserInfoModel userInfoModel = new UserInfoModel();
                     var dr = UserInfoDT.Rows[i];
-                    userInfoModel.No = i + 1;
+                    userInfoModel.No = UserInfoDT.Rows.Count-i;
                     userInfoModel.SuveryID = dr["SuveryID"].ToString();
                     string UserInfoString = dr["UserInfo"].ToString();
+                    userInfoModel.UserInfoString = UserInfoString;
                     var UserInfoArray = UserInfoString.Split(',');
                     userInfoModel.UserInfoName = UserInfoArray[0];
                     DateTime createDate = (DateTime)dr["CreateTime"];
-                    userInfoModel.CreateTimeString = createDate.ToString("yyyy-MM-dd");
+                    userInfoModel.CreateTimeString = createDate.ToString("yyyy-MM-dd hh:mm");
 
                     list.Add(userInfoModel);
                 }
@@ -303,6 +304,7 @@ namespace SuverySystem.SystemAdmin
                 @" 
                     SELECT * FROM [SuverySystem].[dbo].[UserInfo]
                     WHERE [SuveryID] = @SuveryID
+                    ORDER BY [No] DESC
                 ";
             List<SqlParameter> list = new List<SqlParameter>();
             list.Add(new SqlParameter("@SuveryID", guid));

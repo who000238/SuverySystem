@@ -10,6 +10,8 @@ namespace SuverySystem.Models
         public int No { get; set; }
         public string SuveryID { get; set; }
         public string UserInfoName { get; set; }
+        public string UserInfoString { get; set; }
+
         public string CreateTimeString { get; set; }
     }
 }

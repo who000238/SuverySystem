@@ -123,6 +123,7 @@
     <Content Include="SystemAdmin\AdminDetail.aspx" />
     <Content Include="SystemAdmin\AdminList.aspx" />
     <Content Include="SystemAdmin\AdminTemplateQuestion.aspx" />
+    <Content Include="SystemAdmin\SeeAnswerDetail.aspx" />
     <Content Include="Test.aspx" />
     <Content Include="TryConfirmPage.aspx" />
     <Content Include="TryForm.aspx" />
@@ -179,6 +180,13 @@
     </Compile>
     <Compile Include="SystemAdmin\AdminList.aspx.designer.cs">
       <DependentUpon>AdminList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemAdmin\SeeAnswerDetail.aspx.cs">
+      <DependentUpon>SeeAnswerDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemAdmin\SeeAnswerDetail.aspx.designer.cs">
+      <DependentUpon>SeeAnswerDetail.aspx</DependentUpon>
     </Compile>
     <Compile Include="SystemAdmin\SysterAdmin.Master.cs">
       <DependentUpon>SysterAdmin.Master</DependentUpon>

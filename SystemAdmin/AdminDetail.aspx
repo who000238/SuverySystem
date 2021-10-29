@@ -60,7 +60,7 @@
             <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                 <ContentTemplate>
                     回答<asp:TextBox ID="txtAnswer" runat="server"></asp:TextBox>
-                    (多個答案以，分隔)
+                    (多個答案以，分隔 最多四個)
 
                 </ContentTemplate>
                 <Triggers>
@@ -95,7 +95,9 @@
                             <div class="col-1"><%#Eval("No") %></div>
                             <div class="col-4"><%#Eval("UserInfoName") %></div>
                             <div class="col-5"><%#Eval("CreateTimeString") %></div>
-                            <div class="col-2"><%#Eval("No") %></div>
+                            <div class="col-2">
+                                <a href="/SystemAdmin/SeeAnswerDetail.aspx?ID=<%#Eval("SuveryID") %>&UserInfo=<%# Eval("UserInfoString") %>">前往</a>
+                            </div>
                         </div>
                     </ItemTemplate>
                 </asp:Repeater>
