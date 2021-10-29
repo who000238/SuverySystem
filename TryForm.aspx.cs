@@ -205,10 +205,12 @@ namespace SuverySystem
                             var inpList = HttpContext.Current.Request.Form.GetValues($"{ControlName}");
                             string[] list = inpList ?? new string[] { };
                             //if(list.Length != 0)
-                            if (list != null)
-                            {
-                                tempAnswer = tempAnswer + string.Join("&", list);
-                            }
+                            //if (list != null)
+                            //{
+                            //tempAnswer = tempAnswer + list[0] + " ";
+                            tempAnswer = tempAnswer + string.Join("&", list);
+                            //tempAnswer = string.Join("&", list);
+                            //}
                         }
                         AnswerArray[i] = tempAnswer;
                         break;
