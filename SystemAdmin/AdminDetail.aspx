@@ -80,26 +80,26 @@
             <asp:Button ID="btnSubmit2" runat="server" Text="送出" OnClick="btnSubmit2_Click" />
         </div>
         <div id="tabs-3">
-            <asp:Repeater ID="Repeater2" runat="server">
-                <HeaderTemplate>
-                    <div class="row">
-                        <div>
-                            <div class="col-1">編號</div>
-                            <div class="col-4">姓名</div>
-                            <div class="col-5">填寫時間</div>
-                            <div class="col-2">觀看細節</div>
+            <div class="row">
+                <asp:Repeater ID="Repeater2" runat="server">
+                    <HeaderTemplate>
+                        <div class="row">
+                                <div class="col-1">編號</div>
+                                <div class="col-4">姓名</div>
+                                <div class="col-5">填寫時間</div>
+                                <div class="col-2">觀看細節</div>
                         </div>
-                    </div>
-                </HeaderTemplate>
-                <ItemTemplate>
-                    <div class="row">
-                        <div class="col-1">#</div>
-                        <div class="col-4">姓名</div>
-                        <div class="col-5">填寫時間</div>
-                        <div class="col-2">觀看細節</div>
-                    </div>
-                </ItemTemplate>
-            </asp:Repeater>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <div class="row">
+                            <div class="col-1"><%#Eval("No") %></div>
+                            <div class="col-4"><%#Eval("UserInfoName") %></div>
+                            <div class="col-5"><%#Eval("CreateTimeString") %></div>
+                            <div class="col-2"><%#Eval("No") %></div>
+                        </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </div>
         </div>
         <div id="tabs-4">
             <span>統計頁面</span>
@@ -197,7 +197,7 @@
                                             <input type="button" class="btnDelete" value="刪除"/>
                                     </td>
                                     <td  style="width:5%">
-                                            <span>${i+1}</span>
+                                            <span>${i + 1}</span>
                                     </td>
                                     <td  style="width:50%">${obj.DetailTitle}</td>
                                     <td  style="width:25%">${obj.DetailType}</td>

@@ -18,16 +18,37 @@ namespace SuverySystem.SystemAdmin
 
             this.txtAnswer.Enabled = false;
             string SuveryID = Request.QueryString["ID"].ToString();
+            Guid guid = Guid.Parse(SuveryID);
             this.hfSuveryID.Value = SuveryID;
-
+            // 常用問題下拉式選單DataSource
             var QuestionTemplateDT = GetQuestionTemplate();
+            // 觀看問卷填寫細節頁面Repeater DataSource
+            var UserInfoDT = GetUserInfoForSeeDetail(guid);
             if (!IsPostBack)
             {
+                //系結常用問題下拉式選單
                 for (int i = 0; i < QuestionTemplateDT.Rows.Count; i++)
                 {
                     var QuestionTemplateDR = QuestionTemplateDT.Rows[i];
                     this.TemplateQddl.Items.Add(QuestionTemplateDR["QuestionTemplateName"].ToString());
                 }
+                List<UserInfoModel> list = new List<UserInfoModel>();
+                for (int i = 0; i < UserInfoDT.Rows.Count; i++)
+                {
+                    UserInfoModel userInfoModel = new UserInfoModel();
+                    var dr = UserInfoDT.Rows[i];
+                    userInfoModel.No = i + 1;
+                    userInfoModel.SuveryID = dr["SuveryID"].ToString();
+                    string UserInfoString = dr["UserInfo"].ToString();
+                    var UserInfoArray = UserInfoString.Split(',');
+                    userInfoModel.UserInfoName = UserInfoArray[0];
+                    DateTime createDate = (DateTime)dr["CreateTime"];
+                    userInfoModel.CreateTimeString = createDate.ToString("yyyy-MM-dd");
+
+                    list.Add(userInfoModel);
+                }
+                this.Repeater2.DataSource = list;
+                this.Repeater2.DataBind();
             }
 
 
@@ -233,7 +254,7 @@ namespace SuverySystem.SystemAdmin
 
 
         #region Method
-        #region CreateQuestionItem(多載方法)
+        #region CreateQuestionItem(多載方法??)
         public static void CreateQuestionItem(int DetailID, Guid SuveryID, string Item1, string Item2, string Item3, string Item4, int ItemCount)
         {
             string connectionString = DBHelper.GetConnectionString();
@@ -274,6 +295,29 @@ namespace SuverySystem.SystemAdmin
             }
         }
         #endregion
+        
+        public static DataTable GetUserInfoForSeeDetail(Guid guid)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                @" 
+                    SELECT * FROM [SuverySystem].[dbo].[UserInfo]
+                    WHERE [SuveryID] = @SuveryID
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@SuveryID", guid));
+
+            try
+            {
+                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        } 
+
         public static int GetQuestionDetailID(Guid SuveryID, string DetailTitle)
         {
             string connectionString = DBHelper.GetConnectionString();

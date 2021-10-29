@@ -157,6 +157,7 @@
     </Compile>
     <Compile Include="Models\QuestionDetailModel.cs" />
     <Compile Include="Models\QuestionTemplateModel.cs" />
+    <Compile Include="Models\UserInfoModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Statistic.aspx.cs">
       <DependentUpon>Statistic.aspx</DependentUpon>
