@@ -35,6 +35,15 @@
                 <div class="col-12">
                     <asp:Literal ID="ltlInnerText" runat="server"></asp:Literal>
                 </div>
+                <div class="col-12" runat="server" id="UserInformation">
+                    <span>個人資料填寫區</span><br />
+                    <asp:TextBox runat="server" id="UserName" placeholder="姓名" TextMode="SingleLine"  required="required" aria-required="true"/><br />
+                    <asp:TextBox runat="server" id="UserPhone" placeholder="電話" TextMode="Phone" required="required" aria-required="true" /><br />
+                    <asp:TextBox runat="server" id="UserMail" placeholder="E-Mail" TextMode="Email" required="required" aria-required="true" /><br />
+                    <asp:TextBox runat="server" id="UserAge" placeholder="年齡" TextMode="Number" required="required" aria-required="true" />
+
+
+                </div>
                 <div class="col-12" runat="server" id="QuestionArea">
                     <span>問題區</span><br />
                 </div>

@@ -44,6 +44,34 @@ namespace SuverySystem
                     lblTitle.Text = "</br>" + QuestionDetailDR["DetailTitle"].ToString();
                     this.QuestionArea.Controls.Add(lblTitle);
                     #endregion
+
+                    #region 問卷固定問題區
+                    //TextBox textbox = new TextBox();
+                    //for (int i = 1; i  <= 4; i++)
+                    //{
+                    //    textbox.ID = "UserInformation" +i.ToString();
+                    //    switch (i)
+                    //    {
+                    //        case 1:
+                    //            textbox.TextMode = TextBoxMode.SingleLine;
+                    //            break;
+                    //        case 2:
+                    //            textbox.TextMode = TextBoxMode.Number;
+                    //            break;
+                    //        case 3:
+                    //            textbox.TextMode = TextBoxMode.Email;
+                    //            break;
+                    //        case 4:
+                    //            textbox.TextMode = TextBoxMode.Number;
+                    //            break;
+                    //    }
+                    //    textbox.CssClass = "Answer MustKeyIn";
+                    //    this.UserInformation.Controls.Add(textbox);
+                    //}
+
+                    #endregion
+
+
                     string QuestionType = QuestionDetailDR["DetailType"].ToString();
                     string MustKeyIn = QuestionDetailDR["DetailMustKeyin"].ToString();
                     ///SQL語法有使用LEFT JOIN 需要判別欄位空值的問題
@@ -152,7 +180,19 @@ namespace SuverySystem
         {
             string StringGuid = Request.QueryString["ID"]; //取得問卷ID
             Guid guid = Guid.Parse(StringGuid);
+            // 取得基本必填欄位的值
+            string[] UserInfo = new string[]
+            {
+                this.UserName.Text,
+                this.UserPhone.Text,
+                this.UserMail.Text,
+                this.UserAge.Text
+            };
+            var UserInfoString = string.Join(",", UserInfo);
+            //Response.Write($"<script>alert('{UserInfoString}')</script>");
+            this.Session["UserInfo"] = UserInfoString;
 
+            //
             var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid); //取得問卷問題資料
             int QuestionCount = QuestionDetailDT.Rows.Count;                    //問卷共有幾個問題
             string[] AnswerArray = new string[QuestionCount];                     //依照共有幾個問題建構出一個陣列來放回傳值
