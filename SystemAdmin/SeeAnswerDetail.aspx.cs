@@ -37,7 +37,10 @@ namespace SuverySystem.SystemAdmin
                 this.AnswerPost.Controls.Add(lblForAnswer);
             }
         }
-
+        /// <summary>取得三張資料表內的內容分別是問題清單，選項清單，答案清單</summary>
+        /// <param name="guid"></param>
+        /// <param name="UserInfo"></param>
+        /// <returns></returns>
         public static  DataTable GetAnswerDetail(Guid guid,string UserInfo)
         {
             string connectionString = DBHelper.GetConnectionString();

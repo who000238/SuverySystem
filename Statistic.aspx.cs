@@ -170,36 +170,5 @@ namespace SuverySystem
             }
         }
         #endregion
-        //public static DataTable GetSuveryAnswerData(Guid guid)
-        //{
-        //    {
-        //        string connectionString = DBHelper.GetConnectionString();
-        //        string dbCommandString =
-        //                                     @" 
-        //                SELECT
-        //                 [dbo].[SuveryList].[Title],
-        //                 [dbo].[SuveryList].[Guid],
-        //                 [dbo].[SuveryData].[TypeOrder],
-        //                 [dbo].[SuveryData].[NameOrder],
-        //                 [dbo].[SuveryAnswer].[Answer]
-        //                FROM [dbo].[SuveryList]
-        //                JOIN[dbo].[SuveryData] ON[dbo].[SuveryList].[Guid] =  [dbo].[SuveryData].[Guid]
-        //                JOIN 	[dbo].[SuveryAnswer] ON [dbo].[SuveryList].[Guid] =	[dbo].[SuveryAnswer].[Guid]
-        //                WHERE[dbo].[SuveryList].[Guid]  = @Guid
-
-        //        ";
-        //        List<SqlParameter> list = new List<SqlParameter>();
-        //        list.Add(new SqlParameter("@Guid", guid));
-        //        try
-        //        {
-        //            return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Logger.WriteLog(ex);
-        //            return null;
-        //        }
-        //    }
-        //}
     }
 }

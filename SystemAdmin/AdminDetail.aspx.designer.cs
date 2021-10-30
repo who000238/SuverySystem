@@ -186,6 +186,15 @@ namespace SuverySystem.SystemAdmin
         protected global::System.Web.UI.WebControls.Button btnSubmit2;
 
         /// <summary>
+        /// btnCSVDownload 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCSVDownload;
+
+        /// <summary>
         /// Repeater2 控制項。
         /// </summary>
         /// <remarks>
@@ -193,5 +202,23 @@ namespace SuverySystem.SystemAdmin
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater Repeater2;
+
+        /// <summary>
+        /// h3Title 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl h3Title;
+
+        /// <summary>
+        /// StatisticArea 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl StatisticArea;
     }
 }

@@ -81,13 +81,14 @@
         </div>
         <div id="tabs-3">
             <div class="row">
+                <asp:Button Text="匯出" runat="server" ID="btnCSVDownload" OnClick="btnCSVDownload_Click" />
                 <asp:Repeater ID="Repeater2" runat="server">
                     <HeaderTemplate>
                         <div class="row">
-                                <div class="col-1">編號</div>
-                                <div class="col-4">姓名</div>
-                                <div class="col-5">填寫時間</div>
-                                <div class="col-2">觀看細節</div>
+                            <div class="col-1">編號</div>
+                            <div class="col-4">姓名</div>
+                            <div class="col-5">填寫時間</div>
+                            <div class="col-2">觀看細節</div>
                         </div>
                     </HeaderTemplate>
                     <ItemTemplate>
@@ -105,6 +106,10 @@
         </div>
         <div id="tabs-4">
             <span>統計頁面</span>
+            <div class="col-12">
+                <h3 runat="server" id="h3Title"></h3>
+            </div>
+            <div runat="server" id="StatisticArea"></div>
         </div>
     </div>
     <script>

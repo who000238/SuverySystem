@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -53,6 +55,59 @@ namespace SuverySystem.SystemAdmin
             }
 
 
+            #region 統計頁面區
+            //取得問卷標題
+            var SuveryDataRow = GetSuveryMasterData(guid);
+            this.h3Title.InnerText = SuveryDataRow["Title"].ToString();
+            //取得問卷問題標題
+            var SuveryQuestionTitleDT = GetQuestionDetailAndItemDetail(guid);
+            //列印問卷問題標題
+            for (int i = 0; i < SuveryQuestionTitleDT.Rows.Count; i++)
+            {
+                var QuestionDetailDR = SuveryQuestionTitleDT.Rows[i];
+                string QuestionTitle = QuestionDetailDR["DetailTitle"].ToString();
+                string QuestionType = QuestionDetailDR["DetailType"].ToString();
+                int ItemCount; //單多選項目總數
+                if (QuestionDetailDR["ItemCount"].ToString() == string.Empty)
+                    ItemCount = 0;
+                else
+                    ItemCount = (int)QuestionDetailDR["ItemCount"];
+                Label lblTitle = new Label(); //問題標題的lbl
+                switch (QuestionType)
+                {
+                    case "QT5":
+                        lblTitle.Text = QuestionTitle + "</br>";
+                        this.StatisticArea.Controls.Add(lblTitle);
+                        for (int j = 0; j < ItemCount; j++)
+                        {
+
+                            string ColName = "Item" + (j + 1).ToString();
+                            string ItemName = QuestionDetailDR[ColName].ToString();
+                            string ItemSelectedCount = GetItemSelectedCount(ItemName);
+                            Label lblItemTitle = new Label();
+                            lblItemTitle.Text = "&emsp;&emsp;" + ItemName + "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" + $"共 : {ItemSelectedCount} 人" + "</br>";
+                            this.StatisticArea.Controls.Add(lblItemTitle);
+                        }
+                        break;
+                    case "QT6":
+                        lblTitle.Text = QuestionTitle + "</br>";
+                        this.StatisticArea.Controls.Add(lblTitle);
+                        for (int j = 0; j < ItemCount; j++)
+                        {
+                            string ColName = "Item" + (j + 1).ToString();
+                            string ItemName = QuestionDetailDR[ColName].ToString();
+                            string ItemSelectedCount = GetItemSelectedCount(ItemName);
+                            Label lblItemTitle = new Label();
+                            lblItemTitle.Text = "&emsp;&emsp;" + ItemName + "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" + $"共 : {ItemSelectedCount} 人" + "</br>";
+                            this.StatisticArea.Controls.Add(lblItemTitle);
+                        }
+                        break;
+
+                }
+
+            }
+            #endregion
+
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)
@@ -85,9 +140,7 @@ namespace SuverySystem.SystemAdmin
                 //string SuveryMaster = SuveryTitle + "," + SuverySummary + "," + StartDate + "," + EndDate + "," + Status;
                 //this.Session["SuveryMaster"] = SuveryMaster;
                 //Response.Write($"<script>alert('{SuveryMaster}')</script>");
-
                 CreateNewSuvery(guid, SuveryTitle, SuverySummary, StartDate, EndDate, Status);
-
                 return;
             }
         }
@@ -449,6 +502,161 @@ namespace SuverySystem.SystemAdmin
                 return null;
             }
         }
+        #region 匯出CSV所需的Method
+        public static DataTable GetAnswerUserInfoCount(Guid guid)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                 @"
+                    SELECT 
+	                    UserInfo
+                      FROM 
+                      dbo.[AnswerDetail]
+                      WHERE  [AnswerDetail].[SuveryID]=@Guid
+                      GROUP BY dbo.[AnswerDetail].[UserInfo]
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@Guid", guid));
+            try
+            {
+                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
+        /// <summary>取得匯出CSV檔案需要的資料</summary>
+        /// <param name="guid"></param>
+        /// <param name="UserInfo"></param>
+        /// <returns></returns>
+
+        public static DataTable GetSingleUserAnswerDetail(string Userinfo)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                 @"
+                SELECT 
+	                [AnswerDetail].[UserInfo],
+	                [SuveryDetail].[DetailTitle],
+	                [AnswerDetail].[Answer]
+                  FROM 
+                  dbo.[AnswerDetail]
+                  JOIN dbo.[SuveryDetail] ON dbo.[AnswerDetail].DetailID =dbo.[SuveryDetail].[DetailID]
+                  WHERE  [AnswerDetail].[UserInfo]=@Userinfo
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@Userinfo", Userinfo));
+            try
+            {
+                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region 統計頁面區
+        /// <summary>取得問卷基本資料</summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        public static DataRow GetSuveryMasterData(Guid guid)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                 @" SELECT  * FROM [SuverySystem].[dbo].[SuveryMaster]
+                     WHERE SuveryID = @Guid
+                    
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@Guid", guid));
+            try
+            {
+                return DBHelper.ReadDataRow(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
+        //public static DataTable GetSuveryQuestionTItle (Guid guid)
+        //{
+        //    string connectionString = DBHelper.GetConnectionString();
+        //    string dbCommandString =
+        //         @" SELECT  * FROM 
+        //                    [SuverySystem].[dbo].[SuveryDetail]
+        //             WHERE [SuverySystem].[dbo].[SuveryDetail].[SuveryID] = @Guid
+        //            ORDER BY [SuverySystem].[dbo].[SuveryDetail].[DetailID]
+        //        ";
+        //    List<SqlParameter> list = new List<SqlParameter>();
+        //    list.Add(new SqlParameter("@Guid", guid));
+        //    try
+        //    {
+        //        return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.WriteLog(ex);
+        //        return null;
+        //    }
+        //}
+
+        //
+        public static DataTable GetQuestionDetailAndItemDetail(Guid guid)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                 @" SELECT  * FROM 
+                            [SuverySystem].[dbo].[SuveryDetail]
+					  LEFT JOIN 
+                            [SuverySystem].[dbo].[ItemDetail] 
+                        ON 
+                        [SuverySystem].[dbo].[SuveryDetail].[DetailID] =  [SuverySystem].[dbo].[ItemDetail].[DetailID]
+                     WHERE [SuverySystem].[dbo].[SuveryDetail].[SuveryID] = @Guid
+                    ORDER BY [SuverySystem].[dbo].[SuveryDetail].[DetailID]
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@Guid", guid));
+            try
+            {
+                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
+        //
+        public static string GetItemSelectedCount(string ItemName)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                          @" SELECT COUNT([SuverySystem].[dbo].[AnswerDetail].[Answer]) AS SelectedCount
+                                FROM  AnswerDetail 
+                            WHERE Answer LIKE @ItemName
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@ItemName", "%" + ItemName + "%"));
+            try
+            {
+                var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
+                string ItemSelectedCount = dr["SelectedCount"].ToString();
+                return ItemSelectedCount;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
+        #endregion
         #endregion
         #region DDL_SelectedIndexChange
         protected void QTypeddl_SelectedIndexChanged(object sender, EventArgs e)
@@ -512,5 +720,58 @@ namespace SuverySystem.SystemAdmin
         }
         #endregion
 
+        protected void btnCSVDownload_Click(object sender, EventArgs e)
+        {
+            string SuveryID = Request.QueryString["ID"].ToString();
+            Guid guid = Guid.Parse(SuveryID);
+
+            List<CSVDownloadModel> CSVlist = new List<CSVDownloadModel>();
+
+
+            var UserInfoDT = GetAnswerUserInfoCount(guid);
+            for (int i = 0; i < UserInfoDT.Rows.Count; i++)
+            {
+                CSVDownloadModel model = new CSVDownloadModel();
+                //
+                string[] tempArray = new string[UserInfoDT.Rows.Count];
+                //
+                var UserInfoDR = UserInfoDT.Rows[i];
+                string UserInfoString = UserInfoDR["UserInfo"].ToString();
+                var SingleUserAnswerDT = GetSingleUserAnswerDetail(UserInfoString);
+                string csvString = string.Empty;
+                csvString = "填表人資料 : "+UserInfoString;
+                for (int j = 0; j < SingleUserAnswerDT.Rows.Count; j++)
+                {
+                    var SingleAnswerDR = SingleUserAnswerDT.Rows[j];
+                    string QuestionAndAnswerString = string.Empty;
+                    csvString += "問題 : " +SingleAnswerDR["DetailTitle"].ToString() + "    " + "回答 : "+SingleAnswerDR["Answer"].ToString() +"    ";
+                    tempArray[i] = csvString;
+
+                }
+                model.CSVString = tempArray[i];
+                CSVlist.Add(model);
+            }
+            for (int i = 0; i < CSVlist.Count; i++)
+            {
+                var tempstring = CSVlist[i].CSVString.ToString();
+                Response.Write($"<script>alert('{tempstring}')</script>");
+            }
+
+            //
+            Response.Clear();
+            Response.ContentType = "text/comma-separated-values;charset=BIG5";
+            Response.AddHeader("content-disposition", "attachment; filename=檔名.csv");
+
+            StreamWriter sw = new StreamWriter(Response.OutputStream, Encoding.GetEncoding("BIG5"));
+            for (int i = 0; i < CSVlist.Count; i++)
+            {
+                sw.Write(CSVlist[i].CSVString.ToString() + "\r\n");
+            }
+            sw.WriteLine();
+            sw.Close();
+
+            Response.End();
+            //
+        }
     }
 }

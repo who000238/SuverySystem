@@ -156,6 +156,7 @@
     <Compile Include="List.aspx.designer.cs">
       <DependentUpon>List.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Models\CSVDownloadModel.cs" />
     <Compile Include="Models\QuestionDetailModel.cs" />
     <Compile Include="Models\QuestionTemplateModel.cs" />
     <Compile Include="Models\UserInfoModel.cs" />
