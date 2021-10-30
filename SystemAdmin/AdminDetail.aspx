@@ -70,7 +70,7 @@
 
 
 
-            <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" /><br />
+            <asp:Button ID="btnAdd" runat="server" Text="加入" /><br />
             <%--<asp:Button ID="btnDelete" runat="server" Text="刪除" OnClick="btnDelete_Click" />--%>
 
             <div runat="server" id="QuestionArea">

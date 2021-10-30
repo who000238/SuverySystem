@@ -89,7 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ConfirmPage.aspx" />
+    <Content Include="Test\ConfirmPage.aspx" />
     <Content Include="css\bootstrap-grid.css" />
     <Content Include="css\bootstrap-grid.min.css" />
     <Content Include="css\bootstrap-grid.rtl.css" />
@@ -106,7 +106,7 @@
     <Content Include="css\bootstrap.min.css" />
     <Content Include="css\bootstrap.rtl.css" />
     <Content Include="css\bootstrap.rtl.min.css" />
-    <Content Include="Form.aspx" />
+    <Content Include="Test\Form.aspx" />
     <Content Include="Global.asax" />
     <Content Include="js\bootstrap.bundle.js" />
     <Content Include="js\bootstrap.bundle.min.js" />
@@ -116,7 +116,7 @@
     <Content Include="js\bootstrap.min.js" />
     <Content Include="js\jquery-3.6.0.min.js" />
     <Content Include="js\WebForm1.js" />
-    <Content Include="List.aspx" />
+    <Content Include="Test\List.aspx" />
     <Content Include="Scripts\jQuery-min-3.6.0.js" />
     <Content Include="Scripts\WebForm1.js" />
     <Content Include="Statistic.aspx" />
@@ -124,7 +124,7 @@
     <Content Include="SystemAdmin\AdminList.aspx" />
     <Content Include="SystemAdmin\AdminTemplateQuestion.aspx" />
     <Content Include="SystemAdmin\SeeAnswerDetail.aspx" />
-    <Content Include="Test.aspx" />
+    <Content Include="Test\Test.aspx" />
     <Content Include="TryConfirmPage.aspx" />
     <Content Include="TryForm.aspx" />
     <Content Include="TryList.aspx" />
@@ -132,28 +132,28 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfirmPage.aspx.cs">
+    <Compile Include="Test\ConfirmPage.aspx.cs">
       <DependentUpon>ConfirmPage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ConfirmPage.aspx.designer.cs">
+    <Compile Include="Test\ConfirmPage.aspx.designer.cs">
       <DependentUpon>ConfirmPage.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Form.aspx.cs">
+    <Compile Include="Test\Form.aspx.cs">
       <DependentUpon>Form.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Form.aspx.designer.cs">
+    <Compile Include="Test\Form.aspx.designer.cs">
       <DependentUpon>Form.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="List.aspx.cs">
+    <Compile Include="Test\List.aspx.cs">
       <DependentUpon>List.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="List.aspx.designer.cs">
+    <Compile Include="Test\List.aspx.designer.cs">
       <DependentUpon>List.aspx</DependentUpon>
     </Compile>
     <Compile Include="Models\CSVDownloadModel.cs" />
@@ -206,11 +206,11 @@
     <Compile Include="SystemAdmin\TemplateQuestionHandler.ashx.cs">
       <DependentUpon>TemplateQuestionHandler.ashx</DependentUpon>
     </Compile>
-    <Compile Include="Test.aspx.cs">
+    <Compile Include="Test\Test.aspx.cs">
       <DependentUpon>Test.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Test.aspx.designer.cs">
+    <Compile Include="Test\Test.aspx.designer.cs">
       <DependentUpon>Test.aspx</DependentUpon>
     </Compile>
     <Compile Include="TryConfirmPage.aspx.cs">

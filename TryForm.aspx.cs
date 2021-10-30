@@ -148,8 +148,8 @@ namespace SuverySystem
 
         protected void btnCancle_Click(object sender, EventArgs e)
         {
-            Response.Redirect("TryList.aspx");
 
+            Response.Redirect("TryList.aspx");
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)

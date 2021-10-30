@@ -146,78 +146,13 @@ namespace SuverySystem.SystemAdmin
         }
         protected void btnCancle_Click(object sender, EventArgs e)
         {
-
-        }
-
-        protected void btnAdd_Click(object sender, EventArgs e)
-        {
-
-            //string guidString = Request.QueryString["ID"];
-            //string QuestionTitle = this.txtQuestion.Text;
-            //string QuestionType = this.QTypeddl.SelectedValue;
-            //string QuestionIsMustKeyIn;
-            //if (this.QMustKeyIn.Checked)
-            //    QuestionIsMustKeyIn = "Y";
-            //else
-            //    QuestionIsMustKeyIn = "N";
-            //string ItemName = string.Empty;
-            //string QuestionDetail;
-            //if (QuestionType == "QT5" || QuestionType == "QT6")
-            //{
-            //    ItemName = this.txtAnswer.Text;
-            //}
-            //if (string.IsNullOrEmpty(ItemName))
-            //    QuestionDetail = QuestionTitle + QuestionType + QuestionIsMustKeyIn;
-            //else
-            //    QuestionDetail = QuestionTitle + QuestionType + QuestionIsMustKeyIn + ItemName;
-
-
-            //if (HttpContext.Current.Session["QuestionDetail"] == null)
-            //{
-            //    QuestionDetailModel model = new QuestionDetailModel()
-            //    {
-            //        SuveryID = guidString,
-            //        DetailTitle = QuestionTitle,
-            //        DetailType = QuestionType,
-            //        DetailMustKeyin = QuestionIsMustKeyIn,
-            //        ItemName = ItemName
-            //    };
-            //    List<QuestionDetailModel> list = new List<QuestionDetailModel>();
-            //    list.Add(model);
-            //    HttpContext.Current.Session["QuestionDetail"] = list;
-            //}
-            //else
-            //{
-            //    List<QuestionDetailModel> sourceList = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
-
-            //    QuestionDetailModel model = new QuestionDetailModel()
-            //    {
-            //        SuveryID = guidString,
-            //        DetailTitle = QuestionTitle,
-            //        DetailType = QuestionType,
-            //        DetailMustKeyin = QuestionIsMustKeyIn,
-            //        ItemName = ItemName
-            //    };
-
-
-            //    List<QuestionDetailModel> list = new List<QuestionDetailModel>();
-            //    list.Add(model);
-            //    HttpContext.Current.Session["QuestionDetail"] = sourceList;
-
-            //}
-
-        }
-
-        protected void btnDelete_Click(object sender, EventArgs e)
-        {
-
+            Response.Redirect("AdminList.aspx");
         }
 
         protected void btnCancle2_Click(object sender, EventArgs e)
         {
-            List<QuestionDetailModel> list = (List<QuestionDetailModel>)this.Session["QuestionDetail"];
-            int count = list.Count;
-            Response.Write($"<script>alert('{count}'</script>");
+            Response.Redirect("AdminList.aspx");
+
         }
 
         protected void btnSubmit2_Click(object sender, EventArgs e)
