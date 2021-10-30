@@ -45,31 +45,7 @@ namespace SuverySystem
                     this.QuestionArea.Controls.Add(lblTitle);
                     #endregion
 
-                    #region 問卷固定問題區
-                    //TextBox textbox = new TextBox();
-                    //for (int i = 1; i  <= 4; i++)
-                    //{
-                    //    textbox.ID = "UserInformation" +i.ToString();
-                    //    switch (i)
-                    //    {
-                    //        case 1:
-                    //            textbox.TextMode = TextBoxMode.SingleLine;
-                    //            break;
-                    //        case 2:
-                    //            textbox.TextMode = TextBoxMode.Number;
-                    //            break;
-                    //        case 3:
-                    //            textbox.TextMode = TextBoxMode.Email;
-                    //            break;
-                    //        case 4:
-                    //            textbox.TextMode = TextBoxMode.Number;
-                    //            break;
-                    //    }
-                    //    textbox.CssClass = "Answer MustKeyIn";
-                    //    this.UserInformation.Controls.Add(textbox);
-                    //}
-
-                    #endregion
+           
 
 
                     string QuestionType = QuestionDetailDR["DetailType"].ToString();
