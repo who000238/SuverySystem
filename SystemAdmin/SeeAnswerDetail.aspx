@@ -9,7 +9,7 @@
         <asp:TextBox ID="tbEMail" runat="server" Enabled="false"></asp:TextBox>
         <asp:TextBox ID="tbAge" runat="server" Enabled="false"></asp:TextBox>
     </div>
-    <div class="row">
+    <div class="row" runat="server" id="AnswerPost"> 
 
     </div>
 </asp:Content>
