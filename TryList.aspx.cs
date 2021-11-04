@@ -19,26 +19,20 @@ namespace SuverySystem
             string txtEDate = Request.QueryString["EndDate"];
             DateTime SDate = Convert.ToDateTime(txtSDate);
             DateTime EDate = Convert.ToDateTime(txtEDate);
+
+
             //check QueryString is null or not
             if (string.IsNullOrEmpty(txtSreach) ||
                 string.IsNullOrEmpty(txtSDate) ||
                 string.IsNullOrEmpty(txtEDate))
             {
                 DateTime today = DateTime.Today;
-                //var dt = SuveryManager.GetSuveryList();
                 var dt = GetSuveryList();
                 // 測試日期字串轉換
-                //for (int i = 0; i < dt.Rows.Count; i++)
-                //{
-                //    var dr = dt.Rows[i];
-                //    DateTime tempSD = DateTime.Parse(dr["StartDate"].ToString());
-                //    DateTime tempED = DateTime.Parse(dr["EndDate"].ToString());
-                //    string SD = tempSD.ToString("yyyy-MM-dd");
-                //    string ED = tempED.ToString("yyyy-MM-dd");
-                //    dr["StartDate"] = SD;
-                //    dr["EndDate"] = ED;
-                //}
-                //
+
+
+
+
                 this.Repeater1.DataSource = dt;
                 this.Repeater1.DataBind();
 
@@ -61,11 +55,21 @@ namespace SuverySystem
             }
 
         }
+
+        public static string DateCompare(DateTime SDate, DateTime EDate)
+        {
+            if (DateTime.Compare(SDate, EDate) < 0)
+                return "true";
+            else if (DateTime.Compare(SDate, EDate) == 0)
+                return "Same Date";
+            else 
+                return "false"; 
+        }
         public static string CheckStatus(DateTime SDate, DateTime EDate)
         {
             DateTime Today = DateTime.Today;
-            if (DateTime.Compare(Today,SDate)>0||
-                DateTime.Compare(Today, SDate)==0)
+            if (DateTime.Compare(Today, SDate) > 0 ||
+                DateTime.Compare(Today, SDate) == 0)
             {
                 return "開放中";
             }
@@ -76,13 +80,15 @@ namespace SuverySystem
 
             }
             else
-            return "關閉中";
+                return "關閉中";
         }
         protected void btnSreach_Click(object sender, EventArgs e)
         {
             string txtSreach = this.txtSuveryTitle.Text;
             string txtSDate = this.txtStartDate.Text;
             string txtEDate = this.txtEndDate.Text;
+            DateTime SDate = Convert.ToDateTime(txtSDate);
+            DateTime EDate = Convert.ToDateTime(txtEDate);
             //check input empty or not
             if (string.IsNullOrEmpty(txtSreach) ||
                 string.IsNullOrEmpty(txtSDate) ||
@@ -91,9 +97,17 @@ namespace SuverySystem
                 Response.Write("<script>alert('請確認所有欄位都有輸入值!!')</script>");
                 return;
             }
+         
+            //chcek Date is OK or Not
+            string DateResult = DateCompare(SDate, EDate);
+            if (DateResult == "false")
+            {
+                Response.Write("<script>alert('日期格式有誤，請確認後再次輸入')</script>");
+                return;
+            }
 
-            DateTime SDate = Convert.ToDateTime(txtSDate);
-            DateTime EDate = Convert.ToDateTime(txtEDate);
+
+
 
             var dt = SearchSuvery(txtSreach, SDate, EDate);
             if (dt.Rows.Count > 0)
