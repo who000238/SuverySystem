@@ -7,9 +7,9 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
-      <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/bootstrap.css" />
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="js/bootstrap.js"></script>
     <script src="Scripts/jQuery-min-3.6.0.js"></script>
@@ -17,12 +17,20 @@
         div {
             border: 1px solid;
         }
+
+        a.disabled {
+            pointer-events: none;
+            cursor: default;
+            color:black;
+        }
     </style>
 </head>
 <body>
-     <form id="form1" runat="server">
+    <form id="form1" runat="server">
         <div class="container">
             <div><a href="SystemAdmin/AdminList.aspx">前往後台</a></div>
+            <div><a href="SystemAdmin/AdminList.aspx" class="disabled">前往後台</a></div>
+
             <h1>前台</h1>
             <div style="border: dashed 1px">
                 <asp:TextBox ID="txtSuveryTitle" runat="server" placeholder="問卷標題" Width="408px" TextMode="Search"></asp:TextBox><br />
@@ -45,18 +53,18 @@
                         </HeaderTemplate>
                         <ItemTemplate>
                             <div class="row">
-                                <div class="col-1"><%#Eval("SuveryNo") %></div>
-                                <div class="col-4"><a href="TryForm.aspx?ID=<%#Eval("SuveryID") %>"><%#Eval("Title") %></a></div>
-                                <div class="col-2"><%#(Eval("Status").ToString()=="N") ? "關閉中":"開放中" %></div>
-                                <div class="col-2"><%#Eval("StartDate") %></div>
-                                <div class="col-2"><%#Eval("EndDate") %></div>
+                                <div class="col-1"><%#Eval("No") %></div>
+                                <div class="col-4"><a href="TryForm.aspx?ID=<%#Eval("SuveryID") %>" class="<%#Eval("ClassName") %>"><%#Eval("Title") %></a></div>
+                                <div class="col-2"><%#Eval("Status") %></div>
+                                <div class="col-2"><%#Eval("SDate") %></div>
+                                <div class="col-2"><%#Eval("EDate") %></div>
                                 <div class="col-1"><a href="Statistic.aspx?ID=<%#Eval("SuveryID") %>">前往</a></div>
                             </div>
                         </ItemTemplate>
                     </asp:Repeater>
-                        <div style="background-color: orange; opacity: 0.8; text-align: center">
-                            <uc1:ucPager runat="server" id="ucPager"  PageSize="10" Url="/TryList.aspx"/>
-                        </div>
+                    <div style="background-color: orange; opacity: 0.8; text-align: center">
+                        <uc1:ucPager runat="server" ID="ucPager" PageSize="10" Url="/TryList.aspx" />
+                    </div>
                 </div>
             </div>
         </div>

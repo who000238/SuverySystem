@@ -58,7 +58,11 @@ namespace SuverySystem.SystemAdmin
             #region 統計頁面區
             //取得問卷標題
             var SuveryDataRow = GetSuveryMasterData(guid);
-            this.h3Title.InnerText = SuveryDataRow["Title"].ToString();
+            if(SuveryDataRow != null)
+            {
+                this.h3Title.InnerText = SuveryDataRow["Title"].ToString();
+
+            }
             //取得問卷問題標題
             var SuveryQuestionTitleDT = GetQuestionDetailAndItemDetail(guid);
             //列印問卷問題標題

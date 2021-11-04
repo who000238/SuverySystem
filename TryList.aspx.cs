@@ -1,4 +1,5 @@
 ﻿using DBSource;
+using SuverySystem.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -28,25 +29,64 @@ namespace SuverySystem
             {
                 DateTime today = DateTime.Today;
                 var dt = GetSuveryList();
-                // 測試日期字串轉換
+                List<ListModel> list = new List<ListModel>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    var dr = dt.Rows[i];
+                    ListModel model = new ListModel();
+                    model.SuveryID = dr["SuveryID"].ToString();
+                    model.No = (int)dr["SuveryNo"];
+                    model.Title = dr["Title"].ToString();
+                    model.StartDate = DateTime.Parse(dr["StartDate"].ToString());
+                    model.EndDate = DateTime.Parse(dr["EndDate"].ToString());
+                    string StatusString = CheckStatus(DateTime.Parse(dr["StartDate"].ToString()), DateTime.Parse(dr["EndDate"].ToString()));
+                    model.Status = StatusString;
+                    if(StatusString == "尚未開始" ||
+                        StatusString == "關閉中")
+                    {
+                        model.ClassName = "disabled";
+                    }
+                    else
+                    {
+                        model.ClassName = "class";
+                    }
+                    list.Add(model);
+                }
 
 
 
-
-                this.Repeater1.DataSource = dt;
+                this.Repeater1.DataSource = list;
                 this.Repeater1.DataBind();
 
-                this.ucPager.TotalSize = dt.Rows.Count;
+                this.ucPager.TotalSize = list.Count;
                 this.ucPager.Bind();
 
             }
             else
             {
                 var dt = SearchSuvery(txtSreach, SDate, EDate);
-                this.Repeater1.DataSource = dt;
+
+
+                List<ListModel> list = new List<ListModel>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    var dr = dt.Rows[i];
+                    ListModel model = new ListModel();
+                    model.SuveryID = dr["SuveryID"].ToString();
+                    model.No = (int)dr["SuveryNo"];
+                    model.Title = dr["Title"].ToString();
+                    model.StartDate = DateTime.Parse(dr["StartDate"].ToString());
+                    model.EndDate = DateTime.Parse(dr["EndDate"].ToString());
+                    string StatusString = CheckStatus(DateTime.Parse(dr["StartDate"].ToString()), DateTime.Parse(dr["EndDate"].ToString()));
+                    model.Status = StatusString;
+                    list.Add(model);
+                }
+
+
+                this.Repeater1.DataSource = list;
                 this.Repeater1.DataBind();
 
-                this.ucPager.TotalSize = dt.Rows.Count;
+                this.ucPager.TotalSize = list.Count;
                 this.ucPager.txtSearch = txtSreach;
                 this.ucPager.StartDate = txtSDate;
                 this.ucPager.EndDate = txtEDate;
@@ -62,22 +102,20 @@ namespace SuverySystem
                 return "true";
             else if (DateTime.Compare(SDate, EDate) == 0)
                 return "Same Date";
-            else 
-                return "false"; 
+            else
+                return "false";
         }
         public static string CheckStatus(DateTime SDate, DateTime EDate)
         {
             DateTime Today = DateTime.Today;
-            if (DateTime.Compare(Today, SDate) > 0 ||
-                DateTime.Compare(Today, SDate) == 0)
+            if (DateTime.Compare(Today, SDate) < 0)
             {
-                return "開放中";
+                return "尚未開始";
             }
-            else if (DateTime.Compare(Today, EDate) < 0 ||
-                 DateTime.Compare(Today, SDate) == 0)
+            else if (DateTime.Compare(Today, SDate) >= 0 ||
+                DateTime.Compare(Today, EDate) <= 0)
             {
                 return "開放中";
-
             }
             else
                 return "關閉中";
@@ -97,7 +135,7 @@ namespace SuverySystem
                 Response.Write("<script>alert('請確認所有欄位都有輸入值!!')</script>");
                 return;
             }
-         
+
             //chcek Date is OK or Not
             string DateResult = DateCompare(SDate, EDate);
             if (DateResult == "false")
