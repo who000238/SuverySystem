@@ -112,7 +112,7 @@ namespace SuverySystem
             {
                 return "尚未開始";
             }
-            else if (DateTime.Compare(Today, SDate) >= 0 ||
+            else if (DateTime.Compare(Today, SDate) >= 0 &&
                 DateTime.Compare(Today, EDate) <= 0)
             {
                 return "開放中";

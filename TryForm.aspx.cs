@@ -17,7 +17,24 @@ namespace SuverySystem
             string StringGuid = Request.QueryString["ID"];
             Guid guid = Guid.Parse(StringGuid);
 
+
             var SuveryMasterDataRow = GetSuveryMasterData(guid); //取得部分問卷資料
+            //build new model and check status
+            DateTime today = DateTime.Now;
+            DateTime SDate = DateTime.Parse(SuveryMasterDataRow["StartDate"].ToString());
+            DateTime EDate = DateTime.Parse(SuveryMasterDataRow["EndDate"].ToString());
+            if (DateTime.Compare(today, SDate) < 0)
+            {
+                //is mean today is early StartDate update status and redirect to list page
+                UpdateSuveryStatus(guid, "N"); //true Status letter is "W" is mean "wait" but now use "N" to represent  
+                Response.Write("<script type='text/javascript'> alert('發生一些錯誤 即將跳轉至列表頁');location.href = 'TryList.aspx';</script>");
+            }
+            else if (DateTime.Compare(today, EDate) > 0)
+            {
+                //is mean todat is later EndDate update status and redirect to list page
+                UpdateSuveryStatus(guid, "N");
+                Response.Write("<script type='text/javascript'> alert('發生一些錯誤 即將跳轉至列表頁');location.href = 'TryList.aspx';</script>");
+            }
             var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid); //取得問題資料
             if (SuveryMasterDataRow != null)
             {
@@ -145,13 +162,17 @@ namespace SuverySystem
         }
 
 
-
+        /// <summary>back to list page </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnCancle_Click(object sender, EventArgs e)
         {
 
             Response.Redirect("TryList.aspx");
         }
-
+        /// <summary>put data into session and jump to confirm page</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
             string StringGuid = Request.QueryString["ID"]; //取得問卷ID
@@ -292,7 +313,29 @@ namespace SuverySystem
                 return null;
             }
         }
+        public static void UpdateSuveryStatus(Guid guid ,string StatusString)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                                            @"
+                                                UPDATE [dbo].[SuveryMaster]
+                                                   SET
+                                                      [Status] = @StatusString
+                                                   WHERE [SuveryID] = @Guid
+                                            ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@Guid", guid));
 
+            list.Add(new SqlParameter("@StatusString", StatusString));
+            try
+            {
+                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+            }
+        }
         #endregion
     }
 }
