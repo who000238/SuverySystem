@@ -56,17 +56,24 @@ namespace SuverySystem
                     int QuestionNo = i + 1;
 
                     var QuestionDetailDR = QuestionDetailDT.Rows[i];
-                    #region 問題標題區
-                    Label lblTitle = new Label();
-                    lblTitle.Text = "</br>" + QuestionDetailDR["DetailTitle"].ToString();
-                    this.QuestionArea.Controls.Add(lblTitle);
-                    #endregion
-
-           
-
 
                     string QuestionType = QuestionDetailDR["DetailType"].ToString();
                     string MustKeyIn = QuestionDetailDR["DetailMustKeyin"].ToString();
+
+                    #region 問題標題區
+                    Label lblTitle = new Label();
+                    lblTitle.Text = "</br>" + QuestionDetailDR["DetailTitle"].ToString();
+                    if (MustKeyIn == "Y")
+                    {
+                        lblTitle.Text += "     (必填問題)" +"</br>";
+                    }
+                    this.QuestionArea.Controls.Add(lblTitle);
+                    #endregion
+
+
+
+
+               
                     ///SQL語法有使用LEFT JOIN 需要判別欄位空值的問題
                     #region 單多選問題選項數目
 
@@ -103,7 +110,11 @@ namespace SuverySystem
 
                             }
                             if (MustKeyIn == "Y")
+                            {
                                 textBox.CssClass = "Answer MustKeyIn";
+                                textBox.Attributes["required"] = "required";
+                                textBox.Attributes["aria-required"] = "true";
+                            }
                             else
                                 textBox.CssClass = "Answer";
                             this.QuestionArea.Controls.Add(textBox);
@@ -114,7 +125,11 @@ namespace SuverySystem
                             RadioButtonList radioButtonList = new RadioButtonList();
                             radioButtonList.ID = "Q" + QuestionNo.ToString();
                             if (MustKeyIn == "Y")
+                            {
                                 radioButtonList.CssClass = "Answer MustKeyIn";
+                                radioButtonList.Attributes["required"] = "required";
+                                radioButtonList.Attributes["aria-required"] = "true";
+                            }
                             else
                                 radioButtonList.CssClass = "Answer";
                             for (int j = 0; j < ItemCount; j++)
@@ -313,7 +328,7 @@ namespace SuverySystem
                 return null;
             }
         }
-        public static void UpdateSuveryStatus(Guid guid ,string StatusString)
+        public static void UpdateSuveryStatus(Guid guid, string StatusString)
         {
             string connectionString = DBHelper.GetConnectionString();
             string dbCommandString =
