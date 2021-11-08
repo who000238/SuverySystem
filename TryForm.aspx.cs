@@ -238,16 +238,55 @@ namespace SuverySystem
                 //        break;
                 //}
                 #endregion
+                #region 取值版本2 目前單多選必填驗證測試實作中
+                //switch (QuestionType)
+                //{
+                //    case "QT1":
+                //    case "QT2":
+                //    case "QT3":
+                //    case "QT4":
+                //    case "QT5":
+                //        ControlName = "Q" + (i + 1).ToString();
+                //        TempAnswerList = Request.Form.GetValues($"{ControlName}").ToList();
+                //        AnswerArray[i] = TempAnswerList[0];
+                //        break;
+                //    case "QT6":
+                //        int ItemCount = (int)QuestionDetailDR["ItemCount"];
+                //        for (int j = 0; j < ItemCount; j++)
+                //        {
+                //            ControlName = "Q" + (i + 1).ToString() + "$" + j;
+                //            var inpList = HttpContext.Current.Request.Form.GetValues($"{ControlName}");
+                //            string[] list = inpList ?? new string[] { };
+                //            //if(list.Length != 0)
+                //            //if (list != null)
+                //            //{
+                //            //tempAnswer = tempAnswer + list[0] + " ";
+                //            tempAnswer = tempAnswer + string.Join("&", list);
+                //            //tempAnswer = string.Join("&", list);
+                //            //}
+                //        }
+                //        AnswerArray[i] = tempAnswer;
+                //        break;
+                //}
+                #endregion
                 switch (QuestionType)
                 {
                     case "QT1":
                     case "QT2":
                     case "QT3":
                     case "QT4":
-                    case "QT5":
                         ControlName = "Q" + (i + 1).ToString();
                         TempAnswerList = Request.Form.GetValues($"{ControlName}").ToList();
                         AnswerArray[i] = TempAnswerList[0];
+                        break;
+                    case "QT5":
+                        ControlName = "Q" + (i + 1).ToString();
+                        var inpList1 = HttpContext.Current.Request.Form.GetValues($"{ControlName}");
+                        string[] list1 = inpList1?? new string[] { };
+                        if (list1.Length == 0)
+                        {
+                            AnswerArray[i] = "非必填問題，使用者未填寫";
+                        }
                         break;
                     case "QT6":
                         int ItemCount = (int)QuestionDetailDR["ItemCount"];
@@ -256,6 +295,10 @@ namespace SuverySystem
                             ControlName = "Q" + (i + 1).ToString() + "$" + j;
                             var inpList = HttpContext.Current.Request.Form.GetValues($"{ControlName}");
                             string[] list = inpList ?? new string[] { };
+                            //if (list.Length == 0)
+                            //{
+                            //    AnswerArray[i] = "非必填問題，使用者未填寫";
+                            //}
                             //if(list.Length != 0)
                             //if (list != null)
                             //{
@@ -264,6 +307,11 @@ namespace SuverySystem
                             //tempAnswer = string.Join("&", list);
                             //}
                         }
+                        if (string.IsNullOrWhiteSpace(tempAnswer))
+                        {
+                            AnswerArray[i] = "非必填問題，使用者未填寫";
+                        }
+                        else
                         AnswerArray[i] = tempAnswer;
                         break;
                 }
