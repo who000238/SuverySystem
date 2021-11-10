@@ -66,6 +66,7 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.DataVisualization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -89,6 +90,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestPage.aspx" />
     <Content Include="Test\ConfirmPage.aspx" />
     <Content Include="css\bootstrap-grid.css" />
     <Content Include="css\bootstrap-grid.min.css" />
@@ -124,7 +126,7 @@
     <Content Include="SystemAdmin\AdminList.aspx" />
     <Content Include="SystemAdmin\AdminTemplateQuestion.aspx" />
     <Content Include="SystemAdmin\SeeAnswerDetail.aspx" />
-    <Content Include="Test\Test.aspx" />
+    <Content Include="Test\WebForm1.aspx" />
     <Content Include="TryConfirmPage.aspx" />
     <Content Include="TryForm.aspx" />
     <Content Include="TryList.aspx" />
@@ -134,6 +136,13 @@
   <ItemGroup>
     <Compile Include="Models\ListModel.cs" />
     <Compile Include="Models\SuveryStatusModel.cs" />
+    <Compile Include="TestPage.aspx.cs">
+      <DependentUpon>TestPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestPage.aspx.designer.cs">
+      <DependentUpon>TestPage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Test\ConfirmPage.aspx.cs">
       <DependentUpon>ConfirmPage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -208,12 +217,12 @@
     <Compile Include="SystemAdmin\TemplateQuestionHandler.ashx.cs">
       <DependentUpon>TemplateQuestionHandler.ashx</DependentUpon>
     </Compile>
-    <Compile Include="Test\Test.aspx.cs">
-      <DependentUpon>Test.aspx</DependentUpon>
+    <Compile Include="Test\WebForm1.aspx.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Test\Test.aspx.designer.cs">
-      <DependentUpon>Test.aspx</DependentUpon>
+    <Compile Include="Test\WebForm1.aspx.designer.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
     </Compile>
     <Compile Include="TryConfirmPage.aspx.cs">
       <DependentUpon>TryConfirmPage.aspx</DependentUpon>

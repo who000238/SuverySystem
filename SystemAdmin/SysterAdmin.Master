@@ -32,6 +32,8 @@
                 <a href="/SystemAdmin/AdminTemplateQuestion.aspx">常用問題管理</a>
                 <br />
                 <a href="/SystemAdmin/AdminList.aspx">後台列表頁</a>
+                <br />  
+                <a href="/TryList.aspx">回到前台列表頁</a>
             </div>
             <div>
                 <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">

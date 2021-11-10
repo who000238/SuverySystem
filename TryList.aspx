@@ -30,7 +30,7 @@
         <div class="container">
             <div><a href="SystemAdmin/AdminList.aspx">前往後台</a></div>
             <div><a href="SystemAdmin/AdminList.aspx" class="disabled">前往後台</a></div>
-
+            <a href="TestPage.aspx">Test.aspx</a>
             <h1>前台</h1>
             <div style="border: dashed 1px">
                 <asp:TextBox ID="txtSuveryTitle" runat="server" placeholder="問卷標題" Width="408px" TextMode="Search"></asp:TextBox><br />

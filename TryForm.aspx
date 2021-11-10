@@ -4,15 +4,15 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
-       <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/bootstrap.css" />
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="js/bootstrap.js"></script>
     <script src="Scripts/jQuery-min-3.6.0.js"></script>
     <style>
-        div{
-            border:1px solid
+        div {
+            border: 1px solid
         }
     </style>
 </head>
@@ -26,8 +26,8 @@
                 <div class="col-6">
                     <h1>前台</h1>
                 </div>
-                 <div class="col-6">
-                     <asp:Literal ID="ltlStatusAndDate" runat="server"></asp:Literal>
+                <div class="col-6">
+                    <asp:Literal ID="ltlStatusAndDate" runat="server"></asp:Literal>
                 </div>
                 <div class="col-12">
                     <h3 runat="server" id="h3Title"></h3>
@@ -37,10 +37,10 @@
                 </div>
                 <div class="col-12" runat="server" id="UserInformation">
                     <span>個人資料填寫區 (必填)</span><br />
-                    <asp:TextBox runat="server" id="UserName" placeholder="姓名" TextMode="SingleLine"  required="required" aria-required="true"/><br />
-                    <asp:TextBox runat="server" id="UserPhone" placeholder="電話" TextMode="Phone" required="required" aria-required="true" /><br />
-                    <asp:TextBox runat="server" id="UserMail" placeholder="E-Mail" TextMode="Email" required="required" aria-required="true" /><br />
-                    <asp:TextBox runat="server" id="UserAge" placeholder="年齡" TextMode="Number" required="required" aria-required="true" />
+                    <asp:TextBox runat="server" ID="UserName" placeholder="姓名" TextMode="SingleLine" required="required" aria-required="true" /><br />
+                    <asp:TextBox runat="server" ID="UserPhone" placeholder="電話" TextMode="Phone" required="required" aria-required="true" /><br />
+                    <asp:TextBox runat="server" ID="UserMail" placeholder="E-Mail" TextMode="Email" required="required" aria-required="true" /><br />
+                    <asp:TextBox runat="server" ID="UserAge" placeholder="年齡" TextMode="Number" required="required" aria-required="true" />
 
 
                 </div>
@@ -49,45 +49,84 @@
                 </div>
                 <div class="col-12">
                     <asp:Button ID="btnCancle" runat="server" Text="取消" OnClick="btnCancle_Click" />
-                    <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click"/>
+                    <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click" />
                 </div>
             </div>
         </div>
         <script>
-    
-            //$(function () {
-            //    $("#btnSubmit").click(function () {
-            //        alert('Hello');
-            //        var QCount = document.getElementsByClassName('Answer')
-            //        alert(QCount.length);
 
-            //        //字串版本
-            //        //var AnswerData = $(".Answer").serialize(); //文字方塊可讀取，單多選無法取值
-            //        //alert(AnswerData); 
-
-            //        //陣列版本
-            //        //var AnswerData = $(".Answer").val(); //文字方塊可讀取，單多選無法取值
-            //        //for (var i = 0; i < AnswerData.length; i++) {
-            //        //    alert(AnswerData[i].value);
-            //        //}
+            $(function () {
+                //$("#btnSubmit").click(function () {
+                //    var SelectQuestion = document.getElementsByClassName("MustKeyIn");
+                //    var haveValueOrNot - SelectQuestion.selectedIndex;
 
 
-            //        var AnswerData = $(".Answer").val(); //文字方塊可讀取，單多選無法取值
-            //        alert(AnswerData); 
+                //var RBObj = $('.MustKeyInRB').children("input radio");
+                //alert(RBObj.length);
+                //RBObj.attr(required, "required")
+                //});
+                $(function () {
+                    $("#btnSubmit").click(function () {
+                        //alert('hoeel');
+                        //var RBObj = $('.MustKeyInRB').children("input radio");
+                        //alert(RBObj.length);
+                        //RBObj.attr(required,"required")
 
-            //        //var AnswerString;
-            //        //for (var i = 0; i < QCount.length; i++) {
-            //        //    AnswerString = AnswerString + ",";
-            //        //    if (QCount.length - i == 1) {
-            //        //        alert(AnswerString);
-            //        //    }
-            //        //}
-            //        //var QuestionArea = document.getElementById('QuestionArea');
-            //        //var QCount = getElementsByTagName('input');
-            //        //alert(QCount);
-              
-            //    });
-            //});
+                        ////RBObj.required = true;
+                        ////var CBLObj = $('.MustKeyInRB input: checkbox:');
+                        ////alert(CBLObj.val);
+                        ////CBLObj.required = true;
+
+
+                        ////var MustKeyInRBExist = $(".MustKeyInRB").val;
+                        //var MustKeyInRBExist = document.getElementsByClassName("MustKeyInRB");
+                        //alert(MustKeyInRBExist);
+                        //if (MustKeyInRBExist > 0) {
+                        //    var RBSelected = $('.MustKeyInRB input:radio:checked').val();
+                        //    if (RBSelected == null) {
+                        //        alert("好像還有必填問題沒填寫/選取!");
+                        //        return false;
+                        //    }
+                        //}
+                        ////var MustKeyInCBLExist = $(".MustKeyInCBL").val;
+                        //var MustKeyInCBLExist = document.getElementsByClassName("MustKeyInCBL");
+                        //alert(MustKeyInCBLExist);
+                        //if (MustKeyInCBLExist > 0) {
+                        //    var CBLSelected = $('.MustKeyInCBL input:checkbox:checked').val();
+                        //    if (CBLSelected == null) {
+                        //        alert("好像還有必填問題沒填寫/選取!");
+                        //        return false;
+                        //    }
+                        //}
+
+
+                        //var RBSelected = $('.MustKeyIn input:radio:checked').val();
+                        //if (RBSelected == null) {
+                        //    alert("好像還有必填問題沒填寫/選取!");
+                        //    return false;
+                        //}
+
+                        //var MustKeyInRBExist = this.getElementsByClassName("MustKeyInRB");
+                        //if (MustKeyInRBExist) {
+                        //    var RBSelected = $('.MustKeyInRB input:radio:checked').val();
+                        //    if (RBSelected == null) {
+                        //        alert("好像還有必填問題沒填寫/選取!");
+                        //        return false;
+                        //    }
+                        //}
+
+                        //var MustKeyInCBLExist = this.getElementsByClassName("MustKeyInCBL");
+                        //if (MustKeyInCBLExist) {
+                        //    var CBLSelected = $('.MustKeyInCBL input:checkbox:checked').val();
+                        //    if (CBLSelected == null) {
+                        //        alert("好像還有必填問題沒填寫/選取!");
+                        //        return false;
+                        //    }
+                        //}
+
+                    });
+                });
+            });
         </script>
     </form>
 </body>

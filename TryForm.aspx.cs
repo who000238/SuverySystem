@@ -65,15 +65,10 @@ namespace SuverySystem
                     lblTitle.Text = "</br>" + QuestionDetailDR["DetailTitle"].ToString();
                     if (MustKeyIn == "Y")
                     {
-                        lblTitle.Text += "     (必填問題)" +"</br>";
+                        lblTitle.Text += "     (必填問題)" + "</br>";
                     }
                     this.QuestionArea.Controls.Add(lblTitle);
                     #endregion
-
-
-
-
-               
                     ///SQL語法有使用LEFT JOIN 需要判別欄位空值的問題
                     #region 單多選問題選項數目
 
@@ -111,7 +106,7 @@ namespace SuverySystem
                             }
                             if (MustKeyIn == "Y")
                             {
-                                textBox.CssClass = "Answer MustKeyIn";
+                                //textBox.CssClass = "Answer MustKeyIn";
                                 textBox.Attributes["required"] = "required";
                                 textBox.Attributes["aria-required"] = "true";
                             }
@@ -129,6 +124,7 @@ namespace SuverySystem
                                 radioButtonList.CssClass = "Answer MustKeyIn";
                                 radioButtonList.Attributes["required"] = "required";
                                 radioButtonList.Attributes["aria-required"] = "true";
+                                //radioButtonList.Attributes.Add("class", "MustKeyInRB");
                             }
                             else
                                 radioButtonList.CssClass = "Answer";
@@ -140,6 +136,11 @@ namespace SuverySystem
                                 item.Attributes.Add("name", "Q" + QuestionNo.ToString());
                                 item.Text = ItemName;
                                 item.Value = ItemName;
+                                if (MustKeyIn == "Y")
+                                {
+                                    item.Attributes.Add("class", "MustKeyInRB");
+                                    //item.Attributes.Add("class", "MustKeyIn");
+                                }
                                 radioButtonList.Items.Add(item);
                             }
                             this.QuestionArea.Controls.Add(radioButtonList);
@@ -148,7 +149,10 @@ namespace SuverySystem
                             CheckBoxList checkBoxList = new CheckBoxList();
                             checkBoxList.ID = "Q" + QuestionNo.ToString();
                             if (MustKeyIn == "Y")
+                            {
                                 checkBoxList.CssClass = "Answer MustKeyIn";
+                                //checkBoxList.Attributes.Add("class", "MustKeyInCBL");
+                            }
                             else
                                 checkBoxList.CssClass = "Answer";
                             checkBoxList.Attributes.Add("runat", "server");
@@ -161,6 +165,11 @@ namespace SuverySystem
 
                                 item.Text = ItemName;
                                 item.Value = ItemName;
+                                if (MustKeyIn == "Y")
+                                {
+                                    item.Attributes.Add("class", "MustKeyInCBL");
+                                    //item.Attributes.Add("class", "MustKeyIn");
+                                }
                                 checkBoxList.Items.Add(item);
                             }
                             this.QuestionArea.Controls.Add(checkBoxList);
@@ -282,10 +291,14 @@ namespace SuverySystem
                     case "QT5":
                         ControlName = "Q" + (i + 1).ToString();
                         var inpList1 = HttpContext.Current.Request.Form.GetValues($"{ControlName}");
-                        string[] list1 = inpList1?? new string[] { };
+                        string[] list1 = inpList1 ?? new string[] { };
                         if (list1.Length == 0)
                         {
                             AnswerArray[i] = "非必填問題，使用者未填寫";
+                        }
+                        else
+                        {
+                            AnswerArray[i] = list1[0];
                         }
                         break;
                     case "QT6":
@@ -312,7 +325,7 @@ namespace SuverySystem
                             AnswerArray[i] = "非必填問題，使用者未填寫";
                         }
                         else
-                        AnswerArray[i] = tempAnswer;
+                            AnswerArray[i] = tempAnswer;
                         break;
                 }
             }
