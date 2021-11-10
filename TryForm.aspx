@@ -40,7 +40,7 @@
                     <asp:TextBox runat="server" ID="UserName" placeholder="姓名" TextMode="SingleLine" required="required" aria-required="true" /><br />
                     <asp:TextBox runat="server" ID="UserPhone" placeholder="電話" TextMode="Phone" required="required" aria-required="true" /><br />
                     <asp:TextBox runat="server" ID="UserMail" placeholder="E-Mail" TextMode="Email" required="required" aria-required="true" /><br />
-                    <asp:TextBox runat="server" ID="UserAge" placeholder="年齡" TextMode="Number" required="required" aria-required="true" />
+                    <asp:TextBox runat="server" ID="UserAge" placeholder="年齡" TextMode="Number" min="0" max="130" required="required" aria-required="true" />
 
 
                 </div>
@@ -59,16 +59,13 @@
                 //$("#btnSubmit").click(function () {
                 //    var SelectQuestion = document.getElementsByClassName("MustKeyIn");
                 //    var haveValueOrNot - SelectQuestion.selectedIndex;
-
-
-                //var RBObj = $('.MustKeyInRB').children("input radio");
-                //alert(RBObj.length);
-                //RBObj.attr(required, "required")
-                //});
-                $(function () {
+                //var temp = $(".MustKeyInRB").children("input").attr("id");
+                //alert(temp);
+                //$(`input[id='${temp}']`).attr("class", "180");
                     $("#btnSubmit").click(function () {
                         //alert('hoeel');
                         //var RBObj = $('.MustKeyInRB').children("input radio");
+                        //alert(RBObj);
                         //alert(RBObj.length);
                         //RBObj.attr(required,"required")
 
@@ -125,7 +122,6 @@
                         //}
 
                     });
-                });
             });
         </script>
     </form>

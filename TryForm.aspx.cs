@@ -14,6 +14,9 @@ namespace SuverySystem
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            UnobtrusiveValidationMode = UnobtrusiveValidationMode.None;
+
             string StringGuid = Request.QueryString["ID"];
             Guid guid = Guid.Parse(StringGuid);
 
@@ -78,7 +81,7 @@ namespace SuverySystem
                     else
                         ItemCount = (int)QuestionDetailDR["ItemCount"];
                     #endregion
-                    ///依據QuestionType新增問題
+                    //依據QuestionType新增問題
                     switch (QuestionType)
                     {
                         #region 文字方塊
@@ -121,13 +124,17 @@ namespace SuverySystem
                             radioButtonList.ID = "Q" + QuestionNo.ToString();
                             if (MustKeyIn == "Y")
                             {
-                                radioButtonList.CssClass = "Answer MustKeyIn";
-                                radioButtonList.Attributes["required"] = "required";
-                                radioButtonList.Attributes["aria-required"] = "true";
+                                RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator(); //驗證必填控制項的驗證控制項
+                                requiredFieldValidator.ControlToValidate = radioButtonList.ID.ToString();
+                                requiredFieldValidator.ErrorMessage = "請確認所有必填項目都有輸入值&選取值";
+                                this.QuestionArea.Controls.Add(requiredFieldValidator);
+                                //radioButtonList.CssClass = "Answer MustKeyIn";
+                                //radioButtonList.Attributes["required"] = "required";
+                                //radioButtonList.Attributes["aria-required"] = "true";
                                 //radioButtonList.Attributes.Add("class", "MustKeyInRB");
                             }
-                            else
-                                radioButtonList.CssClass = "Answer";
+                            //else
+                            //    radioButtonList.CssClass = "Answer";
                             for (int j = 0; j < ItemCount; j++)
                             {
                                 string ColName = "Item" + (j + 1).ToString();
@@ -150,11 +157,17 @@ namespace SuverySystem
                             checkBoxList.ID = "Q" + QuestionNo.ToString();
                             if (MustKeyIn == "Y")
                             {
-                                checkBoxList.CssClass = "Answer MustKeyIn";
+
+                                //RequiredFieldValidator requiredFieldValidator1 = new RequiredFieldValidator(); //驗證必填控制項的驗證控制項
+                                //requiredFieldValidator1.ControlToValidate = checkBoxList.ID.ToString();
+                                //requiredFieldValidator1.ErrorMessage = "請確認所有必填項目都有輸入值&選取值";
+                                //this.QuestionArea.Controls.Add(requiredFieldValidator1);
+
+                                //checkBoxList.CssClass = "Answer MustKeyIn";
                                 //checkBoxList.Attributes.Add("class", "MustKeyInCBL");
                             }
-                            else
-                                checkBoxList.CssClass = "Answer";
+                            //else
+                            //    checkBoxList.CssClass = "Answer";
                             checkBoxList.Attributes.Add("runat", "server");
                             for (int j = 0; j < ItemCount; j++)
                             {
@@ -222,6 +235,7 @@ namespace SuverySystem
             for (int i = 0; i < QuestionCount; i++)
             {
                 var QuestionDetailDR = QuestionDetailDT.Rows[i];
+                string MustKyeIn = QuestionDetailDR["DetailMustKeyin"].ToString();
                 string QuestionType = QuestionDetailDR["DetailType"].ToString();
                 string ControlName;
                 #region 取值版本1 //多選還是取不到
@@ -319,6 +333,11 @@ namespace SuverySystem
                             tempAnswer = tempAnswer + string.Join("&", list);
                             //tempAnswer = string.Join("&", list);
                             //}
+                        }
+                        if (MustKyeIn=="Y" && string.IsNullOrWhiteSpace(tempAnswer))
+                        {
+                            Response.Write("<script>alert('還有必填項目沒勾選')</script>");
+                            return;
                         }
                         if (string.IsNullOrWhiteSpace(tempAnswer))
                         {

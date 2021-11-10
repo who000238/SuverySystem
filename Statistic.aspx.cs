@@ -89,34 +89,27 @@ namespace SuverySystem
 
                 string[] Title = new string[ItemCount];
                 int[] Answer = new int[ItemCount];
-
+                // 建立新的Chart Pie 以及 Title
                 Chart Chart1 = new Chart();
                 Title title = new Title();
 
                 switch (QuestionType)
                 {
-
                     case "QT5":
-
                         for (int j = 0; j < ItemCount; j++)
                         {
                             string ColName = "Item" + (j + 1).ToString();
                             string ItemName = QuestionDetailDR[ColName].ToString();
-
                             Title[j] = ItemName;
-
                             string ItemSelectedCount = GetItemSelectedCount(ItemName);
-
                             Answer[j] = Convert.ToInt32(ItemSelectedCount);
-
                         }
                         #region 圓餅圖產生
-
                         //ChartAreas,Series,Legends 基本設定-------------------------------------------------
                         Chart1.ChartAreas.Add("ChartArea1"); //圖表區域集合
                         Chart1.Legends.Add("Legends1"); //圖例集合說明
                         Chart1.Series.Add("Series1"); //數據序列集合
-                                                      //設定 Chart-------------------------------------------------------------------------
+                         //設定 Chart-------------------------------------------------------------------------
                         Chart1.Width = 770;
                         Chart1.Height = 400;
                         title.Text = QuestionTitle;
@@ -141,8 +134,8 @@ namespace SuverySystem
                         Chart1.Series["Series1"].Points.DataBindXY(Title, Answer);
                         Chart1.Series["Series1"].LegendText = "#VALX: [ #PERCENT{P1} ]"; //X軸 + 百分比
                         Chart1.Series["Series1"].Label = "#VALX\n#PERCENT{P1}"; //X軸 + 百分比
-                                                                                //Chart1.Series["Series1"].LabelForeColor = Color.FromArgb(0, 90, 255); //字體顏色
-                                                                                //字體設定
+                         //Chart1.Series["Series1"].LabelForeColor = Color.FromArgb(0, 90, 255); //字體顏色
+                         //字體設定
                         Chart1.Series["Series1"].Font = new System.Drawing.Font("Trebuchet MS", 10, System.Drawing.FontStyle.Bold);
                         Chart1.Series["Series1"].Points.FindMaxByValue().LabelForeColor = Color.Red;
                         //Chart1.Series["Series1"].Points.FindMaxByValue().Color = Color.Red;
@@ -151,17 +144,15 @@ namespace SuverySystem
                         //Chart1.Series["Series1"]["DoughnutRadius"] = "80"; // ChartType為Doughnut時，Set Doughnut hole size
                         //Chart1.Series["Series1"]["PieLabelStyle"] = "Inside"; //數值顯示在圓餅內
                         Chart1.Series["Series1"]["PieLabelStyle"] = "Outside"; //數值顯示在圓餅外
-                                                                               //Chart1.Series["Series1"]["PieLabelStyle"] = "Disabled"; //不顯示數值
-                                                                               //設定圓餅效果，除 Default 外其他效果3D不適用
+                          //Chart1.Series["Series1"]["PieLabelStyle"] = "Disabled"; //不顯示數值
+                          //設定圓餅效果，除 Default 外其他效果3D不適用
                         Chart1.Series["Series1"]["PieDrawingStyle"] = "Default";
                         //Chart1.Series["Series1"]["PieDrawingStyle"] = "SoftEdge";
                         //Chart1.Series["Series1"]["PieDrawingStyle"] = "Concave";
                         /*Random rnd = new Random(); //亂數產生區塊顏色
                         foreach (DataPoint point in Chart1.Series["Series1"].Points)
                         {
-
                         //pie 顏色
-
                         point.Color = Color.FromArgb(150, rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
                         }*/
                         this.StatisticArea.Controls.Add(Chart1);
@@ -185,7 +176,6 @@ namespace SuverySystem
                             //this.StatisticArea.Controls.Add(lblItemTitle);
                         }
                         #region 圓餅圖產生
-
                         //ChartAreas,Series,Legends 基本設定-------------------------------------------------
                         Chart1.ChartAreas.Add("ChartArea1"); //圖表區域集合
                         Chart1.Legends.Add("Legends1"); //圖例集合說明
@@ -233,9 +223,7 @@ namespace SuverySystem
                         /*Random rnd = new Random(); //亂數產生區塊顏色
                         foreach (DataPoint point in Chart1.Series["Series1"].Points)
                         {
-
                         //pie 顏色
-
                         point.Color = Color.FromArgb(150, rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
                         }*/
                         this.StatisticArea.Controls.Add(Chart1);
