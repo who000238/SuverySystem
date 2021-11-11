@@ -343,8 +343,11 @@ namespace SuverySystem
                         {
                             AnswerArray[i] = "非必填問題，使用者未填寫";
                         }
-                        else
+                        else 
+                        { 
                             AnswerArray[i] = tempAnswer;
+                            tempAnswer = string.Empty;                        
+                        }
                         break;
                 }
             }
