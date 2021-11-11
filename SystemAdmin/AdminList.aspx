@@ -35,11 +35,11 @@
                     <ItemTemplate>
                         <div class="row">
                             <div class="col-1"><%#Eval("No") %></div>
-                            <div class="col-3"><a href="TryForm.aspx?ID=<%#Eval("SuveryID") %>"><%#Eval("Title") %></a></div>
+                            <div class="col-3"><a href="/TryForm.aspx?ID=<%#Eval("SuveryID") %>"><%#Eval("Title") %></a></div>
                              <div class="col-2"><%#Eval("Status") %></div>
                             <div class="col-2"><%#Eval("StartDate") %></div>
                             <div class="col-2"><%#Eval("EndDate") %></div>
-                            <div class="col-1"><a href="Statistic.aspx?ID=<%#Eval("SuveryID") %>">前往</a></div>
+                            <div class="col-1"><a href="/Statistic.aspx?ID=<%#Eval("SuveryID") %>">前往</a></div>
                             <div class="col-1"><a href="AdminDetail.aspx?ID=<%#Eval("SuveryID") %>">前往</a></div>
                         </div>
                     </ItemTemplate>

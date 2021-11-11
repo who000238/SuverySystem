@@ -135,7 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\ListModel.cs" />
-    <Compile Include="Models\SuveryStatusModel.cs" />
+    <Compile Include="Models\SuveryMasterModel.cs" />
     <Compile Include="TestPage.aspx.cs">
       <DependentUpon>TestPage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

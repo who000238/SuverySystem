@@ -181,9 +181,23 @@
                         alert(result["DetailType"]);
                         $("#ContentPlaceHolder1_txtQuestion").val(result["DetailTitle"]);
                         $("#ContentPlaceHolder1_QTypeddl").val(result["DetailType"]);
+
                     }
                 });
             });
+
+            //$.ajax({
+            //    url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=LoadMaster",
+            //    type: "GET",
+            //    data: {},
+            //    success: function (result) {
+            //        alert("check");
+            //        $("#ContentPlaceHolder1_txtSuveryTitle").val(result["Title"]);
+            //        $("#ContentPlaceHolder1_txtSummary").val(result["Summary"]);
+            //        $("#ContentPlaceHolder1_txtStartDate").val(result["StarDate"]);
+            //        $("#ContentPlaceHolder1_txtEndDate").val(result["EndDate"]);
+            //    }
+            //});
 
             $.ajax({
                 async: false,

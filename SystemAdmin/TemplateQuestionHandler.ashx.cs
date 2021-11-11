@@ -135,6 +135,8 @@ namespace SuverySystem.SystemAdmin
         public void ProcessRequest(HttpContext context)
         {
             string actionName = context.Request.QueryString["actionName"];
+            string guid = context.Request.QueryString["ID"];
+
             #region 自建Table
             ////create DataTable
             //DataTable QuestionDT = new DataTable();
@@ -179,6 +181,14 @@ namespace SuverySystem.SystemAdmin
                 context.Response.Write("ActionName is required");
                 context.Response.End();
             }
+
+            //if(actionName == "LoadMaster")
+            //{
+            //    SuveryMasterModel model = (SuveryMasterModel)HttpContext.Current.Session["SuveryMaster"];
+            //    string jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+            //    context.Response.ContentType = "application/json";
+            //    context.Response.Write(jsonText);
+            //}
 
             if (actionName == "Create")
             {

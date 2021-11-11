@@ -39,7 +39,7 @@ namespace SuverySystem.SystemAdmin
                 {
                     UserInfoModel userInfoModel = new UserInfoModel();
                     var dr = UserInfoDT.Rows[i];
-                    userInfoModel.No = UserInfoDT.Rows.Count-i;
+                    userInfoModel.No = UserInfoDT.Rows.Count - i;
                     userInfoModel.SuveryID = dr["SuveryID"].ToString();
                     string UserInfoString = dr["UserInfo"].ToString();
                     userInfoModel.UserInfoString = UserInfoString;
@@ -53,12 +53,69 @@ namespace SuverySystem.SystemAdmin
                 this.Repeater2.DataSource = list;
                 this.Repeater2.DataBind();
             }
+            #region 確認資料庫是否有內已存放之問卷內容、若有 輸出到頁面上
+            var SuveryMasterDR = GetSuveryMaster(guid);
+            if (SuveryMasterDR != null)
+            {
+                SuveryMasterModel model = new SuveryMasterModel()
+                {
+                    SuveryNo = Guid.Parse(SuveryMasterDR["SuveryID"].ToString()),
+                    Title = SuveryMasterDR["Title"].ToString(),
+                    StartDate = DateTime.Parse(SuveryMasterDR["StartDate"].ToString()),
+                    EndDate = DateTime.Parse(SuveryMasterDR["EndDate"].ToString()),
+                    Status = SuveryMasterDR["Status"].ToString(),
+                    Summary = SuveryMasterDR["Summary"].ToString()
+                };
+                //HttpContext.Current.Session["SuveryMaster"] = model;
+                this.txtSuveryTitle.Text = model.Title;
+                this.txtSummary.Text = model.Summary;
+                this.txtStartDate.Text = model.StartDate.ToString("yyyy-MM-dd");
+                this.txtEndDate.Text = model.EndDate.ToString("yyyy-MM-dd");
+            }
+            #endregion
+            #region 確認資料庫內是否有已存放之問題內容、若有 加入到List內 放至Session中
+            var QuestionDetailDT = GetQuestionDetail(guid);
+            if (QuestionDetailDT != null)
+            {
+                List<QuestionDetailModel> list = new List<QuestionDetailModel>();
+                for (int i = 0; i < QuestionDetailDT.Rows.Count; i++)
+                {
+                    var QuestionDetailDR = QuestionDetailDT.Rows[i];
+
+                    string ItemNames = string.Empty;
+                    int ItemCount;
+                    if (QuestionDetailDR["ItemCount"].ToString() == string.Empty)
+                        ItemCount = 0;
+                    else
+                        ItemCount = (int)QuestionDetailDR["ItemCount"];
+                    if (ItemCount != 0)
+                    {
+                        for (int j = 0; j < ItemCount; j++)
+                        {
+                            ItemNames += QuestionDetailDR[$"Item{j + 1}"].ToString();
+                        }
+                    }
 
 
+                    QuestionDetailModel model = new QuestionDetailModel()
+                    {
+                        QuestionNo = i + 1,
+                        SuveryID = QuestionDetailDR["SuveryID"].ToString(),
+                        DetailTitle = QuestionDetailDR["DetailTitle"].ToString(),
+                        DetailType = QuestionDetailDR["DetailType"].ToString(),
+                        DetailMustKeyin = QuestionDetailDR["DetailMustKeyin"].ToString(),
+                        ItemName = ItemNames
+
+                    };
+                    list.Add(model);
+                }
+                HttpContext.Current.Session["QuestionDetail"] = list;
+            }
+            #endregion
             #region 統計頁面區
             //取得問卷標題
             var SuveryDataRow = GetSuveryMasterData(guid);
-            if(SuveryDataRow != null)
+            if (SuveryDataRow != null)
             {
                 this.h3Title.InnerText = SuveryDataRow["Title"].ToString();
 
@@ -214,31 +271,31 @@ namespace SuverySystem.SystemAdmin
                     string Item2 = string.Empty;
                     string Item3 = string.Empty;
                     string Item4 = string.Empty;
-                        switch (ItemNameArray.Length)
-                        {
-                            case 1:
-                                Item1 = ItemNameArray[0];
-                                CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
-                                break;
-                            case 2:
-                                Item1 = ItemNameArray[0];
-                                Item2 = ItemNameArray[1];
-                                CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
-                                break;
-                            case 3:
-                                Item1 = ItemNameArray[0];
-                                Item2 = ItemNameArray[1];
-                                Item3 = ItemNameArray[2];
-                                CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
-                                break;
-                            case 4:
-                                Item1 = ItemNameArray[0];
-                                Item2 = ItemNameArray[1];
-                                Item3 = ItemNameArray[2];
-                                Item4 = ItemNameArray[3];
-                                CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
-                                break;
-                        }
+                    switch (ItemNameArray.Length)
+                    {
+                        case 1:
+                            Item1 = ItemNameArray[0];
+                            CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                            break;
+                        case 2:
+                            Item1 = ItemNameArray[0];
+                            Item2 = ItemNameArray[1];
+                            CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                            break;
+                        case 3:
+                            Item1 = ItemNameArray[0];
+                            Item2 = ItemNameArray[1];
+                            Item3 = ItemNameArray[2];
+                            CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                            break;
+                        case 4:
+                            Item1 = ItemNameArray[0];
+                            Item2 = ItemNameArray[1];
+                            Item3 = ItemNameArray[2];
+                            Item4 = ItemNameArray[3];
+                            CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                            break;
+                    }
                 }
             }
         }
@@ -288,7 +345,69 @@ namespace SuverySystem.SystemAdmin
             }
         }
         #endregion
-        
+        /// <summary>取得問題、項目明細</summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        public static DataTable GetQuestionDetail(Guid guid)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                 @" 
+                    SELECT 
+                        [SuveryDetail].[DetailID],
+                        [SuveryDetail].[DetailTitle],
+                        [SuveryDetail].[DetailType],
+                        [SuveryDetail].[DetailMustKeyin],
+                        [SuveryDetail].[SuveryID],
+                        [ItemDetail].[Item1],
+                        [ItemDetail].[Item2],
+                        [ItemDetail].[Item3],
+                        [ItemDetail].[Item4],
+                        [ItemDetail].[ItemCount]
+                    FROM  [SuveryDetail]
+                    LEFT JOIN [ItemDetail] ON [SuveryDetail].[DetailID]=[ItemDetail].[DetailID]
+                    WHERE SuveryDetail.[SuveryID]= @Guid
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@Guid", guid));
+            try
+            {
+                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
+        /// <summary>讀取DB內現存之問卷、問題資料</summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        public static DataRow GetSuveryMaster(Guid guid)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                   @" 
+                    SELECT * FROM [SuverySystem].[dbo].[SuveryMaster]
+                    WHERE [SuveryID] = @SuveryID
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@SuveryID", guid));
+
+            try
+            {
+                return DBHelper.ReadDataRow(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
+
+        /// <summary>取得問卷資料用於觀看細節</summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
         public static DataTable GetUserInfoForSeeDetail(Guid guid)
         {
             string connectionString = DBHelper.GetConnectionString();
@@ -310,7 +429,7 @@ namespace SuverySystem.SystemAdmin
                 Logger.WriteLog(ex);
                 return null;
             }
-        } 
+        }
 
         public static int GetQuestionDetailID(Guid SuveryID, string DetailTitle)
         {
@@ -678,12 +797,12 @@ namespace SuverySystem.SystemAdmin
                 string UserInfoString = UserInfoDR["UserInfo"].ToString();
                 var SingleUserAnswerDT = GetSingleUserAnswerDetail(UserInfoString);
                 string csvString = string.Empty;
-                csvString = "填表人資料 : "+UserInfoString;
+                csvString = "填表人資料 : " + UserInfoString;
                 for (int j = 0; j < SingleUserAnswerDT.Rows.Count; j++)
                 {
                     var SingleAnswerDR = SingleUserAnswerDT.Rows[j];
                     string QuestionAndAnswerString = string.Empty;
-                    csvString += "問題 : " +SingleAnswerDR["DetailTitle"].ToString() + "    " + "回答 : "+SingleAnswerDR["Answer"].ToString() +"    ";
+                    csvString += "問題 : " + SingleAnswerDR["DetailTitle"].ToString() + "    " + "回答 : " + SingleAnswerDR["Answer"].ToString() + "    ";
                     tempArray[i] = csvString;
 
                 }
