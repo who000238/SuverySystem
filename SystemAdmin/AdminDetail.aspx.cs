@@ -22,6 +22,13 @@ namespace SuverySystem.SystemAdmin
             string SuveryID = Request.QueryString["ID"].ToString();
             Guid guid = Guid.Parse(SuveryID);
             this.hfSuveryID.Value = SuveryID;
+            //檢查guid是否已有問卷資料or問題資料
+            var CheckSuveryDataExistDR = GetSuveryMaster(guid);
+            if (CheckSuveryDataExistDR!=null)//表示DB內已經有這筆問卷的細節 則新增按鈕關閉顯示改為顯示修改按鈕
+            {
+                this.btnSubmit.Visible = false;
+                this.btnUpdate.Visible = true;
+            }
             // 常用問題下拉式選單DataSource
             var QuestionTemplateDT = GetQuestionTemplate();
             // 觀看問卷填寫細節頁面Repeater DataSource
@@ -54,23 +61,26 @@ namespace SuverySystem.SystemAdmin
                 this.Repeater2.DataBind();
             }
             #region 確認資料庫是否有內已存放之問卷內容、若有 輸出到頁面上
-            var SuveryMasterDR = GetSuveryMaster(guid);
-            if (SuveryMasterDR != null)
+            if (!IsPostBack)
             {
-                SuveryMasterModel model = new SuveryMasterModel()
+                var SuveryMasterDR = GetSuveryMaster(guid);
+                if (SuveryMasterDR != null)
                 {
-                    SuveryNo = Guid.Parse(SuveryMasterDR["SuveryID"].ToString()),
-                    Title = SuveryMasterDR["Title"].ToString(),
-                    StartDate = DateTime.Parse(SuveryMasterDR["StartDate"].ToString()),
-                    EndDate = DateTime.Parse(SuveryMasterDR["EndDate"].ToString()),
-                    Status = SuveryMasterDR["Status"].ToString(),
-                    Summary = SuveryMasterDR["Summary"].ToString()
-                };
-                //HttpContext.Current.Session["SuveryMaster"] = model;
-                this.txtSuveryTitle.Text = model.Title;
-                this.txtSummary.Text = model.Summary;
-                this.txtStartDate.Text = model.StartDate.ToString("yyyy-MM-dd");
-                this.txtEndDate.Text = model.EndDate.ToString("yyyy-MM-dd");
+                    SuveryMasterModel model = new SuveryMasterModel()
+                    {
+                        SuveryNo = Guid.Parse(SuveryMasterDR["SuveryID"].ToString()),
+                        Title = SuveryMasterDR["Title"].ToString(),
+                        StartDate = DateTime.Parse(SuveryMasterDR["StartDate"].ToString()),
+                        EndDate = DateTime.Parse(SuveryMasterDR["EndDate"].ToString()),
+                        Status = SuveryMasterDR["Status"].ToString(),
+                        Summary = SuveryMasterDR["Summary"].ToString()
+                    };
+                    //HttpContext.Current.Session["SuveryMaster"] = model;
+                    this.txtSuveryTitle.Text = model.Title;
+                    this.txtSummary.Text = model.Summary;
+                    this.txtStartDate.Text = model.StartDate.ToString("yyyy-MM-dd");
+                    this.txtEndDate.Text = model.EndDate.ToString("yyyy-MM-dd");
+                }
             }
             #endregion
             #region 確認資料庫內是否有已存放之問題內容、若有 加入到List內 放至Session中
@@ -205,16 +215,50 @@ namespace SuverySystem.SystemAdmin
                 return;
             }
         }
+        /// <summary>問卷編輯內頁編輯問卷資料按鈕事件 </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnUpdate_Click(object sender, EventArgs e)
+        {
+            
+                string guidString = Request.QueryString["ID"];
+                Guid guid = Guid.Parse(guidString);
+                // get input
+
+                string SuveryTitle = this.txtSuveryTitle.Text;
+                string SuverySummary = this.txtSummary.Text;
+                string StartDate = this.txtStartDate.Text;
+                string EndDate = this.txtEndDate.Text;
+                string Status;
+                if (this.StatusCheck.Checked == true)
+                    Status = "Y";
+                else
+                    Status = "N";
+                // checkinput
+                if (string.IsNullOrEmpty(SuveryTitle) ||
+                   string.IsNullOrEmpty(SuverySummary) ||
+                   string.IsNullOrEmpty(StartDate) ||
+                   string.IsNullOrEmpty(EndDate))
+                {
+                    Response.Write("<script>alert('請確認所有輸入框都有輸入值')</script>");
+                    return;
+                }
+                else
+                {
+                    UpdateSuveryDate(guid, SuveryTitle, SuverySummary, StartDate, EndDate, Status);
+                    return;
+                }
+          
+        }
         protected void btnCancle_Click(object sender, EventArgs e)
         {
             Response.Redirect("AdminList.aspx");
         }
 
-        protected void btnCancle2_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("AdminList.aspx");
-
-        }
+        //protected void btnCancle2_Click(object sender, EventArgs e)
+        //{
+        //    Response.Redirect("AdminList.aspx");
+        //}
 
         protected void btnSubmit2_Click(object sender, EventArgs e)
         {
@@ -345,6 +389,28 @@ namespace SuverySystem.SystemAdmin
             }
         }
         #endregion
+        //public static DataRow CheckSuveryDataExist(Guid guid)
+        //{
+        //    string connectionString = DBHelper.GetConnectionString();
+        //    string dbCommandString =
+        //           @" 
+        //            SELECT * FROM [SuverySystem].[dbo].[SuveryMaster]
+        //            WHERE [SuveryID] = @SuveryID
+        //        ";
+        //    List<SqlParameter> list = new List<SqlParameter>();
+        //    list.Add(new SqlParameter("@SuveryID", guid));
+
+        //    try
+        //    {
+        //        return DBHelper.ReadDataRow(connectionString, dbCommandString, list);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.WriteLog(ex);
+        //        return null;
+        //    }
+        //}
+
         /// <summary>取得問題、項目明細</summary>
         /// <param name="guid"></param>
         /// <returns></returns>
@@ -484,6 +550,13 @@ namespace SuverySystem.SystemAdmin
                 Logger.WriteLog(ex);
             }
         }
+        /// <summary>根據使用者輸入值新增問卷資料</summary>
+        /// <param name="guid"></param>
+        /// <param name="Title"></param>
+        /// <param name="Summary"></param>
+        /// <param name="StartDate"></param>
+        /// <param name="EndDate"></param>
+        /// <param name="Status"></param>
         public static void CreateNewSuvery(Guid guid, string Title, string Summary, string StartDate, string EndDate, string Status)
         {
             string connectionString = DBHelper.GetConnectionString();
@@ -503,6 +576,36 @@ namespace SuverySystem.SystemAdmin
                                ,@EndDate
                                ,@Status
                                ,@Summary)
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@Guid", guid));
+            list.Add(new SqlParameter("@Title", Title));
+            list.Add(new SqlParameter("@Summary", Summary));
+            list.Add(new SqlParameter("@StartDate", StartDate));
+            list.Add(new SqlParameter("@EndDate", EndDate));
+            list.Add(new SqlParameter("@Status", Status));
+            try
+            {
+                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+            }
+        }
+        public static void UpdateSuveryDate(Guid guid, string Title, string Summary, string StartDate, string EndDate, string Status)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                @" 
+                        UPDATE [dbo].[SuveryMaster]
+                           SET 
+                               [Title] = @Title
+                              ,[StartDate] = @StartDate
+                              ,[EndDate] = @EndDate
+                              ,[Status] = @Status
+                              ,[Summary] = @Summary
+                         WHERE [SuveryID] = @Guid
                 ";
             List<SqlParameter> list = new List<SqlParameter>();
             list.Add(new SqlParameter("@Guid", guid));
@@ -643,27 +746,7 @@ namespace SuverySystem.SystemAdmin
                 return null;
             }
         }
-        //public static DataTable GetSuveryQuestionTItle (Guid guid)
-        //{
-        //    string connectionString = DBHelper.GetConnectionString();
-        //    string dbCommandString =
-        //         @" SELECT  * FROM 
-        //                    [SuverySystem].[dbo].[SuveryDetail]
-        //             WHERE [SuverySystem].[dbo].[SuveryDetail].[SuveryID] = @Guid
-        //            ORDER BY [SuverySystem].[dbo].[SuveryDetail].[DetailID]
-        //        ";
-        //    List<SqlParameter> list = new List<SqlParameter>();
-        //    list.Add(new SqlParameter("@Guid", guid));
-        //    try
-        //    {
-        //        return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Logger.WriteLog(ex);
-        //        return null;
-        //    }
-        //}
+
 
         //
         public static DataTable GetQuestionDetailAndItemDetail(Guid guid)
@@ -831,5 +914,6 @@ namespace SuverySystem.SystemAdmin
             Response.End();
             //
         }
+        
     }
 }

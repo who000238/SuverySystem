@@ -27,7 +27,8 @@
             <asp:TextBox ID="txtEndDate" runat="server" TextMode="Date"></asp:TextBox>
             <asp:CheckBox ID="StatusCheck" runat="server" Checked="True" Text="已啟用" />
             <asp:Button ID="btnCancle" runat="server" Text="取消" OnClick="btnCancle_Click" />
-            <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click" />
+            <asp:Button ID="btnSubmit" runat="server" Text="新增問卷資料" OnClick="btnSubmit_Click" />
+            <asp:Button ID="btnUpdate" runat="server" Text="修改問卷資料" OnClick="btnUpdate_Click" OnClientClick="javascript:return confirm('確定修改 ?');" Visible="false" />
             <br />
             <hr />
             <%-- </div>
@@ -76,7 +77,7 @@
             <div runat="server" id="QuestionArea">
             </div>
 
-            <asp:Button ID="btnCancle2" runat="server" Text="取消" OnClick="btnCancle2_Click" />
+            <asp:Button ID="btnCancle2" runat="server" Text="取消" OnClick="btnCancle_Click" />
             <asp:Button ID="btnSubmit2" runat="server" Text="送出" OnClick="btnSubmit2_Click" />
         </div>
         <div id="tabs-3">
