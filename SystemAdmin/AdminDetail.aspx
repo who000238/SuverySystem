@@ -10,6 +10,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <input type="hidden" id="hfSuveryID" runat="server" />
+    <input type="hidden" id="hfAnswerExistOrNot" runat="server" />
 
 
     <div id="tabs">
@@ -78,7 +79,7 @@
             </div>
 
             <asp:Button ID="btnCancle2" runat="server" Text="取消" OnClick="btnCancle_Click" />
-            <asp:Button ID="btnSubmit2" runat="server" Text="送出" OnClick="btnSubmit2_Click" />
+            <asp:Button ID="btnSubmit2" runat="server" Text="送出" OnClick="btnSubmit2_Click" OnClientClick="javascript:return CheckAnsExist();" />
         </div>
         <div id="tabs-3">
             <div class="row">
@@ -114,6 +115,17 @@
         </div>
     </div>
     <script>
+        function CheckAnsExist() {
+            var AnswerExistOrNot = $("#ContentPlaceHolder1_hfAnswerExistOrNot").val();
+            if (AnswerExistOrNot == "Exist") {
+                if (confirm('目前資料庫內已有此問卷的填答資料，改動問卷問題順序、內容將會造成資料壞軌 \r\n建議將填答檔案匯出後再更動問卷內容 ! \r\n按下確定 修改問題內容 按下取消 保持原狀')) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        }
         $(function () {
 
             $("#ContentPlaceHolder1_btnAdd").click(function () {
@@ -159,8 +171,8 @@
                         "ID": rowID,
                     },
                     success: function (result) {
-                        alert('刪除成功');
-                        history.go(0);
+                        //alert('刪除成功');
+                        location.reload()
                     }
                 });
             });
@@ -178,8 +190,8 @@
                         "ID": rowID,
                     },
                     success: function (result) {
-                        alert(result["DetailTitle"]);
-                        alert(result["DetailType"]);
+                        //alert(result["DetailTitle"]);
+                        //alert(result["DetailType"]);
                         $("#ContentPlaceHolder1_txtQuestion").val(result["DetailTitle"]);
                         $("#ContentPlaceHolder1_QTypeddl").val(result["DetailType"]);
 
@@ -187,18 +199,7 @@
                 });
             });
 
-            //$.ajax({
-            //    url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=LoadMaster",
-            //    type: "GET",
-            //    data: {},
-            //    success: function (result) {
-            //        alert("check");
-            //        $("#ContentPlaceHolder1_txtSuveryTitle").val(result["Title"]);
-            //        $("#ContentPlaceHolder1_txtSummary").val(result["Summary"]);
-            //        $("#ContentPlaceHolder1_txtStartDate").val(result["StarDate"]);
-            //        $("#ContentPlaceHolder1_txtEndDate").val(result["EndDate"]);
-            //    }
-            //});
+
 
             $.ajax({
                 async: false,

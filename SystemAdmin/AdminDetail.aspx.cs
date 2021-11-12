@@ -24,11 +24,19 @@ namespace SuverySystem.SystemAdmin
             this.hfSuveryID.Value = SuveryID;
             //檢查guid是否已有問卷資料or問題資料
             var CheckSuveryDataExistDR = GetSuveryMaster(guid);
-            if (CheckSuveryDataExistDR!=null)//表示DB內已經有這筆問卷的細節 則新增按鈕關閉顯示改為顯示修改按鈕
+            if (CheckSuveryDataExistDR != null)//表示DB內已經有這筆問卷的細節 則新增按鈕關閉顯示改為顯示修改按鈕
             {
                 this.btnSubmit.Visible = false;
                 this.btnUpdate.Visible = true;
             }
+            //檢查此ID是否已有填答資料
+            var AnsDataExistOrNotDT = CheckAnsExistOrNot(guid);
+            if(AnsDataExistOrNotDT.Rows.Count>0 )
+            {
+                this.hfAnswerExistOrNot.Value = "Exist";
+            }
+
+
             // 常用問題下拉式選單DataSource
             var QuestionTemplateDT = GetQuestionTemplate();
             // 觀看問卷填寫細節頁面Repeater DataSource
@@ -60,9 +68,9 @@ namespace SuverySystem.SystemAdmin
                 this.Repeater2.DataSource = list;
                 this.Repeater2.DataBind();
             }
-            #region 確認資料庫是否有內已存放之問卷內容、若有 輸出到頁面上
             if (!IsPostBack)
             {
+                #region 確認資料庫是否有內已存放之問卷內容、若有 輸出到頁面上
                 var SuveryMasterDR = GetSuveryMaster(guid);
                 if (SuveryMasterDR != null)
                 {
@@ -81,47 +89,72 @@ namespace SuverySystem.SystemAdmin
                     this.txtStartDate.Text = model.StartDate.ToString("yyyy-MM-dd");
                     this.txtEndDate.Text = model.EndDate.ToString("yyyy-MM-dd");
                 }
-            }
+
             #endregion
-            #region 確認資料庫內是否有已存放之問題內容、若有 加入到List內 放至Session中
-            var QuestionDetailDT = GetQuestionDetail(guid);
-            if (QuestionDetailDT != null)
-            {
-                List<QuestionDetailModel> list = new List<QuestionDetailModel>();
-                for (int i = 0; i < QuestionDetailDT.Rows.Count; i++)
+                #region 確認資料庫內是否有已存放之問題內容、若有 加入到List內 放至Session中
+                var QuestionDetailDT = GetQuestionDetail(guid);
+                if (QuestionDetailDT != null)
                 {
-                    var QuestionDetailDR = QuestionDetailDT.Rows[i];
-
-                    string ItemNames = string.Empty;
-                    int ItemCount;
-                    if (QuestionDetailDR["ItemCount"].ToString() == string.Empty)
-                        ItemCount = 0;
-                    else
-                        ItemCount = (int)QuestionDetailDR["ItemCount"];
-                    if (ItemCount != 0)
+                    List<QuestionDetailModel> list = new List<QuestionDetailModel>();
+                    for (int i = 0; i < QuestionDetailDT.Rows.Count; i++)
                     {
-                        for (int j = 0; j < ItemCount; j++)
+                        var QuestionDetailDR = QuestionDetailDT.Rows[i];
+
+                        string ItemNames = string.Empty;
+                        int ItemCount;
+                        if (QuestionDetailDR["ItemCount"].ToString() == string.Empty)
+                            ItemCount = 0;
+                        else
+                            ItemCount = (int)QuestionDetailDR["ItemCount"];
+                        if (ItemCount != 0)
                         {
-                            ItemNames += QuestionDetailDR[$"Item{j + 1}"].ToString();
+                            for (int j = 0; j < ItemCount; j++)
+                            {
+                                ItemNames += QuestionDetailDR[$"Item{j + 1}"].ToString();
+                            }
                         }
+
+                        string DetailType = QuestionDetailDR["DetailType"].ToString();
+                        switch (DetailType)
+                        {
+                            case "QT1":
+                                DetailType = "文字方塊(文字)";
+                                break;
+                            case "QT2":
+                                DetailType = "文字方塊(數字)";
+                                break;
+                            case "QT3":
+                                DetailType = "文字方塊(E-Mail)";
+                                break;
+                            case "QT4":
+                                DetailType = "文字方塊(日期)";
+                                break;
+                            case "QT5":
+                                DetailType = "單選方塊";
+                                break;
+                            case "QT6":
+                                DetailType = "多選方塊";
+                                break;
+                        }
+
+
+                        QuestionDetailModel model = new QuestionDetailModel()
+                        {
+                            QuestionNo = i + 1,
+                            SuveryID = QuestionDetailDR["SuveryID"].ToString(),
+                            DetailTitle = QuestionDetailDR["DetailTitle"].ToString(),
+                            DetailType = DetailType,
+                            DetailMustKeyin = QuestionDetailDR["DetailMustKeyin"].ToString(),
+                            ItemName = ItemNames
+
+                        };
+                        list.Add(model);
                     }
-
-
-                    QuestionDetailModel model = new QuestionDetailModel()
-                    {
-                        QuestionNo = i + 1,
-                        SuveryID = QuestionDetailDR["SuveryID"].ToString(),
-                        DetailTitle = QuestionDetailDR["DetailTitle"].ToString(),
-                        DetailType = QuestionDetailDR["DetailType"].ToString(),
-                        DetailMustKeyin = QuestionDetailDR["DetailMustKeyin"].ToString(),
-                        ItemName = ItemNames
-
-                    };
-                    list.Add(model);
+                    HttpContext.Current.Session["QuestionDetail"] = list;
                 }
-                HttpContext.Current.Session["QuestionDetail"] = list;
+                #endregion
             }
-            #endregion
+
             #region 統計頁面區
             //取得問卷標題
             var SuveryDataRow = GetSuveryMasterData(guid);
@@ -208,8 +241,7 @@ namespace SuverySystem.SystemAdmin
             }
             else
             {
-                //string SuveryMaster = SuveryTitle + "," + SuverySummary + "," + StartDate + "," + EndDate + "," + Status;
-                //this.Session["SuveryMaster"] = SuveryMaster;
+
                 //Response.Write($"<script>alert('{SuveryMaster}')</script>");
                 CreateNewSuvery(guid, SuveryTitle, SuverySummary, StartDate, EndDate, Status);
                 return;
@@ -220,50 +252,52 @@ namespace SuverySystem.SystemAdmin
         /// <param name="e"></param>
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
-            
-                string guidString = Request.QueryString["ID"];
-                Guid guid = Guid.Parse(guidString);
-                // get input
 
-                string SuveryTitle = this.txtSuveryTitle.Text;
-                string SuverySummary = this.txtSummary.Text;
-                string StartDate = this.txtStartDate.Text;
-                string EndDate = this.txtEndDate.Text;
-                string Status;
-                if (this.StatusCheck.Checked == true)
-                    Status = "Y";
-                else
-                    Status = "N";
-                // checkinput
-                if (string.IsNullOrEmpty(SuveryTitle) ||
-                   string.IsNullOrEmpty(SuverySummary) ||
-                   string.IsNullOrEmpty(StartDate) ||
-                   string.IsNullOrEmpty(EndDate))
-                {
-                    Response.Write("<script>alert('請確認所有輸入框都有輸入值')</script>");
-                    return;
-                }
-                else
-                {
-                    UpdateSuveryDate(guid, SuveryTitle, SuverySummary, StartDate, EndDate, Status);
-                    return;
-                }
-          
+            string guidString = Request.QueryString["ID"];
+            Guid guid = Guid.Parse(guidString);
+            // get input
+
+            string SuveryTitle = this.txtSuveryTitle.Text;
+            string SuverySummary = this.txtSummary.Text;
+            string StartDate = this.txtStartDate.Text;
+            string EndDate = this.txtEndDate.Text;
+            string Status;
+            if (this.StatusCheck.Checked == true)
+                Status = "Y";
+            else
+                Status = "N";
+            // checkinput
+            if (string.IsNullOrEmpty(SuveryTitle) ||
+               string.IsNullOrEmpty(SuverySummary) ||
+               string.IsNullOrEmpty(StartDate) ||
+               string.IsNullOrEmpty(EndDate))
+            {
+                Response.Write("<script>alert('請確認所有輸入框都有輸入值')</script>");
+                return;
+            }
+            else
+            {
+                UpdateSuveryDate(guid, SuveryTitle, SuverySummary, StartDate, EndDate, Status);
+                return;
+            }
+
         }
         protected void btnCancle_Click(object sender, EventArgs e)
         {
             Response.Redirect("AdminList.aspx");
         }
 
-        //protected void btnCancle2_Click(object sender, EventArgs e)
-        //{
-        //    Response.Redirect("AdminList.aspx");
-        //}
-
+        /// <summary>送出session中存放的問題資料</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSubmit2_Click(object sender, EventArgs e)
         {
             string IDString = Request.QueryString["ID"];
-            Guid id = Guid.Parse(IDString);
+            Guid guid = Guid.Parse(IDString);
+            //// 清空問題內容資料表及項目內容資料表
+            //RemoveQuestionDetail(guid);
+            //RemoveItemDetail(guid);
+            ////
 
             var list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
             for (int i = 0; i < list.Count; i++)
@@ -303,12 +337,12 @@ namespace SuverySystem.SystemAdmin
                         QMustKeyIn = "N";
                         break;
                 }
-                CreateNewQuestion(id, QTitle, QType, QMustKeyIn);
+                CreateNewQuestion(guid, QTitle, QType, QMustKeyIn);
 
                 string QItemName = string.Empty;
                 if (!string.IsNullOrEmpty(list[i].ItemName))
                 {
-                    var QDetailID = GetQuestionDetailID(id, QTitle);
+                    var QDetailID = GetQuestionDetailID(guid, QTitle);
                     QItemName = list[i].ItemName;
                     var ItemNameArray = QItemName.Split(',');
                     string Item1 = string.Empty;
@@ -319,29 +353,30 @@ namespace SuverySystem.SystemAdmin
                     {
                         case 1:
                             Item1 = ItemNameArray[0];
-                            CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                            CreateQuestionItem(QDetailID, guid, Item1, Item2, Item3, Item4, ItemNameArray.Length);
                             break;
                         case 2:
                             Item1 = ItemNameArray[0];
                             Item2 = ItemNameArray[1];
-                            CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                            CreateQuestionItem(QDetailID, guid, Item1, Item2, Item3, Item4, ItemNameArray.Length);
                             break;
                         case 3:
                             Item1 = ItemNameArray[0];
                             Item2 = ItemNameArray[1];
                             Item3 = ItemNameArray[2];
-                            CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                            CreateQuestionItem(QDetailID, guid, Item1, Item2, Item3, Item4, ItemNameArray.Length);
                             break;
                         case 4:
                             Item1 = ItemNameArray[0];
                             Item2 = ItemNameArray[1];
                             Item3 = ItemNameArray[2];
                             Item4 = ItemNameArray[3];
-                            CreateQuestionItem(QDetailID, id, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                            CreateQuestionItem(QDetailID, guid, Item1, Item2, Item3, Item4, ItemNameArray.Length);
                             break;
                     }
                 }
             }
+            Response.Redirect(Request.Url.ToString());
         }
 
 
@@ -389,27 +424,71 @@ namespace SuverySystem.SystemAdmin
             }
         }
         #endregion
-        //public static DataRow CheckSuveryDataExist(Guid guid)
-        //{
-        //    string connectionString = DBHelper.GetConnectionString();
-        //    string dbCommandString =
-        //           @" 
-        //            SELECT * FROM [SuverySystem].[dbo].[SuveryMaster]
-        //            WHERE [SuveryID] = @SuveryID
-        //        ";
-        //    List<SqlParameter> list = new List<SqlParameter>();
-        //    list.Add(new SqlParameter("@SuveryID", guid));
+        /// <summary>清除問題資料表內的內容</summary>
+        /// <param name="guid"></param>
+        public static void RemoveQuestionDetail(Guid guid)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                @" 
+                    DELETE FROM [dbo].[SuveryDetail]
+                    WHERE [ItemDetailID] = @SuveryID
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@SuveryID", guid));
+            try
+            {
+                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+            }
+        }      /// <summary>清除問題項目資料表內的內容</summary>
+               /// <param name="guid"></param>
+        public static void RemoveItemDetail(Guid guid)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                @" 
+                    DELETE FROM [dbo].[ItemDetail]
+                    WHERE [ItemDetailID] = @SuveryID
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@SuveryID", guid));
+            try
+            {
+                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+            }
+        }
 
-        //    try
-        //    {
-        //        return DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Logger.WriteLog(ex);
-        //        return null;
-        //    }
-        //}
+        /// <summary>確認此ID的問卷有無填答內容 若有 在管理者編輯問題內容時提示使用者可能會造成資料對不上進而造成系統跳出EX</summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        public static DataTable CheckAnsExistOrNot(Guid guid)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                 @" 
+                    SELECT * FROM [SuverySystem].[dbo].[AnswerDetail]
+                    WHERE [AnswerDetail].[SuveryID]= @Guid
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@Guid", guid));
+            try
+            {
+                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
 
         /// <summary>取得問題、項目明細</summary>
         /// <param name="guid"></param>
@@ -914,6 +993,6 @@ namespace SuverySystem.SystemAdmin
             Response.End();
             //
         }
-        
+
     }
 }

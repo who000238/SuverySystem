@@ -181,14 +181,7 @@ namespace SuverySystem.SystemAdmin
                 context.Response.Write("ActionName is required");
                 context.Response.End();
             }
-
-            //if(actionName == "LoadMaster")
-            //{
-            //    SuveryMasterModel model = (SuveryMasterModel)HttpContext.Current.Session["SuveryMaster"];
-            //    string jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(model);
-            //    context.Response.ContentType = "application/json";
-            //    context.Response.Write(jsonText);
-            //}
+      
 
             if (actionName == "Create")
             {

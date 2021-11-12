@@ -13,33 +13,34 @@ namespace SuverySystem
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            UnobtrusiveValidationMode = UnobtrusiveValidationMode.None;
-            #region RBList
-            //RadioButtonList radioButtonList = new RadioButtonList();
-            //radioButtonList.ID = "gender";
-            //ListItem item1 = new ListItem();
-            //item1.Value = "BOY";
-            //item1.Text = "BOY";
-            ////item1.Attributes.Add("GroupName", "gender");
-            //radioButtonList.Items.Add(item1);
-            //ListItem item2 = new ListItem();
-            //item2.Value = "GIRL";
-            //item2.Text = "GIRL";
-            ////item2.Attributes.Add("GroupName", "gender");
-            //radioButtonList.Items.Add(item2);
-            #endregion
-            #region CBList
-            CheckBoxList checkBoxList = new CheckBoxList();
-            checkBoxList.ID = "Food";
+            this.HFdata.Value = "Y";
+            //UnobtrusiveValidationMode = UnobtrusiveValidationMode.None;
+            //#region RBList
+            ////RadioButtonList radioButtonList = new RadioButtonList();
+            ////radioButtonList.ID = "gender";
+            ////ListItem item1 = new ListItem();
+            ////item1.Value = "BOY";
+            ////item1.Text = "BOY";
+            //////item1.Attributes.Add("GroupName", "gender");
+            ////radioButtonList.Items.Add(item1);
+            ////ListItem item2 = new ListItem();
+            ////item2.Value = "GIRL";
+            ////item2.Text = "GIRL";
+            //////item2.Attributes.Add("GroupName", "gender");
+            ////radioButtonList.Items.Add(item2);
+            //#endregion
+            //#region CBList
+            //CheckBoxList checkBoxList = new CheckBoxList();
+            //checkBoxList.ID = "Food";
 
-            #endregion
+            //#endregion
 
-            RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator();
-            requiredFieldValidator.ErrorMessage = "check";
-            requiredFieldValidator.ControlToValidate = "gender";
+            //RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator();
+            //requiredFieldValidator.ErrorMessage = "check";
+            //requiredFieldValidator.ControlToValidate = "gender";
 
-            //this.div.Controls.Add(radioButtonList);
-            this.div.Controls.Add(requiredFieldValidator);
+            ////this.div.Controls.Add(radioButtonList);
+            //this.div.Controls.Add(requiredFieldValidator);
             #region 圓餅圖
             //string[] X = new string[] { "1", "3", "5" };
             //int[] Y = new int[] { 1, 2, 3 };
@@ -161,6 +162,12 @@ namespace SuverySystem
         protected void btn_Click(object sender, EventArgs e)
         {
             Response.Redirect("TryList.aspx");
+        }
+
+        protected void Unnamed_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("TryList.aspx");
+
         }
     }
 }
