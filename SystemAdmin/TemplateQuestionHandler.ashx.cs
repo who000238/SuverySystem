@@ -260,6 +260,20 @@ namespace SuverySystem.SystemAdmin
 
 
             }
+      
+            else if (actionName == "Load")
+            {
+
+                if (HttpContext.Current.Session["QuestionDetail"] != null)
+                {
+                    var list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
+
+                    string jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(list);
+                    context.Response.ContentType = "application/json";
+                    context.Response.Write(jsonText);
+                }
+
+            }
             else if (actionName == "Delete")
             {
                 string rowID = context.Request.Form["ID"];
@@ -273,19 +287,6 @@ namespace SuverySystem.SystemAdmin
                 string jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(list);
                 context.Response.ContentType = "application/json";
                 context.Response.Write(jsonText);
-
-            }
-            else if (actionName == "Load")
-            {
-
-                if (HttpContext.Current.Session["QuestionDetail"] != null)
-                {
-                    var list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
-
-                    string jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(list);
-                    context.Response.ContentType = "application/json";
-                    context.Response.Write(jsonText);
-                }
 
             }
             else if (actionName == "query")

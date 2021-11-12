@@ -90,68 +90,75 @@ namespace SuverySystem.SystemAdmin
                     this.txtEndDate.Text = model.EndDate.ToString("yyyy-MM-dd");
                 }
 
-            #endregion
+                #endregion
                 #region 確認資料庫內是否有已存放之問題內容、若有 加入到List內 放至Session中
-                var QuestionDetailDT = GetQuestionDetail(guid);
-                if (QuestionDetailDT != null)
+                //確認session["QuestionDetail"]中有沒有資料 若有 就代表已在其他地方執行過寫入 則不在此處讀取資料庫並寫入
+                var DetailList = HttpContext.Current.Session["QuestionDetail"];
+                //
+                if(DetailList == null)
                 {
-                    List<QuestionDetailModel> list = new List<QuestionDetailModel>();
-                    for (int i = 0; i < QuestionDetailDT.Rows.Count; i++)
+                    var QuestionDetailDT = GetQuestionDetail(guid);
+                    if (QuestionDetailDT != null)
                     {
-                        var QuestionDetailDR = QuestionDetailDT.Rows[i];
-
-                        string ItemNames = string.Empty;
-                        int ItemCount;
-                        if (QuestionDetailDR["ItemCount"].ToString() == string.Empty)
-                            ItemCount = 0;
-                        else
-                            ItemCount = (int)QuestionDetailDR["ItemCount"];
-                        if (ItemCount != 0)
+                        List<QuestionDetailModel> list = new List<QuestionDetailModel>();
+                        for (int i = 0; i < QuestionDetailDT.Rows.Count; i++)
                         {
-                            for (int j = 0; j < ItemCount; j++)
+                            var QuestionDetailDR = QuestionDetailDT.Rows[i];
+
+                            string ItemNames = string.Empty;
+                            int ItemCount;
+                            if (QuestionDetailDR["ItemCount"].ToString() == string.Empty)
+                                ItemCount = 0;
+                            else
+                                ItemCount = (int)QuestionDetailDR["ItemCount"];
+                            if (ItemCount != 0)
                             {
-                                ItemNames += QuestionDetailDR[$"Item{j + 1}"].ToString();
+                                for (int j = 0; j < ItemCount; j++)
+                                {
+                                    ItemNames += QuestionDetailDR[$"Item{j + 1}"].ToString();
+                                }
                             }
+
+                            string DetailType = QuestionDetailDR["DetailType"].ToString();
+                            switch (DetailType)
+                            {
+                                case "QT1":
+                                    DetailType = "文字方塊(文字)";
+                                    break;
+                                case "QT2":
+                                    DetailType = "文字方塊(數字)";
+                                    break;
+                                case "QT3":
+                                    DetailType = "文字方塊(E-Mail)";
+                                    break;
+                                case "QT4":
+                                    DetailType = "文字方塊(日期)";
+                                    break;
+                                case "QT5":
+                                    DetailType = "單選方塊";
+                                    break;
+                                case "QT6":
+                                    DetailType = "多選方塊";
+                                    break;
+                            }
+
+
+                            QuestionDetailModel model = new QuestionDetailModel()
+                            {
+                                QuestionNo = i + 1,
+                                SuveryID = QuestionDetailDR["SuveryID"].ToString(),
+                                DetailTitle = QuestionDetailDR["DetailTitle"].ToString(),
+                                DetailType = DetailType,
+                                DetailMustKeyin = QuestionDetailDR["DetailMustKeyin"].ToString(),
+                                ItemName = ItemNames
+
+                            };
+                            list.Add(model);
                         }
-
-                        string DetailType = QuestionDetailDR["DetailType"].ToString();
-                        switch (DetailType)
-                        {
-                            case "QT1":
-                                DetailType = "文字方塊(文字)";
-                                break;
-                            case "QT2":
-                                DetailType = "文字方塊(數字)";
-                                break;
-                            case "QT3":
-                                DetailType = "文字方塊(E-Mail)";
-                                break;
-                            case "QT4":
-                                DetailType = "文字方塊(日期)";
-                                break;
-                            case "QT5":
-                                DetailType = "單選方塊";
-                                break;
-                            case "QT6":
-                                DetailType = "多選方塊";
-                                break;
-                        }
-
-
-                        QuestionDetailModel model = new QuestionDetailModel()
-                        {
-                            QuestionNo = i + 1,
-                            SuveryID = QuestionDetailDR["SuveryID"].ToString(),
-                            DetailTitle = QuestionDetailDR["DetailTitle"].ToString(),
-                            DetailType = DetailType,
-                            DetailMustKeyin = QuestionDetailDR["DetailMustKeyin"].ToString(),
-                            ItemName = ItemNames
-
-                        };
-                        list.Add(model);
+                        HttpContext.Current.Session["QuestionDetail"] = list;
                     }
-                    HttpContext.Current.Session["QuestionDetail"] = list;
                 }
+                
                 #endregion
             }
 
@@ -295,8 +302,8 @@ namespace SuverySystem.SystemAdmin
             string IDString = Request.QueryString["ID"];
             Guid guid = Guid.Parse(IDString);
             //// 清空問題內容資料表及項目內容資料表
-            //RemoveQuestionDetail(guid);
-            //RemoveItemDetail(guid);
+            RemoveQuestionDetail(guid);
+            RemoveItemDetail(guid);
             ////
 
             var list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
@@ -432,7 +439,7 @@ namespace SuverySystem.SystemAdmin
             string dbCommandString =
                 @" 
                     DELETE FROM [dbo].[SuveryDetail]
-                    WHERE [ItemDetailID] = @SuveryID
+                    WHERE [SuveryID] = @SuveryID
                 ";
             List<SqlParameter> list = new List<SqlParameter>();
             list.Add(new SqlParameter("@SuveryID", guid));
@@ -452,7 +459,7 @@ namespace SuverySystem.SystemAdmin
             string dbCommandString =
                 @" 
                     DELETE FROM [dbo].[ItemDetail]
-                    WHERE [ItemDetailID] = @SuveryID
+                    WHERE [SuveryID] = @SuveryID
                 ";
             List<SqlParameter> list = new List<SqlParameter>();
             list.Add(new SqlParameter("@SuveryID", guid));
