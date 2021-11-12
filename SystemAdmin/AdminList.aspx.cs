@@ -26,10 +26,7 @@ namespace SuverySystem.SystemAdmin
                 string.IsNullOrEmpty(txtEDate))
             {
                 DateTime today = DateTime.Today;
-                //var dt = SuveryManager.GetSuveryList();
                 var dt = GetSuveryList();
-
-
                 List<ListModel> list = new List<ListModel>();
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
@@ -53,11 +50,8 @@ namespace SuverySystem.SystemAdmin
                     }
                     list.Add(model);
                 }
-
-
                 this.Repeater1.DataSource = list;
                 this.Repeater1.DataBind();
-
                 this.ucPager.TotalSize = list.Count;
                 this.ucPager.Bind();
             }
@@ -79,11 +73,8 @@ namespace SuverySystem.SystemAdmin
                     model.Status = StatusString;
                     list.Add(model);
                 }
-
-
                 this.Repeater1.DataSource = list;
                 this.Repeater1.DataBind();
-
                 this.ucPager.TotalSize = list.Count;
                 this.ucPager.txtSearch = txtSreach;
                 this.ucPager.StartDate = txtSDate;
@@ -105,10 +96,8 @@ namespace SuverySystem.SystemAdmin
                 Response.Write("<script>alert('請確認所有欄位都有輸入值!!')</script>");
                 return;
             }
-
             DateTime SDate = Convert.ToDateTime(txtSDate);
             DateTime EDate = Convert.ToDateTime(txtEDate);
-
             var dt = SearchSuvery(txtSreach, SDate, EDate);
             if (dt.Rows.Count > 0)
             {
@@ -186,11 +175,12 @@ namespace SuverySystem.SystemAdmin
         public static string CheckStatus(DateTime SDate, DateTime EDate)
         {
             DateTime Today = DateTime.Today;
-            if (DateTime.Compare(Today, SDate) < 0)
-            {
-                return "尚未開始";
-            }
-            else if (DateTime.Compare(Today, SDate) >= 0 &&
+            //if (DateTime.Compare(Today, SDate) < 0)
+            //{
+            //    return "尚未開始";
+            //}
+            //else 
+            if (DateTime.Compare(Today, SDate) >= 0 &&
                 DateTime.Compare(Today, EDate) <= 0)
             {
                 return "開放中";

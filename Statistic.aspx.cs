@@ -85,8 +85,6 @@ namespace SuverySystem
                 //Label lblTitle = new Label();
                 //lblTitle.Text = "</br>" + QuestionTitle + "</br>";
                 //this.StatisticArea.Controls.Add(lblTitle);
-
-
                 string[] Title = new string[ItemCount];
                 int[] Answer = new int[ItemCount];
                 // 建立新的Chart Pie 以及 Title
@@ -157,10 +155,8 @@ namespace SuverySystem
                         }*/
                         this.StatisticArea.Controls.Add(Chart1);
                         #endregion
-
                         break;
                     case "QT6":
-
                         for (int j = 0; j < ItemCount; j++)
                         {
                             string ColName = "Item" + (j + 1).ToString();
@@ -228,7 +224,6 @@ namespace SuverySystem
                         }*/
                         this.StatisticArea.Controls.Add(Chart1);
                         #endregion
-
                         break;
                 }
             }
@@ -280,6 +275,9 @@ namespace SuverySystem
         //}
 
         //
+        /// <summary>使用Guid查找問題資料表以及選項資料表</summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
         public static DataTable GetQuestionDetailAndItemDetail(Guid guid)
         {
             string connectionString = DBHelper.GetConnectionString();
@@ -305,7 +303,9 @@ namespace SuverySystem
                 return null;
             }
         }
-        //
+        /// <summary>取得單複選選項個數</summary>
+        /// <param name="ItemName"></param>
+        /// <returns></returns>
         public static string GetItemSelectedCount(string ItemName)
         {
             string connectionString = DBHelper.GetConnectionString();

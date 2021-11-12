@@ -20,8 +20,9 @@ namespace SuverySystem
             string StringGuid = Request.QueryString["ID"];
             Guid guid = Guid.Parse(StringGuid);
 
-
             var SuveryMasterDataRow = GetSuveryMasterData(guid); //取得部分問卷資料
+            var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid); //取得問題資料
+
             //build new model and check status
             DateTime today = DateTime.Now;
             DateTime SDate = DateTime.Parse(SuveryMasterDataRow["StartDate"].ToString());
@@ -34,11 +35,11 @@ namespace SuverySystem
             }
             else if (DateTime.Compare(today, EDate) > 0)
             {
-                //is mean todat is later EndDate update status and redirect to list page
+                //is mean today is later EndDate update status and redirect to list page
                 UpdateSuveryStatus(guid, "N");
                 Response.Write("<script type='text/javascript'> alert('發生一些錯誤 即將跳轉至列表頁');location.href = 'TryList.aspx';</script>");
             }
-            var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid); //取得問題資料
+
             if (SuveryMasterDataRow != null)
             {
                 #region 辨別問卷狀態
@@ -57,12 +58,9 @@ namespace SuverySystem
                 for (int i = 0; i < QuestionDetailDT.Rows.Count; i++)
                 {
                     int QuestionNo = i + 1;
-
                     var QuestionDetailDR = QuestionDetailDT.Rows[i];
-
                     string QuestionType = QuestionDetailDR["DetailType"].ToString();
                     string MustKeyIn = QuestionDetailDR["DetailMustKeyin"].ToString();
-
                     #region 問題標題區
                     Label lblTitle = new Label();
                     lblTitle.Text = "</br>" + QuestionDetailDR["DetailTitle"].ToString();
@@ -74,7 +72,6 @@ namespace SuverySystem
                     #endregion
                     ///SQL語法有使用LEFT JOIN 需要判別欄位空值的問題
                     #region 單多選問題選項數目
-
                     int ItemCount; //單多選項目總數
                     if (QuestionDetailDR["ItemCount"].ToString() == string.Empty)
                         ItemCount = 0;
@@ -109,7 +106,6 @@ namespace SuverySystem
                             }
                             if (MustKeyIn == "Y")
                             {
-                                //textBox.CssClass = "Answer MustKeyIn";
                                 textBox.Attributes["required"] = "required";
                                 textBox.Attributes["aria-required"] = "true";
                             }
@@ -204,7 +200,6 @@ namespace SuverySystem
         /// <param name="e"></param>
         protected void btnCancle_Click(object sender, EventArgs e)
         {
-
             Response.Redirect("TryList.aspx");
         }
         /// <summary>put data into session and jump to confirm page</summary>
@@ -223,9 +218,7 @@ namespace SuverySystem
                 this.UserAge.Text
             };
             var UserInfoString = string.Join(",", UserInfo);
-            //Response.Write($"<script>alert('{UserInfoString}')</script>");
             this.Session["UserInfo"] = UserInfoString;
-
             //
             var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid); //取得問卷問題資料
             int QuestionCount = QuestionDetailDT.Rows.Count;                    //問卷共有幾個問題
@@ -412,6 +405,9 @@ namespace SuverySystem
                 return null;
             }
         }
+        /// <summary>DB內的資料不會自動過期 在這邊驗證日期及狀態 若已過期問卷狀態改為關閉</summary>
+        /// <param name="guid"></param>
+        /// <param name="StatusString"></param>
         public static void UpdateSuveryStatus(Guid guid, string StatusString)
         {
             string connectionString = DBHelper.GetConnectionString();

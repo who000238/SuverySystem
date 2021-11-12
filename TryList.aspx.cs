@@ -96,7 +96,10 @@ namespace SuverySystem
             }
 
         }
-
+        /// <summary>檢查搜尋列使用者輸入日期的值</summary>
+        /// <param name="SDate"></param>
+        /// <param name="EDate"></param>
+        /// <returns></returns>
         public static string DateCompare(DateTime SDate, DateTime EDate)
         {
             if (DateTime.Compare(SDate, EDate) < 0)
@@ -106,6 +109,10 @@ namespace SuverySystem
             else
                 return "false";
         }
+        /// <summary>檢查DB讀取出的日期判別問卷的狀態</summary>
+        /// <param name="SDate"></param>
+        /// <param name="EDate"></param>
+        /// <returns></returns>
         public static string CheckStatus(DateTime SDate, DateTime EDate)
         {
             DateTime Today = DateTime.Today;
@@ -121,6 +128,9 @@ namespace SuverySystem
             else
                 return "關閉中";
         }
+        /// <summary>搜尋按鈕事件</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSreach_Click(object sender, EventArgs e)
         {
             string txtSreach = this.txtSuveryTitle.Text;
@@ -157,13 +167,13 @@ namespace SuverySystem
             {
                 Response.Write("<script>alert('查無資料!!')</script>");
             }
-            //this.Repeater1.DataSource = dt;
-            //this.Repeater1.DataBind();
+
         }
 
 
 
-
+        /// <summary>找出所有問卷資料用於RP控制項</summary>
+        /// <returns></returns>
         public static DataTable GetSuveryList()
         {
             string connStr = DBHelper.GetConnectionString();
@@ -189,7 +199,11 @@ namespace SuverySystem
                 return null;
             }
         }
-
+        /// <summary>依照使用者輸入的標題、日期查找問卷資料</summary>
+        /// <param name="txtInput"></param>
+        /// <param name="SDate"></param>
+        /// <param name="EDate"></param>
+        /// <returns></returns>
         public static DataTable SearchSuvery(string txtInput, DateTime SDate, DateTime EDate)
         {
             string connStr = DBHelper.GetConnectionString();

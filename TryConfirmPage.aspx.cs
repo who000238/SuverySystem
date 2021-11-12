@@ -14,9 +14,10 @@ namespace SuverySystem
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (this.Session["ansString"] == null)
+            if (this.Session["ansString"] == null)//session內沒有存放資料但跳進來此頁面，跳出錯誤訊息及跳頁
             {
-
+                Response.Write("<script type='text/javascript'> alert('發生一些錯誤 即將跳轉至列表頁');location.href = 'TryList.aspx';</script>");
+                return;
             }
             string StringGuid = Request.QueryString["ID"];
             Guid guid = Guid.Parse(StringGuid);
@@ -53,7 +54,9 @@ namespace SuverySystem
                 }
             }
         }
-
+        /// <summary>送出問卷填答內容</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
             string StringGuid = Request.QueryString["ID"];
