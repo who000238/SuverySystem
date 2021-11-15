@@ -120,9 +120,10 @@ namespace SuverySystem
                             radioButtonList.ID = "Q" + QuestionNo.ToString();
                             if (MustKeyIn == "Y")
                             {
-                                RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator(); //驗證必填控制項的驗證控制項
+                                RequiredFieldValidator requiredFieldValidator = new RequiredFieldValidator(); //驗證RadioButtonList必填控制項的驗證控制項
                                 requiredFieldValidator.ControlToValidate = radioButtonList.ID.ToString();
                                 requiredFieldValidator.ErrorMessage = "請確認所有必填項目都有輸入值&選取值";
+                                requiredFieldValidator.CssClass = "ErrorMSG";
                                 this.QuestionArea.Controls.Add(requiredFieldValidator);
                                 //radioButtonList.CssClass = "Answer MustKeyIn";
                                 //radioButtonList.Attributes["required"] = "required";

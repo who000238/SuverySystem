@@ -14,6 +14,9 @@
         div {
             border: 1px solid
         }
+        .ErrorMSG{
+            color: red
+        }
     </style>
 </head>
 <body>

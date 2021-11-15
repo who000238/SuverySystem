@@ -131,6 +131,7 @@
     <Content Include="TryForm.aspx" />
     <Content Include="TryList.aspx" />
     <Content Include="UserControls\ucPager.ascx" />
+    <Content Include="UserControls\ucPagerForDetail.ascx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -251,6 +252,13 @@
     </Compile>
     <Compile Include="UserControls\ucPager.ascx.designer.cs">
       <DependentUpon>ucPager.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucPagerForDetail.ascx.cs">
+      <DependentUpon>ucPagerForDetail.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucPagerForDetail.ascx.designer.cs">
+      <DependentUpon>ucPagerForDetail.ascx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

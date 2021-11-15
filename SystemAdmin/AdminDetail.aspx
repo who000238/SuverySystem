@@ -1,5 +1,12 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/SystemAdmin/SysterAdmin.Master" AutoEventWireup="true" CodeBehind="AdminDetail.aspx.cs" Inherits="SuverySystem.SystemAdmin.Detail1" %>
 
+<%@ Register Src="~/UserControls/ucPagerForDetail.ascx" TagPrefix="uc1" TagName="ucPagerForDetail" %>
+
+
+
+
+
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script>
         $(function () {
@@ -104,6 +111,9 @@
                         </div>
                     </ItemTemplate>
                 </asp:Repeater>
+                <div style="background-color: orange; opacity: 0.8; text-align: center">
+                    <uc1:ucPagerForDetail runat="server" ID="ucPagerForDetail" PageSize="2" Url="/SystemAdmin/AdminDetail.aspx"/>
+                </div>
             </div>
         </div>
         <div id="tabs-4">

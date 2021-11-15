@@ -67,6 +67,10 @@ namespace SuverySystem.SystemAdmin
                 }
                 this.Repeater2.DataSource = list;
                 this.Repeater2.DataBind();
+
+                this.ucPagerForDetail.SuveruID = SuveryID;
+                this.ucPagerForDetail.TotalSize = list.Count;
+                this.ucPagerForDetail.Bind();
             }
             if (!IsPostBack)
             {
