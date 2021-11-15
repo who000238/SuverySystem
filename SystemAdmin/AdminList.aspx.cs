@@ -50,8 +50,13 @@ namespace SuverySystem.SystemAdmin
                     }
                     list.Add(model);
                 }
-                this.Repeater1.DataSource = list;
+                int pagesize = this.ucPager.PageSize;
+                var pageList = this.GetPagedList(list, pagesize);
+
+                this.Repeater1.DataSource = pageList;
                 this.Repeater1.DataBind();
+
+
                 this.ucPager.TotalSize = list.Count;
                 this.ucPager.Bind();
             }
@@ -73,8 +78,14 @@ namespace SuverySystem.SystemAdmin
                     model.Status = StatusString;
                     list.Add(model);
                 }
-                this.Repeater1.DataSource = list;
+
+                int pagesize = this.ucPager.PageSize;
+                var pageList = this.GetPagedList(list, pagesize);
+
+                this.Repeater1.DataSource = pageList;
                 this.Repeater1.DataBind();
+
+
                 this.ucPager.TotalSize = list.Count;
                 this.ucPager.txtSearch = txtSreach;
                 this.ucPager.StartDate = txtSDate;
@@ -119,6 +130,33 @@ namespace SuverySystem.SystemAdmin
             string guid = Guid.NewGuid().ToString();
             Response.Redirect($"AdminDetail.aspx?ID={guid}");
         }
+
+
+        #region 分頁控制項用
+        private int GetCurrentPage()
+        {
+            string pageText = Request.QueryString["Page"];
+
+            if (string.IsNullOrWhiteSpace(pageText))
+                return 1;
+
+            int intPage;
+            if (!int.TryParse(pageText, out intPage))
+                return 1;
+
+            if (intPage <= 0)
+                return 1;
+
+            return intPage;
+        }
+
+        private List<ListModel> GetPagedList(List<ListModel> list, int pagesize)
+        {
+            int startIndex = (this.GetCurrentPage() - 1) * pagesize;
+            return list.Skip(startIndex).Take(pagesize).ToList();
+        }
+        #endregion
+
 
         public static DataTable GetSuveryList()
         {

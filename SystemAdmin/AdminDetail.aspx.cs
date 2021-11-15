@@ -66,7 +66,7 @@ namespace SuverySystem.SystemAdmin
                     list.Add(userInfoModel);
                 }
                 int pagesize = this.ucPagerForDetail.PageSize;
-                var pagedList = this.GetPagedDataTable(list, pagesize);
+                var pagedList = this.GetPagedDetailList(list, pagesize);
 
                 this.Repeater2.DataSource = pagedList;
                 this.Repeater2.DataBind();
@@ -415,7 +415,7 @@ namespace SuverySystem.SystemAdmin
             return intPage;
         }
 
-        private List<UserInfoModel> GetPagedDataTable(List<UserInfoModel> list,int pagesize)
+        private List<UserInfoModel> GetPagedDetailList(List<UserInfoModel> list,int pagesize)
         {
             int startIndex = (this.GetCurrentPage() - 1) * pagesize;
             return list.Skip(startIndex).Take(pagesize).ToList();

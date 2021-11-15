@@ -53,10 +53,10 @@ namespace SuverySystem
                     }
                     list.Add(model);
                 }
+                int pagesize = this.ucPager.PageSize;
+                var pageList = this.GetPagedList(list, pagesize);
 
-
-
-                this.Repeater1.DataSource = list;
+                this.Repeater1.DataSource = pageList;
                 this.Repeater1.DataBind();
 
                 this.ucPager.TotalSize = list.Count;
@@ -83,8 +83,10 @@ namespace SuverySystem
                     list.Add(model);
                 }
 
+                int pagesize = this.ucPager.PageSize;
+                var pageList = this.GetPagedList(list, pagesize);
 
-                this.Repeater1.DataSource = list;
+                this.Repeater1.DataSource = pageList;
                 this.Repeater1.DataBind();
 
                 this.ucPager.TotalSize = list.Count;
@@ -136,8 +138,7 @@ namespace SuverySystem
             string txtSreach = this.txtSuveryTitle.Text;
             string txtSDate = this.txtStartDate.Text;
             string txtEDate = this.txtEndDate.Text;
-            DateTime SDate = Convert.ToDateTime(txtSDate);
-            DateTime EDate = Convert.ToDateTime(txtEDate);
+        
             //check input empty or not
             if (string.IsNullOrEmpty(txtSreach) ||
                 string.IsNullOrEmpty(txtSDate) ||
@@ -148,6 +149,8 @@ namespace SuverySystem
             }
 
             //chcek Date is OK or Not
+            DateTime SDate = Convert.ToDateTime(txtSDate);
+            DateTime EDate = Convert.ToDateTime(txtEDate);
             string DateResult = DateCompare(SDate, EDate);
             if (DateResult == "false")
             {
@@ -170,7 +173,30 @@ namespace SuverySystem
 
         }
 
+        #region 分頁控制項用
+        private int GetCurrentPage()
+        {
+            string pageText = Request.QueryString["Page"];
 
+            if (string.IsNullOrWhiteSpace(pageText))
+                return 1;
+
+            int intPage;
+            if (!int.TryParse(pageText, out intPage))
+                return 1;
+
+            if (intPage <= 0)
+                return 1;
+
+            return intPage;
+        }
+
+        private List<ListModel> GetPagedList(List<ListModel> list, int pagesize)
+        {
+            int startIndex = (this.GetCurrentPage() - 1) * pagesize;
+            return list.Skip(startIndex).Take(pagesize).ToList();
+        }
+        #endregion
 
         /// <summary>找出所有問卷資料用於RP控制項</summary>
         /// <returns></returns>
