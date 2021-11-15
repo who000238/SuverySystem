@@ -12,13 +12,22 @@
         $(function () {
             $("#tabs").tabs();
         });
+        $(document).ready(function () {
+            var tabIndex = $("#<%= hidCurrentTab.ClientID %>").val();
+            $("#tabs").tabs({
+                select: function (event, ui) {
+                    $("#<%= hidCurrentTab.ClientID %>").val(ui.index);
+                   }
+                       , selected: tabIndex
+                   });
+        });
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <input type="hidden" id="hfSuveryID" runat="server" />
     <input type="hidden" id="hfAnswerExistOrNot" runat="server" />
-
+    <asp:HiddenField ID="hidCurrentTab" runat="server" />
 
     <div id="tabs">
         <ul>
@@ -112,7 +121,7 @@
                     </ItemTemplate>
                 </asp:Repeater>
                 <div style="background-color: orange; opacity: 0.8; text-align: center">
-                    <uc1:ucPagerForDetail runat="server" ID="ucPagerForDetail" PageSize="3" Url="/SystemAdmin/AdminDetail.aspx"/>
+                    <uc1:ucPagerForDetail runat="server" ID="ucPagerForDetail" PageSize="3" Url="/SystemAdmin/AdminDetail.aspx" />
                 </div>
             </div>
         </div>
