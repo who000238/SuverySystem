@@ -112,7 +112,7 @@
                     </ItemTemplate>
                 </asp:Repeater>
                 <div style="background-color: orange; opacity: 0.8; text-align: center">
-                    <uc1:ucPagerForDetail runat="server" ID="ucPagerForDetail" PageSize="2" Url="/SystemAdmin/AdminDetail.aspx"/>
+                    <uc1:ucPagerForDetail runat="server" ID="ucPagerForDetail" PageSize="3" Url="/SystemAdmin/AdminDetail.aspx"/>
                 </div>
             </div>
         </div>

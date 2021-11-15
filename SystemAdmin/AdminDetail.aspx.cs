@@ -65,7 +65,10 @@ namespace SuverySystem.SystemAdmin
 
                     list.Add(userInfoModel);
                 }
-                this.Repeater2.DataSource = list;
+                int pagesize = this.ucPagerForDetail.PageSize;
+                var pagedList = this.GetPagedDataTable(list, pagesize);
+
+                this.Repeater2.DataSource = pagedList;
                 this.Repeater2.DataBind();
 
                 this.ucPagerForDetail.SuveruID = SuveryID;
@@ -394,6 +397,31 @@ namespace SuverySystem.SystemAdmin
 
 
         #region Method
+        #region 分頁控制項用
+        private int GetCurrentPage()
+        {
+            string pageText = Request.QueryString["Page"];
+
+            if (string.IsNullOrWhiteSpace(pageText))
+                return 1;
+
+            int intPage;
+            if (!int.TryParse(pageText, out intPage))
+                return 1;
+
+            if (intPage <= 0)
+                return 1;
+
+            return intPage;
+        }
+
+        private List<UserInfoModel> GetPagedDataTable(List<UserInfoModel> list,int pagesize)
+        {
+            int startIndex = (this.GetCurrentPage() - 1) * pagesize;
+            return list.Skip(startIndex).Take(pagesize).ToList();
+        }
+        #endregion
+
         #region CreateQuestionItem(多載方法??)
         public static void CreateQuestionItem(int DetailID, Guid SuveryID, string Item1, string Item2, string Item3, string Item4, int ItemCount)
         {
