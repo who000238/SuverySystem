@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/SystemAdmin/SysterAdmin.Master" AutoEventWireup="true" CodeBehind="AdminList.aspx.cs" Inherits="SuverySystem.SystemAdmin.List1" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/SystemAdmin/SysterAdmin.Master" AutoEventWireup="true" CodeBehind="AdminList.aspx.cs" Inherits="SuverySystem.SystemAdmin.List1" EnableEventValidation="false" %>
 
 <%@ Register Src="~/UserControls/ucPager.ascx" TagPrefix="uc1" TagName="ucPager" %>
 
@@ -14,8 +14,8 @@
             <asp:Button ID="btnSreach" runat="server" Text="搜尋" OnClick="btnSreach_Click" />
         </div>
         <div>
-            <asp:Button ID="btnDelete" runat="server" Text="刪除問卷" OnClick="btnDelete_Click" />
-            &nbsp;&nbsp;
+            <%--<asp:Button ID="btnDelete" runat="server" Text="刪除問卷" OnClick="btnDelete_Click" />--%>
+            <%--&nbsp;&nbsp;--%>
             <asp:Button ID="btnAdd" runat="server" Text="新增問卷" OnClick="btnAdd_Click" />
         </div>
         <div style="border: dashed 1px">
@@ -34,7 +34,10 @@
                     </HeaderTemplate>
                     <ItemTemplate>
                         <div class="row">
-                            <div class="col-1"><%#Eval("No") %></div>
+                            <div class="col-1">
+                                <input type="hidden" class="hfSuveryID" value="<%#Eval("SuveryID") %>"/>
+                                <asp:Button runat="server" Text="刪除" CssClass="btnDelete" />
+                            </div>
                             <div class="col-3"><a href="/TryForm.aspx?ID=<%#Eval("SuveryID") %>"><%#Eval("Title") %></a></div>
                              <div class="col-2"><%#Eval("Status") %></div>
                             <div class="col-2"><%#Eval("StartDate") %></div>
@@ -49,4 +52,25 @@
                         </div>
             </div>
         </div>
+    <script>
+        $(document).on("click", ".btnDelete", function () {
+            if (confirm('確定刪除 ? ')) {
+                var td = $(this).closest("div");
+                var hf = td.find("input.hfSuveryID");
+
+                var rowSuveryID = hf.val();
+                $.ajax({
+                    url: "http://localhost:50503/SystemAdmin/AdminListHandler.ashx?actionName=Delete",
+                    type: "POST",
+                    data: {
+                        "ID": rowSuveryID,
+                    },
+                    success: function (result) {
+                        alert('刪除成功');
+                        location.reload()
+                    }
+                });
+            }
+        });
+    </script>
 </asp:Content>

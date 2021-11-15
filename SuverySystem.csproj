@@ -133,7 +133,7 @@
     <Content Include="TryConfirmPage.aspx" />
     <Content Include="TryForm.aspx" />
     <Content Include="TryList.aspx" />
-    <Content Include="TryTabsFoucs.aspx" />
+    <Content Include="Test\TryTabsFoucs.aspx" />
     <Content Include="UserControls\ucPager.ascx" />
     <Content Include="UserControls\ucPagerForDetail.ascx" />
     <Content Include="Web.config" />
@@ -141,6 +141,9 @@
   <ItemGroup>
     <Compile Include="Models\ListModel.cs" />
     <Compile Include="Models\SuveryMasterModel.cs" />
+    <Compile Include="SystemAdmin\AdminListHandler.ashx.cs">
+      <DependentUpon>AdminListHandler.ashx</DependentUpon>
+    </Compile>
     <Compile Include="TestPage.aspx.cs">
       <DependentUpon>TestPage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -250,11 +253,11 @@
     <Compile Include="TryList.aspx.designer.cs">
       <DependentUpon>TryList.aspx</DependentUpon>
     </Compile>
-    <Compile Include="TryTabsFoucs.aspx.cs">
+    <Compile Include="Test\TryTabsFoucs.aspx.cs">
       <DependentUpon>TryTabsFoucs.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="TryTabsFoucs.aspx.designer.cs">
+    <Compile Include="Test\TryTabsFoucs.aspx.designer.cs">
       <DependentUpon>TryTabsFoucs.aspx</DependentUpon>
     </Compile>
     <Compile Include="UserControls\ucPager.ascx.cs">
@@ -298,6 +301,7 @@
     <None Include="packages.config" />
     <Content Include="SystemAdmin\SysterAdmin.Master" />
     <Content Include="SystemAdmin\TemplateQuestionHandler.ashx" />
+    <Content Include="SystemAdmin\AdminListHandler.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
