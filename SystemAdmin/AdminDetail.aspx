@@ -21,6 +21,24 @@
                        , selected: tabIndex
                    });
         });
+        $(function () {
+
+            //tabs頁簽 使用cookie記住最後開啟的頁簽
+            $("#tabs").tabs({
+
+                //起始頁active: 導向cookie("tabs")所指頁簽，如果空白導向tabs:0
+                active: ($.cookie("tabs") || 0),
+
+                //換頁動作activate 
+                activate: function (event, ui) {
+                    //取得選取的頁簽編號
+                    var newIndex = ui.newTab.parent().children().index(ui.newTab);
+
+                    //記錄到cookie   
+                    $.cookie("tabs", newIndex, { expires: 1 });
+                }
+            });
+        })
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
