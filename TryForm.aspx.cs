@@ -294,7 +294,14 @@ namespace SuverySystem
                     case "QT4":
                         ControlName = "Q" + (i + 1).ToString();
                         TempAnswerList = Request.Form.GetValues($"{ControlName}").ToList();
+                        if (string.IsNullOrEmpty(TempAnswerList[0]))
+                        {
+                            AnswerArray[i] = "非必填問題，使用者未填寫";
+                        }
+                        else
+                        {
                         AnswerArray[i] = TempAnswerList[0];
+                        }
                         break;
                     case "QT5":
                         ControlName = "Q" + (i + 1).ToString();
@@ -311,22 +318,15 @@ namespace SuverySystem
                         break;
                     case "QT6":
                         int ItemCount = (int)QuestionDetailDR["ItemCount"];
+
                         for (int j = 0; j < ItemCount; j++)
                         {
                             ControlName = "Q" + (i + 1).ToString() + "$" + j;
                             var inpList = HttpContext.Current.Request.Form.GetValues($"{ControlName}");
                             string[] list = inpList ?? new string[] { };
-                            //if (list.Length == 0)
-                            //{
-                            //    AnswerArray[i] = "非必填問題，使用者未填寫";
-                            //}
-                            //if(list.Length != 0)
-                            //if (list != null)
-                            //{
-                            //tempAnswer = tempAnswer + list[0] + " ";
-                            tempAnswer = tempAnswer + string.Join("&", list);
-                            //tempAnswer = string.Join("&", list);
-                            //}
+
+                            //tempAnswer = tempAnswer + string.Join("&", list);
+                            tempAnswer = tempAnswer+ " "+ string.Join(" ", list);
                         }
                         if (MustKyeIn=="Y" && string.IsNullOrWhiteSpace(tempAnswer))
                         {

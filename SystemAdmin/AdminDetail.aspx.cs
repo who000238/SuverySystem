@@ -213,6 +213,7 @@ namespace SuverySystem.SystemAdmin
                         this.StatisticArea.Controls.Add(lblTitle);
                         for (int j = 0; j < ItemCount; j++)
                         {
+
                             string ColName = "Item" + (j + 1).ToString();
                             string ItemName = QuestionDetailDR[ColName].ToString();
                             string ItemSelectedCount = GetItemSelectedCount(ItemName, DetailID);
@@ -893,8 +894,8 @@ namespace SuverySystem.SystemAdmin
                 return null;
             }
         }
-        //
-        public static string GetItemSelectedCount(string ItemName,int DetailID)
+        //單選用
+        public static string GetItemSelectedCount(string ItemName, int DetailID)
         {
             string connectionString = DBHelper.GetConnectionString();
             string dbCommandString =
@@ -903,7 +904,7 @@ namespace SuverySystem.SystemAdmin
                             WHERE Answer LIKE @ItemName AND [DetailID] = @DetailID
                 ";
             List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@ItemName",   ItemName  ));
+            list.Add(new SqlParameter("@ItemName", "%" +ItemName+ "%"));
             list.Add(new SqlParameter("@DetailID", DetailID));
             try
             {
@@ -917,6 +918,29 @@ namespace SuverySystem.SystemAdmin
                 return null;
             }
         }
+        //多選用
+        //public static string GetItemSelectedCount(string ItemName)
+        //{
+        //    string connectionString = DBHelper.GetConnectionString();
+        //    string dbCommandString =
+        //                  @" SELECT COUNT([SuverySystem].[dbo].[AnswerDetail].[Answer]) AS SelectedCount
+        //                        FROM  AnswerDetail 
+        //                    WHERE Answer LIKE @ItemName 
+        //        ";
+        //    List<SqlParameter> list = new List<SqlParameter>();
+        //    list.Add(new SqlParameter("@ItemName", ItemName));
+        //    try
+        //    {
+        //        var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
+        //        string ItemSelectedCount = dr["SelectedCount"].ToString();
+        //        return ItemSelectedCount;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.WriteLog(ex);
+        //        return null;
+        //    }
+        //}
         #endregion
         #endregion
         #region DDL_SelectedIndexChange

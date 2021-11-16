@@ -108,7 +108,7 @@ namespace SuverySystem
                         Chart1.ChartAreas.Add("ChartArea1"); //圖表區域集合
                         Chart1.Legends.Add("Legends1"); //圖例集合說明
                         Chart1.Series.Add("Series1"); //數據序列集合
-                         //設定 Chart-------------------------------------------------------------------------
+                                                      //設定 Chart-------------------------------------------------------------------------
                         Chart1.Width = 770;
                         Chart1.Height = 400;
                         title.Text = QuestionTitle;
@@ -133,8 +133,8 @@ namespace SuverySystem
                         Chart1.Series["Series1"].Points.DataBindXY(Title, Answer);
                         Chart1.Series["Series1"].LegendText = "#VALX: [ #PERCENT{P1} ]"; //X軸 + 百分比
                         Chart1.Series["Series1"].Label = "#VALX\n#PERCENT{P1}"; //X軸 + 百分比
-                         //Chart1.Series["Series1"].LabelForeColor = Color.FromArgb(0, 90, 255); //字體顏色
-                         //字體設定
+                                                                                //Chart1.Series["Series1"].LabelForeColor = Color.FromArgb(0, 90, 255); //字體顏色
+                                                                                //字體設定
                         Chart1.Series["Series1"].Font = new System.Drawing.Font("Trebuchet MS", 10, System.Drawing.FontStyle.Bold);
                         Chart1.Series["Series1"].Points.FindMaxByValue().LabelForeColor = Color.Red;
                         //Chart1.Series["Series1"].Points.FindMaxByValue().Color = Color.Red;
@@ -143,8 +143,8 @@ namespace SuverySystem
                         //Chart1.Series["Series1"]["DoughnutRadius"] = "80"; // ChartType為Doughnut時，Set Doughnut hole size
                         //Chart1.Series["Series1"]["PieLabelStyle"] = "Inside"; //數值顯示在圓餅內
                         Chart1.Series["Series1"]["PieLabelStyle"] = "Outside"; //數值顯示在圓餅外
-                          //Chart1.Series["Series1"]["PieLabelStyle"] = "Disabled"; //不顯示數值
-                          //設定圓餅效果，除 Default 外其他效果3D不適用
+                                                                               //Chart1.Series["Series1"]["PieLabelStyle"] = "Disabled"; //不顯示數值
+                                                                               //設定圓餅效果，除 Default 外其他效果3D不適用
                         Chart1.Series["Series1"]["PieDrawingStyle"] = "Default";
                         //Chart1.Series["Series1"]["PieDrawingStyle"] = "SoftEdge";
                         //Chart1.Series["Series1"]["PieDrawingStyle"] = "Concave";
@@ -164,7 +164,7 @@ namespace SuverySystem
                             string ItemName = QuestionDetailDR[ColName].ToString();
                             Title[j] = ItemName;
 
-                            string ItemSelectedCount = GetItemSelectedCount(ItemName, DetailID);
+                            string ItemSelectedCount = GetItemSelectedCount(ItemName);
 
                             Answer[j] = Convert.ToInt32(ItemSelectedCount);
 
@@ -307,7 +307,7 @@ namespace SuverySystem
         /// <summary>取得單複選選項個數</summary>
         /// <param name="ItemName"></param>
         /// <returns></returns>
-        public static string GetItemSelectedCount(string ItemName,int DetailID)
+        public static string GetItemSelectedCount(string ItemName, int DetailID)
         {
             string connectionString = DBHelper.GetConnectionString();
             string dbCommandString =
@@ -316,7 +316,7 @@ namespace SuverySystem
                             WHERE Answer LIKE @ItemName AND [DetailID] = @DetailID
                 ";
             List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@ItemName",  ItemName));
+            list.Add(new SqlParameter("@ItemName", ItemName));
             list.Add(new SqlParameter("@DetailID", DetailID));
             try
             {
@@ -330,6 +330,30 @@ namespace SuverySystem
                 return null;
             }
         }
+
+        public static string GetItemSelectedCount(string ItemName)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                          @" SELECT COUNT([SuverySystem].[dbo].[AnswerDetail].[Answer]) AS SelectedCount
+                                FROM  AnswerDetail 
+                            WHERE Answer LIKE @ItemName 
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@ItemName", "%" + ItemName + "%"));
+            try
+            {
+                var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
+                string ItemSelectedCount = dr["SelectedCount"].ToString();
+                return ItemSelectedCount;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
+
         #endregion
     }
 }

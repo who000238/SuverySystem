@@ -49,6 +49,24 @@ namespace SuverySystem
                 {
                     var QuestionDetailDR = QuestionDetailDT.Rows[i];
                     Label lblForConfirmMsg = new Label();
+
+                    //string tempAnsString = ansStringArray[i];
+                    //if (tempAnsString.Contains("&"))
+                    //{
+                    //    string[] CBLAnsString = tempAnsString.Split('&');
+                    //    tempAnsString = string.Join(" ", CBLAnsString);
+
+                    //    //string[] CBLAnsString = tempAnsString.Split('&');
+                    //    //for (int j = 0; j < CBLAnsString.Length; j++)
+                    //    //{
+                    //    //    if (!string.IsNullOrEmpty(CBLAnsString[j]))
+                    //    //    {
+                    //    //        tempAnsString = string.Join(",", CBLAnsString[j]);
+                    //    //    }
+                    //    //}
+
+                    //}
+
                     lblForConfirmMsg.Text = (i + 1).ToString() + ".  " + QuestionDetailDR["DetailTitle"].ToString() + "</br>" + ansStringArray[i] + "</br></br>";
                     this.AnsArea.Controls.Add(lblForConfirmMsg);
                 }
