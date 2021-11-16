@@ -515,7 +515,7 @@ namespace SuverySystem.SystemAdmin
             //
             Response.Clear();
             Response.ContentType = "text/comma-separated-values;charset=BIG5";
-            Response.AddHeader("content-disposition", $"attachment; filename={SuveryTitle}-填寫資料'.csv");
+            Response.AddHeader("content-disposition", $"attachment; filename={SuveryTitle}-填寫資料.csv");
 
             StreamWriter sw = new StreamWriter(Response.OutputStream, Encoding.GetEncoding("BIG5"));
             for (int i = 0; i < CSVlist.Count; i++)
