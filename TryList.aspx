@@ -28,10 +28,13 @@
 <body>
     <form id="form1" runat="server">
         <div class="container">
-            <div><a href="SystemAdmin/AdminList.aspx">前往後台</a></div>
-            <div><a href="SystemAdmin/AdminList.aspx" class="disabled">前往後台</a></div>
-            <a href="TestPage.aspx">Test.aspx</a>
             <h1>前台</h1>
+            <div>
+                <a href="SystemAdmin/AdminList.aspx" runat="server" id="LoginedLink">前往後台</a>
+                <a href="Login.aspx" runat="server" id="LoginLink">Login.aspx</a>
+                <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click">登出</asp:LinkButton>
+
+            </div>
             <div style="border: dashed 1px">
                 <asp:TextBox ID="txtSuveryTitle" runat="server" placeholder="問卷標題" Width="408px" TextMode="Search"></asp:TextBox><br />
                 <asp:TextBox ID="txtStartDate" runat="server" placeholder="開始日期" TextMode="Date"></asp:TextBox>

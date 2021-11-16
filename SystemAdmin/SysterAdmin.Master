@@ -33,10 +33,9 @@
             <h1>後台 - 問卷管理</h1>
             <div>
                 <a href="/SystemAdmin/AdminTemplateQuestion.aspx">常用問題管理</a>
-                <br />
                 <a href="/SystemAdmin/AdminList.aspx">後台列表頁</a>
-                <br />  
                 <a href="/TryList.aspx">回到前台列表頁</a>
+                <asp:LinkButton ID="btnLogout" runat="server" OnClick="btnLogout_Click">登出</asp:LinkButton>
             </div>
             <div>
                 <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">

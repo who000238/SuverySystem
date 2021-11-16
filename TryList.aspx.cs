@@ -15,6 +15,19 @@ namespace SuverySystem
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            //檢查是否已登入
+            var Logined = this.Session["Logined"];
+            if (Logined != null)
+            {
+                this.LoginLink.Visible = false;
+            }
+            else
+            {
+                this.LoginedLink.Visible = false;
+                this.btnLogout.Visible = false;
+            }
+
+
             string txtSreach = Request.QueryString["Search"];
             string txtSDate = Request.QueryString["StartDate"];
             string txtEDate = Request.QueryString["EndDate"];
@@ -254,6 +267,12 @@ namespace SuverySystem
                 Logger.WriteLog(ex);
                 return null;
             }
+        }
+
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            this.Session["Logined"] = null;
+            Response.Redirect(Request.Url.ToString());
         }
     }
 }

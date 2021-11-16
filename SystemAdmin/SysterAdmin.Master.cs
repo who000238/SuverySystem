@@ -11,7 +11,19 @@ namespace SuverySystem.SystemAdmin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            //檢查是否已登入
+            var Logined = this.Session["Logined"];
+            if (Logined == null)
+            {
+                Response.Redirect("/TryList.aspx");
+            }
 
+        }
+
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            this.Session["Logined"] = null;
+            Response.Redirect("/TryList.aspx");
         }
     }
 }

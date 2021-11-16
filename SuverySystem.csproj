@@ -92,6 +92,7 @@
   <ItemGroup>
     <Content Include="js\jquery-ui.css" />
     <Content Include="js\jquery-ui.min.js" />
+    <Content Include="Login.aspx" />
     <Content Include="Scripts\custom.min.js" />
     <Content Include="TestPage.aspx" />
     <Content Include="Test\ConfirmPage.aspx" />
@@ -139,6 +140,13 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Models\ListModel.cs" />
     <Compile Include="Models\SuveryMasterModel.cs" />
     <Compile Include="SystemAdmin\AdminListHandler.ashx.cs">
