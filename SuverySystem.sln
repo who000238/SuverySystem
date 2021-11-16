@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuverySystem", "SuverySyste
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBSource", "DBSource\DBSource.csproj", "{E73D67BF-9CB4-4BE8-88C5-62D1AED7FB38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Method", "..\Method\Method.csproj", "{C920D567-8308-488C-B4EE-B063F0B75224}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Method", "Method\Method.csproj", "{C920D567-8308-488C-B4EE-B063F0B75224}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
