@@ -50,7 +50,7 @@
     <div id="tabs">
         <ul>
             <li><a href="#tabs-1">問卷</a></li>
-            <%--<li><a href="#tabs-2">問題</a></li>--%>
+            <li><a href="#tabs-2">問題</a></li>
             <li><a href="#tabs-3">填寫資料</a></li>
             <li><a href="#tabs-4">統計</a></li>
         </ul>
@@ -66,8 +66,8 @@
             <asp:Button ID="btnUpdate" runat="server" Text="修改問卷資料" OnClick="btnUpdate_Click" OnClientClick="javascript:return confirm('確定修改 ?');" Visible="false" />
             <br />
             <hr />
-            <%-- </div>
-        <div id="tabs-2">--%>
+             </div>
+        <div id="tabs-2">
             種類
             <asp:DropDownList ID="TemplateQddl" runat="server" OnSelectedIndexChanged="TemplateQddl_SelectedIndexChanged" AutoPostBack="true">
                 <asp:ListItem></asp:ListItem>

@@ -183,6 +183,7 @@ namespace SuverySystem.SystemAdmin
             for (int i = 0; i < SuveryQuestionTitleDT.Rows.Count; i++)
             {
                 var QuestionDetailDR = SuveryQuestionTitleDT.Rows[i];
+                int DetailID = (int)QuestionDetailDR["DetailID"];
                 string QuestionTitle = QuestionDetailDR["DetailTitle"].ToString();
                 string QuestionType = QuestionDetailDR["DetailType"].ToString();
                 int ItemCount; //單多選項目總數
@@ -201,7 +202,7 @@ namespace SuverySystem.SystemAdmin
 
                             string ColName = "Item" + (j + 1).ToString();
                             string ItemName = QuestionDetailDR[ColName].ToString();
-                            string ItemSelectedCount = GetItemSelectedCount(ItemName);
+                            string ItemSelectedCount = GetItemSelectedCount(ItemName, DetailID);
                             Label lblItemTitle = new Label();
                             lblItemTitle.Text = "&emsp;&emsp;" + ItemName + "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" + $"共 : {ItemSelectedCount} 人" + "</br>";
                             this.StatisticArea.Controls.Add(lblItemTitle);
@@ -214,7 +215,7 @@ namespace SuverySystem.SystemAdmin
                         {
                             string ColName = "Item" + (j + 1).ToString();
                             string ItemName = QuestionDetailDR[ColName].ToString();
-                            string ItemSelectedCount = GetItemSelectedCount(ItemName);
+                            string ItemSelectedCount = GetItemSelectedCount(ItemName, DetailID);
                             Label lblItemTitle = new Label();
                             lblItemTitle.Text = "&emsp;&emsp;" + ItemName + "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" + $"共 : {ItemSelectedCount} 人" + "</br>";
                             this.StatisticArea.Controls.Add(lblItemTitle);
@@ -893,16 +894,17 @@ namespace SuverySystem.SystemAdmin
             }
         }
         //
-        public static string GetItemSelectedCount(string ItemName)
+        public static string GetItemSelectedCount(string ItemName,int DetailID)
         {
             string connectionString = DBHelper.GetConnectionString();
             string dbCommandString =
                           @" SELECT COUNT([SuverySystem].[dbo].[AnswerDetail].[Answer]) AS SelectedCount
                                 FROM  AnswerDetail 
-                            WHERE Answer LIKE @ItemName
+                            WHERE Answer LIKE @ItemName AND [DetailID] = @DetailID
                 ";
             List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@ItemName", "%" + ItemName + "%"));
+            list.Add(new SqlParameter("@ItemName",   ItemName  ));
+            list.Add(new SqlParameter("@DetailID", DetailID));
             try
             {
                 var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);

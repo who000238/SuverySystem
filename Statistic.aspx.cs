@@ -75,6 +75,7 @@ namespace SuverySystem
                 var QuestionDetailDR = SuveryQuestionTitleDT.Rows[i];                      //AnswerTable內的DR
                 string QuestionTitle = QuestionDetailDR["DetailTitle"].ToString();       //問題的Title
                 string QuestionType = QuestionDetailDR["DetailType"].ToString();      //問題的Type  
+                int DetailID = (int)QuestionDetailDR["DetailID"];
                 //單多選項目總數
                 int ItemCount;
                 if (QuestionDetailDR["ItemCount"].ToString() == string.Empty)
@@ -99,7 +100,7 @@ namespace SuverySystem
                             string ColName = "Item" + (j + 1).ToString();
                             string ItemName = QuestionDetailDR[ColName].ToString();
                             Title[j] = ItemName;
-                            string ItemSelectedCount = GetItemSelectedCount(ItemName);
+                            string ItemSelectedCount = GetItemSelectedCount(ItemName, DetailID);
                             Answer[j] = Convert.ToInt32(ItemSelectedCount);
                         }
                         #region 圓餅圖產生
@@ -163,7 +164,7 @@ namespace SuverySystem
                             string ItemName = QuestionDetailDR[ColName].ToString();
                             Title[j] = ItemName;
 
-                            string ItemSelectedCount = GetItemSelectedCount(ItemName);
+                            string ItemSelectedCount = GetItemSelectedCount(ItemName, DetailID);
 
                             Answer[j] = Convert.ToInt32(ItemSelectedCount);
 
@@ -306,16 +307,17 @@ namespace SuverySystem
         /// <summary>取得單複選選項個數</summary>
         /// <param name="ItemName"></param>
         /// <returns></returns>
-        public static string GetItemSelectedCount(string ItemName)
+        public static string GetItemSelectedCount(string ItemName,int DetailID)
         {
             string connectionString = DBHelper.GetConnectionString();
             string dbCommandString =
                           @" SELECT COUNT([SuverySystem].[dbo].[AnswerDetail].[Answer]) AS SelectedCount
                                 FROM  AnswerDetail 
-                            WHERE Answer LIKE @ItemName
+                            WHERE Answer LIKE @ItemName AND [DetailID] = @DetailID
                 ";
             List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@ItemName", "%" + ItemName + "%"));
+            list.Add(new SqlParameter("@ItemName",  ItemName));
+            list.Add(new SqlParameter("@DetailID", DetailID));
             try
             {
                 var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
