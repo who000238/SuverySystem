@@ -1010,6 +1010,8 @@ namespace SuverySystem.SystemAdmin
             string SuveryID = Request.QueryString["ID"].ToString();
             Guid guid = Guid.Parse(SuveryID);
 
+            string SuveryTitle = GetSuveryTitle(guid);
+
             List<CSVDownloadModel> CSVlist = new List<CSVDownloadModel>();
 
 
@@ -1021,15 +1023,24 @@ namespace SuverySystem.SystemAdmin
                 string[] tempArray = new string[UserInfoDT.Rows.Count];
                 //
                 var UserInfoDR = UserInfoDT.Rows[i];
+                //
                 string UserInfoString = UserInfoDR["UserInfo"].ToString();
                 var SingleUserAnswerDT = GetSingleUserAnswerDetail(UserInfoString);
-                string csvString = string.Empty;
-                csvString = "填表人資料 : " + UserInfoString;
+
+                string[] UserInfoArray = UserInfoString.Split(',');
+                string InfoString = "姓名:" + UserInfoArray[0] + " 電話:" + UserInfoArray[1] + " 信箱:" + UserInfoArray[2] + " 年齡:" + UserInfoArray[3];
+
+                string csvString = "填表人資料 - " + InfoString;
+                //csvString =  
+                //
+                //var SingleUserAnswerDT = GetSingleUserAnswerDetail(UserInfoString);
+                //string csvString = string.Empty;
+                //csvString = "填表人資料 : " + UserInfoString;
                 for (int j = 0; j < SingleUserAnswerDT.Rows.Count; j++)
                 {
                     var SingleAnswerDR = SingleUserAnswerDT.Rows[j];
                     string QuestionAndAnswerString = string.Empty;
-                    csvString += "問題 : " + SingleAnswerDR["DetailTitle"].ToString() + "    " + "回答 : " + SingleAnswerDR["Answer"].ToString() + "    ";
+                    csvString += "   問題 : " + SingleAnswerDR["DetailTitle"].ToString() + "    " + "回答 : " + SingleAnswerDR["Answer"].ToString() + "    ";
                     tempArray[i] = csvString;
 
                 }
@@ -1045,7 +1056,7 @@ namespace SuverySystem.SystemAdmin
             //
             Response.Clear();
             Response.ContentType = "text/comma-separated-values;charset=BIG5";
-            Response.AddHeader("content-disposition", "attachment; filename=檔名.csv");
+            Response.AddHeader("content-disposition", $"attachment; filename={SuveryTitle}-填寫資料'.csv");
 
             StreamWriter sw = new StreamWriter(Response.OutputStream, Encoding.GetEncoding("BIG5"));
             for (int i = 0; i < CSVlist.Count; i++)
@@ -1057,6 +1068,31 @@ namespace SuverySystem.SystemAdmin
 
             Response.End();
             //
+        }
+
+        public static string GetSuveryTitle(Guid guid)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                          @" 
+                        SELECT 
+                             [SuveryMaster].[Title]
+                          FROM [SuverySystem].[dbo].[SuveryMaster]
+                          WHERE [SuveryMaster].[SuveryID]=@Guid
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@Guid", guid));
+            try
+            {
+                var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
+                string Title = dr["Title"].ToString();
+                return Title;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
         }
 
     }
