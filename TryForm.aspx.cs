@@ -1,4 +1,5 @@
 ﻿using DBSource;
+using Method;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,14 +15,13 @@ namespace SuverySystem
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
             UnobtrusiveValidationMode = UnobtrusiveValidationMode.None;
 
             string StringGuid = Request.QueryString["ID"];
             Guid guid = Guid.Parse(StringGuid);
 
-            var SuveryMasterDataRow = GetSuveryMasterData(guid); //取得部分問卷資料
-            var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid); //取得問題資料
+            var SuveryMasterDataRow = ForegroundMethod.GetSuveryMasterData(guid); //取得部分問卷資料
+            var QuestionDetailDT = ForegroundMethod.GetQuestionDetailAndItemDetail(guid); //取得問題資料
 
             //build new model and check status
             DateTime today = DateTime.Now;
@@ -30,13 +30,13 @@ namespace SuverySystem
             if (DateTime.Compare(today, SDate) < 0)
             {
                 //is mean today is early StartDate update status and redirect to list page
-                UpdateSuveryStatus(guid, "N"); //true Status letter is "W" is mean "wait" but now use "N" to represent  
+                ForegroundMethod.UpdateSuveryStatus(guid, "N"); //true Status letter is "W" is mean "wait" but now use "N" to represent  
                 Response.Write("<script type='text/javascript'> alert('發生一些錯誤 即將跳轉至列表頁');location.href = 'TryList.aspx';</script>");
             }
             else if (DateTime.Compare(today, EDate) > 0)
             {
                 //is mean today is later EndDate update status and redirect to list page
-                UpdateSuveryStatus(guid, "N");
+                ForegroundMethod.UpdateSuveryStatus(guid, "N");
                 Response.Write("<script type='text/javascript'> alert('發生一些錯誤 即將跳轉至列表頁');location.href = 'TryList.aspx';</script>");
             }
 
@@ -125,13 +125,9 @@ namespace SuverySystem
                                 requiredFieldValidator.ErrorMessage = "請確認所有必填項目都有輸入值&選取值";
                                 requiredFieldValidator.CssClass = "ErrorMSG";
                                 this.QuestionArea.Controls.Add(requiredFieldValidator);
-                                //radioButtonList.CssClass = "Answer MustKeyIn";
-                                //radioButtonList.Attributes["required"] = "required";
-                                //radioButtonList.Attributes["aria-required"] = "true";
-                                //radioButtonList.Attributes.Add("class", "MustKeyInRB");
+                             
                             }
-                            //else
-                            //    radioButtonList.CssClass = "Answer";
+                  
                             for (int j = 0; j < ItemCount; j++)
                             {
                                 string ColName = "Item" + (j + 1).ToString();
@@ -143,7 +139,6 @@ namespace SuverySystem
                                 if (MustKeyIn == "Y")
                                 {
                                     item.Attributes.Add("class", "MustKeyInRB");
-                                    //item.Attributes.Add("class", "MustKeyIn");
                                 }
                                 radioButtonList.Items.Add(item);
                             }
@@ -152,19 +147,6 @@ namespace SuverySystem
                         case "QT6":
                             CheckBoxList checkBoxList = new CheckBoxList();
                             checkBoxList.ID = "Q" + QuestionNo.ToString();
-                            if (MustKeyIn == "Y")
-                            {
-
-                                //RequiredFieldValidator requiredFieldValidator1 = new RequiredFieldValidator(); //驗證必填控制項的驗證控制項
-                                //requiredFieldValidator1.ControlToValidate = checkBoxList.ID.ToString();
-                                //requiredFieldValidator1.ErrorMessage = "請確認所有必填項目都有輸入值&選取值";
-                                //this.QuestionArea.Controls.Add(requiredFieldValidator1);
-
-                                //checkBoxList.CssClass = "Answer MustKeyIn";
-                                //checkBoxList.Attributes.Add("class", "MustKeyInCBL");
-                            }
-                            //else
-                            //    checkBoxList.CssClass = "Answer";
                             checkBoxList.Attributes.Add("runat", "server");
                             for (int j = 0; j < ItemCount; j++)
                             {
@@ -178,31 +160,23 @@ namespace SuverySystem
                                 if (MustKeyIn == "Y")
                                 {
                                     item.Attributes.Add("class", "MustKeyInCBL");
-                                    //item.Attributes.Add("class", "MustKeyIn");
                                 }
                                 checkBoxList.Items.Add(item);
                             }
                             this.QuestionArea.Controls.Add(checkBoxList);
-
                             break;
                             #endregion
                     }
                 }
                 //提示共有幾個問題的Label
                 Label lblQCount = new Label();
-                lblQCount.Text = "共 " + QuestionDetailDT.Rows.Count.ToString() + " 個問題";
+                lblQCount.Text = "</br></br>共 " + QuestionDetailDT.Rows.Count.ToString() + " 個問題";
                 this.QuestionArea.Controls.Add(lblQCount);
             }
         }
 
 
-        /// <summary>back to list page </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void btnCancle_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("TryList.aspx");
-        }
+        
         /// <summary>put data into session and jump to confirm page</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -221,7 +195,7 @@ namespace SuverySystem
             var UserInfoString = string.Join(",", UserInfo);
             this.Session["UserInfo"] = UserInfoString;
             //
-            var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid); //取得問卷問題資料
+            var QuestionDetailDT = ForegroundMethod.GetQuestionDetailAndItemDetail(guid); //取得問卷問題資料
             int QuestionCount = QuestionDetailDT.Rows.Count;                    //問卷共有幾個問題
             string[] AnswerArray = new string[QuestionCount];                     //依照共有幾個問題建構出一個陣列來放回傳值
             string tempAnswer = string.Empty;                                                 //儲存多選問題時使用者選擇的項目字串
@@ -354,84 +328,7 @@ namespace SuverySystem
 
         }
         #region Method區
-   
-        /// <summary>取得問卷基本資料</summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public static DataRow GetSuveryMasterData(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                 @" SELECT  * FROM [SuverySystem].[dbo].[SuveryMaster]
-                     WHERE SuveryID = @Guid
-                    
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            try
-            {
-                return DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-        /// <summary>取的問卷內問題以及單多選項目資料</summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public static DataTable GetQuestionDetailAndItemDetail(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                 @" SELECT  * FROM 
-                            [SuverySystem].[dbo].[SuveryDetail]
-					  LEFT JOIN 
-                            [SuverySystem].[dbo].[ItemDetail] 
-                        ON 
-                        [SuverySystem].[dbo].[SuveryDetail].[DetailID] =  [SuverySystem].[dbo].[ItemDetail].[DetailID]
-                     WHERE [SuverySystem].[dbo].[SuveryDetail].[SuveryID] = @Guid
-                    ORDER BY [SuverySystem].[dbo].[SuveryDetail].[DetailID]
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            try
-            {
-                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-        /// <summary>DB內的資料不會自動過期 在這邊驗證日期及狀態 若已過期問卷狀態改為關閉</summary>
-        /// <param name="guid"></param>
-        /// <param name="StatusString"></param>
-        public static void UpdateSuveryStatus(Guid guid, string StatusString)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                                            @"
-                                                UPDATE [dbo].[SuveryMaster]
-                                                   SET
-                                                      [Status] = @StatusString
-                                                   WHERE [SuveryID] = @Guid
-                                            ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
 
-            list.Add(new SqlParameter("@StatusString", StatusString));
-            try
-            {
-                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-            }
-        }
         #endregion
     }
 }

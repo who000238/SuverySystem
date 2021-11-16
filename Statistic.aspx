@@ -23,6 +23,7 @@
             <h1>前台</h1>
             <div class="col-12">
                 統計頁面
+                <input type="button" onclick="javascript:history.back();" value="上一頁"/>
             </div>
             <div class="col-12">
                 <h3 runat="server" id="h3Title"></h3>

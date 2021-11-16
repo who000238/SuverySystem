@@ -14,8 +14,7 @@
             <asp:Button ID="btnSreach" runat="server" Text="搜尋" OnClick="btnSreach_Click" />
         </div>
         <div>
-            <%--<asp:Button ID="btnDelete" runat="server" Text="刪除問卷" OnClick="btnDelete_Click" />--%>
-            <%--&nbsp;&nbsp;--%>
+
             <asp:Button ID="btnAdd" runat="server" Text="新增問卷" OnClick="btnAdd_Click" />
         </div>
         <div style="border: dashed 1px">

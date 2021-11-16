@@ -1,4 +1,5 @@
 ﻿using DBSource;
+using Method;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -33,9 +34,9 @@ namespace SuverySystem
 
             string SuveryStatus;
             //取得問卷基本資料
-            var SuveryMasterDataRow = GetSuveryMasterData(guid);
+            var SuveryMasterDataRow = ForegroundMethod.GetSuveryMasterData(guid);
             //取得問題資料
-            var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid); 
+            var QuestionDetailDT = ForegroundMethod. GetQuestionDetailAndItemDetail(guid); 
 
             if (SuveryMasterDataRow != null)
             {
@@ -80,10 +81,10 @@ namespace SuverySystem
             string StringGuid = Request.QueryString["ID"];
             Guid guid = Guid.Parse(StringGuid);
             //取得問題資料
-            var QuestionDetailDT = GetQuestionDetailAndItemDetail(guid);
+            var QuestionDetailDT = ForegroundMethod.GetQuestionDetailAndItemDetail(guid);
             //取得固定問題之使用者資料
             var UserInfoString = this.Session["UserInfo"].ToString();
-            SaveUserInfo(guid, UserInfoString);
+            ForegroundMethod.SaveUserInfo(guid, UserInfoString);
             //取得使用者輸入問卷回覆內容
             string ansString = this.Session["ansString"].ToString();
             string[] ansStringArray = ansString.Split(',');
@@ -92,133 +93,13 @@ namespace SuverySystem
                 var QuestionDetailDR = QuestionDetailDT.Rows[i];
                 int DetailID = (int)QuestionDetailDR["DetailID"];
                 string AnswerString = ansStringArray[i];
-                SaveSuveryAnswer(guid, DetailID, AnswerString, UserInfoString);
+                ForegroundMethod. SaveSuveryAnswer(guid, DetailID, AnswerString, UserInfoString);
             }
             Response.Redirect("TryList.aspx");
         }
 
         #region Method區
-        /// <summary>保存問卷回答</summary>
-        /// <param name="guid"></param>
-        /// <param name="DetailID"></param>
-        /// <param name="AnswerString"></param>
-        /// <param name="UserInfoString"></param>
-        public static void SaveSuveryAnswer(Guid guid, int DetailID, string AnswerString, string UserInfoString)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                                            @"
-                                            INSERT INTO [dbo].[AnswerDetail]
-                                                       ([SuveryID]
-                                                       ,[DetailID]
-                                                       ,[Answer]
-                                                       ,[UserInfo]
-                                                       ,[CreateTime])
-                                                 VALUES
-                                                       (@Guid
-                                                       ,@DetailID
-                                                       ,@Answer
-                                                       ,@UserInfo
-                                                       ,@CreateTime)                  
-                                            ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            list.Add(new SqlParameter("@DetailID", DetailID));
-            list.Add(new SqlParameter("@Answer", AnswerString));
-            list.Add(new SqlParameter("@UserInfo", UserInfoString));
-            list.Add(new SqlParameter("@CreateTime", DateTime.Now));
-            try
-            {
-                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-            }
-        }
-        /// <summary>保存固定問題之使用者資訊</summary>
-        /// <param name="guid"></param>
-        /// <param name="UserInfo"></param>
-        public static void SaveUserInfo(Guid guid,string UserInfo)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                                            @"
-                                            INSERT INTO [dbo].[UserInfo]
-                                                       ([SuveryID]
-                                                       ,[UserInfo]
-                                                       ,[CreateTime])
-                                                 VALUES
-                                                       (@SuveryID
-                                                       ,@UserInfo
-                                                       ,@CreateTime)              
-                                            ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@SuveryID", guid));
-            list.Add(new SqlParameter("@UserInfo", UserInfo));
-            list.Add(new SqlParameter("@CreateTime", DateTime.Now));
-
-            try
-            {
-                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-            }
-        }
-        /// <summary>取得問卷基本資料</summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public static DataRow GetSuveryMasterData(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                 @" SELECT  * FROM [SuverySystem].[dbo].[SuveryMaster]
-                     WHERE SuveryID = @Guid
-                    
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            try
-            {
-                return DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-        /// <summary>取的問卷內問題以及單多選項目資料</summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public static DataTable GetQuestionDetailAndItemDetail(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                 @" SELECT  * FROM 
-                            [SuverySystem].[dbo].[SuveryDetail]
-					  LEFT JOIN 
-                            [SuverySystem].[dbo].[ItemDetail] 
-                        ON 
-                        [SuverySystem].[dbo].[SuveryDetail].[DetailID] =  [SuverySystem].[dbo].[ItemDetail].[DetailID]
-                     WHERE [SuverySystem].[dbo].[SuveryDetail].[SuveryID] = @Guid
-                    ORDER BY [SuverySystem].[dbo].[SuveryDetail].[DetailID]
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            try
-            {
-                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-
+       
         #endregion
 
     }

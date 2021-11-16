@@ -51,8 +51,8 @@
                     <span>問題區</span><br />
                 </div>
                 <div class="col-12">
-                    <asp:Button ID="btnCancle" runat="server" Text="取消" OnClick="btnCancle_Click" />
-                    <asp:Button ID="btnSubmit" runat="server" Text="送出" OnClick="btnSubmit_Click" />
+                     <input type="button" onclick="javascript:history.back();" value="取消回至上一頁"/>
+                    <asp:Button ID="btnSubmit" runat="server" Text="送出填寫資料" OnClick="btnSubmit_Click" />
                 </div>
             </div>
         </div>

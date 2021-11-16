@@ -216,7 +216,7 @@ namespace SuverySystem.SystemAdmin
 
                             string ColName = "Item" + (j + 1).ToString();
                             string ItemName = QuestionDetailDR[ColName].ToString();
-                            string ItemSelectedCount = GetItemSelectedCount(ItemName, DetailID);
+                            string ItemSelectedCount = GetItemSelectedCount(ItemName);
                             Label lblItemTitle = new Label();
                             lblItemTitle.Text = "&emsp;&emsp;" + ItemName + "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" + $"共 : {ItemSelectedCount} 人" + "</br>";
                             this.StatisticArea.Controls.Add(lblItemTitle);
@@ -904,7 +904,7 @@ namespace SuverySystem.SystemAdmin
                             WHERE Answer LIKE @ItemName AND [DetailID] = @DetailID
                 ";
             List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@ItemName", "%" +ItemName+ "%"));
+            list.Add(new SqlParameter("@ItemName",ItemName));
             list.Add(new SqlParameter("@DetailID", DetailID));
             try
             {
@@ -919,28 +919,28 @@ namespace SuverySystem.SystemAdmin
             }
         }
         //多選用
-        //public static string GetItemSelectedCount(string ItemName)
-        //{
-        //    string connectionString = DBHelper.GetConnectionString();
-        //    string dbCommandString =
-        //                  @" SELECT COUNT([SuverySystem].[dbo].[AnswerDetail].[Answer]) AS SelectedCount
-        //                        FROM  AnswerDetail 
-        //                    WHERE Answer LIKE @ItemName 
-        //        ";
-        //    List<SqlParameter> list = new List<SqlParameter>();
-        //    list.Add(new SqlParameter("@ItemName", ItemName));
-        //    try
-        //    {
-        //        var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-        //        string ItemSelectedCount = dr["SelectedCount"].ToString();
-        //        return ItemSelectedCount;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Logger.WriteLog(ex);
-        //        return null;
-        //    }
-        //}
+        public static string GetItemSelectedCount(string ItemName)
+        {
+            string connectionString = DBHelper.GetConnectionString();
+            string dbCommandString =
+                          @" SELECT COUNT([SuverySystem].[dbo].[AnswerDetail].[Answer]) AS SelectedCount
+                                FROM  AnswerDetail 
+                            WHERE Answer LIKE @ItemName 
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@ItemName", "%" + ItemName + "%"));
+            try
+            {
+                var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
+                string ItemSelectedCount = dr["SelectedCount"].ToString();
+                return ItemSelectedCount;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
         #endregion
         #endregion
         #region DDL_SelectedIndexChange

@@ -1,4 +1,5 @@
 ﻿using DBSource;
+using Method;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,10 +20,10 @@ namespace SuverySystem
             string StringGuid = Request.QueryString["ID"];
             Guid guid = Guid.Parse(StringGuid);
             //取得問卷標題
-            var SuveryDataRow = GetSuveryMasterData(guid);
+            var SuveryDataRow = ForegroundMethod.GetSuveryMasterData(guid);
             this.h3Title.InnerText = SuveryDataRow["Title"].ToString();
             //取得問卷問題標題
-            var SuveryQuestionTitleDT = GetQuestionDetailAndItemDetail(guid);
+            var SuveryQuestionTitleDT = ForegroundMethod.GetQuestionDetailAndItemDetail(guid);
 
             #region 統計文字版
             ////列印問卷問題標題
@@ -100,7 +101,7 @@ namespace SuverySystem
                             string ColName = "Item" + (j + 1).ToString();
                             string ItemName = QuestionDetailDR[ColName].ToString();
                             Title[j] = ItemName;
-                            string ItemSelectedCount = GetItemSelectedCount(ItemName, DetailID);
+                            string ItemSelectedCount = ForegroundMethod.GetItemSelectedCount(ItemName, DetailID);
                             Answer[j] = Convert.ToInt32(ItemSelectedCount);
                         }
                         #region 圓餅圖產生
@@ -164,13 +165,11 @@ namespace SuverySystem
                             string ItemName = QuestionDetailDR[ColName].ToString();
                             Title[j] = ItemName;
 
-                            string ItemSelectedCount = GetItemSelectedCount(ItemName);
+                            string ItemSelectedCount = ForegroundMethod.GetItemSelectedCount(ItemName);
 
                             Answer[j] = Convert.ToInt32(ItemSelectedCount);
 
-                            //Label lblItemTitle = new Label();
-                            //lblItemTitle.Text = "&emsp;&emsp;" + ItemName + "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" + $"共 : {ItemSelectedCount} 人" + "</br>";
-                            //this.StatisticArea.Controls.Add(lblItemTitle);
+                       
                         }
                         #region 圓餅圖產生
                         //ChartAreas,Series,Legends 基本設定-------------------------------------------------
@@ -229,131 +228,6 @@ namespace SuverySystem
                 }
             }
         }
-        #region Method
-        /// <summary>取得問卷基本資料</summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public static DataRow GetSuveryMasterData(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                 @" SELECT  * FROM [SuverySystem].[dbo].[SuveryMaster]
-                     WHERE SuveryID = @Guid
-                    
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            try
-            {
-                return DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-        //public static DataTable GetSuveryQuestionTItle (Guid guid)
-        //{
-        //    string connectionString = DBHelper.GetConnectionString();
-        //    string dbCommandString =
-        //         @" SELECT  * FROM 
-        //                    [SuverySystem].[dbo].[SuveryDetail]
-        //             WHERE [SuverySystem].[dbo].[SuveryDetail].[SuveryID] = @Guid
-        //            ORDER BY [SuverySystem].[dbo].[SuveryDetail].[DetailID]
-        //        ";
-        //    List<SqlParameter> list = new List<SqlParameter>();
-        //    list.Add(new SqlParameter("@Guid", guid));
-        //    try
-        //    {
-        //        return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Logger.WriteLog(ex);
-        //        return null;
-        //    }
-        //}
-
-        //
-        /// <summary>使用Guid查找問題資料表以及選項資料表</summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public static DataTable GetQuestionDetailAndItemDetail(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                 @" SELECT  * FROM 
-                            [SuverySystem].[dbo].[SuveryDetail]
-					  LEFT JOIN 
-                            [SuverySystem].[dbo].[ItemDetail] 
-                        ON 
-                        [SuverySystem].[dbo].[SuveryDetail].[DetailID] =  [SuverySystem].[dbo].[ItemDetail].[DetailID]
-                     WHERE [SuverySystem].[dbo].[SuveryDetail].[SuveryID] = @Guid
-                    ORDER BY [SuverySystem].[dbo].[SuveryDetail].[DetailID]
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            try
-            {
-                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-        /// <summary>取得單複選選項個數</summary>
-        /// <param name="ItemName"></param>
-        /// <returns></returns>
-        public static string GetItemSelectedCount(string ItemName, int DetailID)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                          @" SELECT COUNT([SuverySystem].[dbo].[AnswerDetail].[Answer]) AS SelectedCount
-                                FROM  AnswerDetail 
-                            WHERE Answer LIKE @ItemName AND [DetailID] = @DetailID
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@ItemName", ItemName));
-            list.Add(new SqlParameter("@DetailID", DetailID));
-            try
-            {
-                var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-                string ItemSelectedCount = dr["SelectedCount"].ToString();
-                return ItemSelectedCount;
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-
-        public static string GetItemSelectedCount(string ItemName)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                          @" SELECT COUNT([SuverySystem].[dbo].[AnswerDetail].[Answer]) AS SelectedCount
-                                FROM  AnswerDetail 
-                            WHERE Answer LIKE @ItemName 
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@ItemName", "%" + ItemName + "%"));
-            try
-            {
-                var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-                string ItemSelectedCount = dr["SelectedCount"].ToString();
-                return ItemSelectedCount;
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-
-        #endregion
+      
     }
 }
