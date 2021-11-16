@@ -9,23 +9,19 @@ using System.Web;
 namespace SuverySystem.SystemAdmin
 {
     /// <summary>
-    /// AdminListHandler 的摘要描述
+    /// AdminTemplateQuestionHandler 的摘要描述
     /// </summary>
-    public class AdminListHandler : IHttpHandler
+    public class AdminTemplateQuestionHandler : IHttpHandler
     {
-
         public void ProcessRequest(HttpContext context)
         {
             string actionName = context.Request.QueryString["actionName"];
 
             if (actionName == "Delete")
             {
-                string SuveryID = context.Request.Form["ID"];
-
-                BackgroundMethod.DeleteSuvery(SuveryID);
-
+                string QuestionTemplateNo = context.Request.Form["ID"];
+                BackgroundMethod.DeleteQuestionTemplate(QuestionTemplateNo);
                 string returnString = "Success";
-
                 string jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(returnString);
                 context.Response.ContentType = "application/json";
                 context.Response.Write(jsonText);
@@ -36,12 +32,8 @@ namespace SuverySystem.SystemAdmin
                 context.Response.ContentType = "text/plain";
                 context.Response.Write("Error");
                 context.Response.End();
-
             }
         }
-
-
-
         public bool IsReusable
         {
             get

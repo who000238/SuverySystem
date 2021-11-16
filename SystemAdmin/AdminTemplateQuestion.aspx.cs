@@ -1,4 +1,5 @@
 ﻿using DBSource;
+using Method;
 using SuverySystem.Models;
 using System;
 using System.Collections.Generic;
@@ -16,14 +17,13 @@ namespace SuverySystem.SystemAdmin
         protected void Page_Load(object sender, EventArgs e)
         {
             this.txtItemName.Visible = false;
-            var TemplateDT = GetQuestionTemplateDT();
+            var TemplateDT = BackgroundMethod. GetQuestionTemplateDT();
             List<QuestionTemplateModel> list = new List<QuestionTemplateModel>();
-
             for (int i = 0; i < TemplateDT.Rows.Count; i++)
             {
                 QuestionTemplateModel model = new QuestionTemplateModel();
                 var dr = TemplateDT.Rows[i];
-                model.QuestionTemplateNo = (i + 1).ToString();
+                model.QuestionTemplateNo = (int)dr["QuestionTemplateNo"];
                 model.QuestionTemplateName = dr["QuestionTemplateName"].ToString();
                 var QType = dr["QuestionTemplateType"].ToString();
                 switch (QType)
@@ -64,8 +64,8 @@ namespace SuverySystem.SystemAdmin
             var SelectedIndex = this.ddlQuestionType.SelectedValue;
             switch (SelectedIndex)
             {
-                case "5":
-                case "6":
+                case "QT5":
+                case "QT6":
                     this.txtItemName.Visible = true;
                     break;
             }
@@ -97,97 +97,13 @@ namespace SuverySystem.SystemAdmin
             }
             if (!string.IsNullOrWhiteSpace(txtItemName))
             {
-                CreateQuestionTemplate(txtQName, txtQType, txtMustKeyIn, txtItemName);
+                BackgroundMethod. CreateQuestionTemplate(txtQName, txtQType, txtMustKeyIn, txtItemName);
             }
             else
             {
-                CreateQuestionTemplate(txtQName, txtQType, txtMustKeyIn);
+                BackgroundMethod.CreateQuestionTemplate(txtQName, txtQType, txtMustKeyIn);
             }
-
-        }
-        public static void CreateQuestionTemplate(string QuestionTemplateName,
-            string QuestionTemplateType, string QuestionTemplateMustKeyIn, string
-            QuestionTemplateItemName)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                @" 
-                    INSERT INTO [dbo].[QuestionTemplateDetail]
-                               ([QuestionTemplateName]
-                               ,[QuestionTemplateType]
-                               ,[QuestionTemplateMustKeyIn]
-                               ,[QuestionTemplateItemName])
-                         VALUES
-                               (@QuestionTemplateName
-                               ,@QuestionTemplateType
-                               ,@QuestionTemplateMustKeyIn
-                               ,@QuestionTemplateItemName)
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@QuestionTemplateName", QuestionTemplateName));
-            list.Add(new SqlParameter("@QuestionTemplateType", QuestionTemplateType));
-            list.Add(new SqlParameter("@QuestionTemplateMustKeyIn", QuestionTemplateMustKeyIn));
-            list.Add(new SqlParameter("@QuestionTemplateItemName", QuestionTemplateItemName));
-            try
-            {
-                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-            }
-        }
-        public static void CreateQuestionTemplate(string QuestionTemplateName,
-           string QuestionTemplateType, string QuestionTemplateMustKeyIn
-           )
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                @" 
-                    INSERT INTO [dbo].[QuestionTemplateDetail]
-                               ([QuestionTemplateName]
-                               ,[QuestionTemplateType]
-                               ,[QuestionTemplateMustKeyIn]
-                               )
-                         VALUES
-                               (@QuestionTemplateName
-                               ,@QuestionTemplateType
-                               ,@QuestionTemplateMustKeyIn
-                               )
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@QuestionTemplateName", QuestionTemplateName));
-            list.Add(new SqlParameter("@QuestionTemplateType", QuestionTemplateType));
-            list.Add(new SqlParameter("@QuestionTemplateMustKeyIn", QuestionTemplateMustKeyIn));
-
-            try
-            {
-                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-            }
-        }
-        public static DataTable GetQuestionTemplateDT()
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                @" 
-                      SELECT * FROM [dbo].[QuestionTemplateDetail]
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-
-
-            try
-            {
-                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
+            Response.Redirect(Request.Url.ToString());
         }
 
         protected void btnDelete_Click(object sender, EventArgs e)

@@ -179,7 +179,7 @@
                 var ItemName = $("#ContentPlaceHolder1_txtAnswer").val();
                 $.ajax({
                     async: false,
-                    url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=Create",
+                    url: "http://localhost:50503/SystemAdmin/QuestionHandler.ashx?actionName=Create",
                     type: "POST",
                     data: {
                         "SuveryID": SuveryID,
@@ -202,7 +202,7 @@
 
                 var rowID = hf.val();
                 $.ajax({
-                    url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=Delete",
+                    url: "http://localhost:50503/SystemAdmin/QuestionHandler.ashx?actionName=Delete",
                     type: "POST",
                     data: {
                         "ID": rowID,
@@ -221,7 +221,7 @@
                 var rowID = hf.val();
                 $.ajax({
                     async: false,
-                    url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=query",
+                    url: "http://localhost:50503/SystemAdmin/QuestionHandler.ashx?actionName=query",
                     type: "POST",
                     data: {
                         "ID": rowID,
@@ -240,7 +240,7 @@
 
             $.ajax({
                 async: false,
-                url: "http://localhost:50503/SystemAdmin/TemplateQuestionHandler.ashx?actionName=Load",
+                url: "http://localhost:50503/SystemAdmin/QuestionHandler.ashx?actionName=Load",
                 type: "GET",
                 data: {},
 

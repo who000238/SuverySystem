@@ -1,4 +1,5 @@
 ﻿using DBSource;
+using Method;
 using SuverySystem.Models;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace SuverySystem.SystemAdmin
                 string.IsNullOrEmpty(txtEDate))
             {
                 DateTime today = DateTime.Today;
-                var dt = GetSuveryList();
+                var dt = BackgroundMethod.GetSuveryList();
                 List<ListModel> list = new List<ListModel>();
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
@@ -37,7 +38,7 @@ namespace SuverySystem.SystemAdmin
                     model.Title = dr["Title"].ToString();
                     model.StartDate = DateTime.Parse(dr["StartDate"].ToString());
                     model.EndDate = DateTime.Parse(dr["EndDate"].ToString());
-                    string StatusString = CheckStatus(DateTime.Parse(dr["StartDate"].ToString()), DateTime.Parse(dr["EndDate"].ToString()));
+                    string StatusString = BackgroundMethod.CheckStatus(DateTime.Parse(dr["StartDate"].ToString()), DateTime.Parse(dr["EndDate"].ToString()));
                     model.Status = StatusString;
                     if (StatusString == "尚未開始" ||
                         StatusString == "關閉中")
@@ -62,7 +63,7 @@ namespace SuverySystem.SystemAdmin
             }
             else
             {
-                var dt = SearchSuvery(txtSreach, SDate, EDate);
+                var dt = BackgroundMethod.SearchSuvery(txtSreach, SDate, EDate);
 
                 List<ListModel> list = new List<ListModel>();
                 for (int i = 0; i < dt.Rows.Count; i++)
@@ -74,7 +75,7 @@ namespace SuverySystem.SystemAdmin
                     model.Title = dr["Title"].ToString();
                     model.StartDate = DateTime.Parse(dr["StartDate"].ToString());
                     model.EndDate = DateTime.Parse(dr["EndDate"].ToString());
-                    string StatusString = CheckStatus(DateTime.Parse(dr["StartDate"].ToString()), DateTime.Parse(dr["EndDate"].ToString()));
+                    string StatusString = BackgroundMethod.CheckStatus(DateTime.Parse(dr["StartDate"].ToString()), DateTime.Parse(dr["EndDate"].ToString()));
                     model.Status = StatusString;
                     list.Add(model);
                 }
@@ -109,7 +110,7 @@ namespace SuverySystem.SystemAdmin
             }
             DateTime SDate = Convert.ToDateTime(txtSDate);
             DateTime EDate = Convert.ToDateTime(txtEDate);
-            var dt = SearchSuvery(txtSreach, SDate, EDate);
+            var dt = BackgroundMethod.SearchSuvery(txtSreach, SDate, EDate);
             if (dt.Rows.Count > 0)
             {
                 Response.Redirect($"AdminList.aspx?Page=1&Search={txtSreach}&StartDate={txtSDate}&EndDate={txtEDate}");
@@ -119,18 +120,11 @@ namespace SuverySystem.SystemAdmin
                 Response.Write("<script>alert('查無資料!!')</script>");
             }
         }
-
-        protected void btnDelete_Click(object sender, EventArgs e)
-        {
-
-        }
-
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             string guid = Guid.NewGuid().ToString();
             Response.Redirect($"AdminDetail.aspx?ID={guid}");
         }
-
 
         #region 分頁控制項用
         private int GetCurrentPage()
@@ -156,75 +150,6 @@ namespace SuverySystem.SystemAdmin
             return list.Skip(startIndex).Take(pagesize).ToList();
         }
         #endregion
-
-
-        public static DataTable GetSuveryList()
-        {
-            string connStr = DBHelper.GetConnectionString();
-            string dbCommand =
-                $@" SELECT 
-                      SuveryNo,
-                      SuveryID,
-                      Title,
-                      StartDate,
-                        EndDate,
-                    Status
-                    FROM [SuverySystem].[dbo].[SuveryMaster]
-                    ORDER BY SuveryNo DESC
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            try
-            {
-                return DBHelper.ReadDataTable(connStr, dbCommand, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-
-        public static DataTable SearchSuvery(string txtInput, DateTime SDate, DateTime EDate)
-        {
-            string connStr = DBHelper.GetConnectionString();
-            string dbCommand =
-                 $@" SELECT *FROM  [SuverySystem].[dbo].[SuveryMaster]
-                       WHERE Title Like @Title
-                        AND StartDate >= @StartDate
-                        AND EndDate <= @EndDate
-                ";
-
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Title", "%" + txtInput + "%"));
-            list.Add(new SqlParameter("@StartDate", SDate));
-            list.Add(new SqlParameter("@EndDate", EDate));
-
-            try
-            {
-                return DBHelper.ReadDataTable(connStr, dbCommand, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-
-        public static string CheckStatus(DateTime SDate, DateTime EDate)
-        {
-            DateTime Today = DateTime.Today;
-            //if (DateTime.Compare(Today, SDate) < 0)
-            //{
-            //    return "尚未開始";
-            //}
-            //else 
-            if (DateTime.Compare(Today, SDate) >= 0 &&
-                DateTime.Compare(Today, EDate) <= 0)
-            {
-                return "開放中";
-            }
-            else
-                return "關閉中";
-        }
+        
     }
 }

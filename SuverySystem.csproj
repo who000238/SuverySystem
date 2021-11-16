@@ -152,6 +152,9 @@
     <Compile Include="SystemAdmin\AdminListHandler.ashx.cs">
       <DependentUpon>AdminListHandler.ashx</DependentUpon>
     </Compile>
+    <Compile Include="SystemAdmin\AdminTemplateQuestionHandler.ashx.cs">
+      <DependentUpon>AdminTemplateQuestionHandler.ashx</DependentUpon>
+    </Compile>
     <Compile Include="TestPage.aspx.cs">
       <DependentUpon>TestPage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -230,8 +233,8 @@
     <Compile Include="SystemAdmin\AdminTemplateQuestion.aspx.designer.cs">
       <DependentUpon>AdminTemplateQuestion.aspx</DependentUpon>
     </Compile>
-    <Compile Include="SystemAdmin\TemplateQuestionHandler.ashx.cs">
-      <DependentUpon>TemplateQuestionHandler.ashx</DependentUpon>
+    <Compile Include="SystemAdmin\QuestionHandler.ashx.cs">
+      <DependentUpon>QuestionHandler.ashx</DependentUpon>
     </Compile>
     <Compile Include="Test\WebForm1.aspx.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>
@@ -308,8 +311,9 @@
     <Content Include="css\bootstrap.rtl.min.css.map" />
     <None Include="packages.config" />
     <Content Include="SystemAdmin\SysterAdmin.Master" />
-    <Content Include="SystemAdmin\TemplateQuestionHandler.ashx" />
+    <Content Include="SystemAdmin\QuestionHandler.ashx" />
     <Content Include="SystemAdmin\AdminListHandler.ashx" />
+    <Content Include="SystemAdmin\AdminTemplateQuestionHandler.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -18,7 +18,6 @@ namespace SuverySystem.SystemAdmin
                 Response.Redirect("/TryList.aspx");
             }
         }
-
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             this.Session["Logined"] = null;

@@ -1,4 +1,5 @@
 ﻿using DBSource;
+using Method;
 using SuverySystem.Models;
 using System;
 using System.Collections.Generic;
@@ -17,30 +18,27 @@ namespace SuverySystem.SystemAdmin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
             this.txtAnswer.Enabled = false;
             string SuveryID = Request.QueryString["ID"].ToString();
             Guid guid = Guid.Parse(SuveryID);
             this.hfSuveryID.Value = SuveryID;
             //檢查guid是否已有問卷資料or問題資料
-            var CheckSuveryDataExistDR = GetSuveryMaster(guid);
+            var CheckSuveryDataExistDR = BackgroundMethod.GetSuveryMaster(guid);
             if (CheckSuveryDataExistDR != null)//表示DB內已經有這筆問卷的細節 則新增按鈕關閉顯示改為顯示修改按鈕
             {
                 this.btnSubmit.Visible = false;
                 this.btnUpdate.Visible = true;
             }
             //檢查此ID是否已有填答資料
-            var AnsDataExistOrNotDT = CheckAnsExistOrNot(guid);
-            if(AnsDataExistOrNotDT.Rows.Count>0 )
+            var AnsDataExistOrNotDT = BackgroundMethod.CheckAnsExistOrNot(guid);
+            if (AnsDataExistOrNotDT.Rows.Count > 0)
             {
                 this.hfAnswerExistOrNot.Value = "Exist";
             }
-
-
             // 常用問題下拉式選單DataSource
-            var QuestionTemplateDT = GetQuestionTemplate();
+            var QuestionTemplateDT = BackgroundMethod.GetQuestionTemplate();
             // 觀看問卷填寫細節頁面Repeater DataSource
-            var UserInfoDT = GetUserInfoForSeeDetail(guid);
+            var UserInfoDT = BackgroundMethod.GetUserInfoForSeeDetail(guid);
             if (!IsPostBack)
             {
                 //系結常用問題下拉式選單
@@ -78,7 +76,7 @@ namespace SuverySystem.SystemAdmin
             if (!IsPostBack)
             {
                 #region 確認資料庫是否有內已存放之問卷內容、若有 輸出到頁面上
-                var SuveryMasterDR = GetSuveryMaster(guid);
+                var SuveryMasterDR = BackgroundMethod.GetSuveryMaster(guid);
                 if (SuveryMasterDR != null)
                 {
                     SuveryMasterModel model = new SuveryMasterModel()
@@ -102,9 +100,9 @@ namespace SuverySystem.SystemAdmin
                 //確認session["QuestionDetail"]中有沒有資料 若有 就代表已在其他地方執行過寫入 則不在此處讀取資料庫並寫入
                 var DetailList = HttpContext.Current.Session["QuestionDetail"];
                 //
-                if(DetailList == null)
+                if (DetailList == null)
                 {
-                    var QuestionDetailDT = GetQuestionDetail(guid);
+                    var QuestionDetailDT = BackgroundMethod.GetQuestionDetail(guid);
                     if (QuestionDetailDT != null)
                     {
                         List<QuestionDetailModel> list = new List<QuestionDetailModel>();
@@ -165,20 +163,18 @@ namespace SuverySystem.SystemAdmin
                         HttpContext.Current.Session["QuestionDetail"] = list;
                     }
                 }
-                
+
                 #endregion
             }
-
             #region 統計頁面區
             //取得問卷標題
-            var SuveryDataRow = GetSuveryMasterData(guid);
+            var SuveryDataRow = BackgroundMethod.GetSuveryMasterData(guid);
             if (SuveryDataRow != null)
             {
                 this.h3Title.InnerText = SuveryDataRow["Title"].ToString();
-
             }
             //取得問卷問題標題
-            var SuveryQuestionTitleDT = GetQuestionDetailAndItemDetail(guid);
+            var SuveryQuestionTitleDT = BackgroundMethod.GetQuestionDetailAndItemDetail(guid);
             //列印問卷問題標題
             for (int i = 0; i < SuveryQuestionTitleDT.Rows.Count; i++)
             {
@@ -202,7 +198,7 @@ namespace SuverySystem.SystemAdmin
 
                             string ColName = "Item" + (j + 1).ToString();
                             string ItemName = QuestionDetailDR[ColName].ToString();
-                            string ItemSelectedCount = GetItemSelectedCount(ItemName, DetailID);
+                            string ItemSelectedCount = BackgroundMethod.GetItemSelectedCount(ItemName, DetailID);
                             Label lblItemTitle = new Label();
                             lblItemTitle.Text = "&emsp;&emsp;" + ItemName + "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" + $"共 : {ItemSelectedCount} 人" + "</br>";
                             this.StatisticArea.Controls.Add(lblItemTitle);
@@ -216,27 +212,22 @@ namespace SuverySystem.SystemAdmin
 
                             string ColName = "Item" + (j + 1).ToString();
                             string ItemName = QuestionDetailDR[ColName].ToString();
-                            string ItemSelectedCount = GetItemSelectedCount(ItemName);
+                            string ItemSelectedCount = BackgroundMethod.GetItemSelectedCount(ItemName);
                             Label lblItemTitle = new Label();
                             lblItemTitle.Text = "&emsp;&emsp;" + ItemName + "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" + $"共 : {ItemSelectedCount} 人" + "</br>";
                             this.StatisticArea.Controls.Add(lblItemTitle);
                         }
                         break;
-
                 }
-
             }
             #endregion
-
         }
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-
             string guidString = Request.QueryString["ID"];
             Guid guid = Guid.Parse(guidString);
             // get input
-
             string SuveryTitle = this.txtSuveryTitle.Text;
             string SuverySummary = this.txtSummary.Text;
             string StartDate = this.txtStartDate.Text;
@@ -257,9 +248,8 @@ namespace SuverySystem.SystemAdmin
             }
             else
             {
-
                 //Response.Write($"<script>alert('{SuveryMaster}')</script>");
-                CreateNewSuvery(guid, SuveryTitle, SuverySummary, StartDate, EndDate, Status);
+                BackgroundMethod.CreateNewSuvery(guid, SuveryTitle, SuverySummary, StartDate, EndDate, Status);
                 return;
             }
         }
@@ -268,11 +258,9 @@ namespace SuverySystem.SystemAdmin
         /// <param name="e"></param>
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
-
             string guidString = Request.QueryString["ID"];
             Guid guid = Guid.Parse(guidString);
             // get input
-
             string SuveryTitle = this.txtSuveryTitle.Text;
             string SuverySummary = this.txtSummary.Text;
             string StartDate = this.txtStartDate.Text;
@@ -293,7 +281,7 @@ namespace SuverySystem.SystemAdmin
             }
             else
             {
-                UpdateSuveryDate(guid, SuveryTitle, SuverySummary, StartDate, EndDate, Status);
+                BackgroundMethod.UpdateSuveryDate(guid, SuveryTitle, SuverySummary, StartDate, EndDate, Status);
                 return;
             }
 
@@ -302,7 +290,6 @@ namespace SuverySystem.SystemAdmin
         {
             Response.Redirect("AdminList.aspx");
         }
-
         /// <summary>送出session中存放的問題資料</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -311,10 +298,9 @@ namespace SuverySystem.SystemAdmin
             string IDString = Request.QueryString["ID"];
             Guid guid = Guid.Parse(IDString);
             //// 清空問題內容資料表及項目內容資料表
-            RemoveQuestionDetail(guid);
-            RemoveItemDetail(guid);
+            BackgroundMethod.RemoveQuestionDetail(guid);
+            BackgroundMethod.RemoveItemDetail(guid);
             ////
-
             var list = (List<QuestionDetailModel>)HttpContext.Current.Session["QuestionDetail"];
             for (int i = 0; i < list.Count; i++)
             {
@@ -353,12 +339,11 @@ namespace SuverySystem.SystemAdmin
                         QMustKeyIn = "N";
                         break;
                 }
-                CreateNewQuestion(guid, QTitle, QType, QMustKeyIn);
-
+                BackgroundMethod.CreateNewQuestion(guid, QTitle, QType, QMustKeyIn);
                 string QItemName = string.Empty;
                 if (!string.IsNullOrEmpty(list[i].ItemName))
                 {
-                    var QDetailID = GetQuestionDetailID(guid, QTitle);
+                    var QDetailID = BackgroundMethod.GetQuestionDetailID(guid, QTitle);
                     QItemName = list[i].ItemName;
                     var ItemNameArray = QItemName.Split(',');
                     string Item1 = string.Empty;
@@ -369,36 +354,31 @@ namespace SuverySystem.SystemAdmin
                     {
                         case 1:
                             Item1 = ItemNameArray[0];
-                            CreateQuestionItem(QDetailID, guid, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                            BackgroundMethod.CreateQuestionItem(QDetailID, guid, Item1, Item2, Item3, Item4, ItemNameArray.Length);
                             break;
                         case 2:
                             Item1 = ItemNameArray[0];
                             Item2 = ItemNameArray[1];
-                            CreateQuestionItem(QDetailID, guid, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                            BackgroundMethod.CreateQuestionItem(QDetailID, guid, Item1, Item2, Item3, Item4, ItemNameArray.Length);
                             break;
                         case 3:
                             Item1 = ItemNameArray[0];
                             Item2 = ItemNameArray[1];
                             Item3 = ItemNameArray[2];
-                            CreateQuestionItem(QDetailID, guid, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                            BackgroundMethod.CreateQuestionItem(QDetailID, guid, Item1, Item2, Item3, Item4, ItemNameArray.Length);
                             break;
                         case 4:
                             Item1 = ItemNameArray[0];
                             Item2 = ItemNameArray[1];
                             Item3 = ItemNameArray[2];
                             Item4 = ItemNameArray[3];
-                            CreateQuestionItem(QDetailID, guid, Item1, Item2, Item3, Item4, ItemNameArray.Length);
+                            BackgroundMethod.CreateQuestionItem(QDetailID, guid, Item1, Item2, Item3, Item4, ItemNameArray.Length);
                             break;
                     }
                 }
             }
             Response.Redirect(Request.Url.ToString());
         }
-
-
-
-
-        #region Method
         #region 分頁控制項用
         private int GetCurrentPage()
         {
@@ -417,531 +397,11 @@ namespace SuverySystem.SystemAdmin
             return intPage;
         }
 
-        private List<UserInfoModel> GetPagedDetailList(List<UserInfoModel> list,int pagesize)
+        private List<UserInfoModel> GetPagedDetailList(List<UserInfoModel> list, int pagesize)
         {
             int startIndex = (this.GetCurrentPage() - 1) * pagesize;
             return list.Skip(startIndex).Take(pagesize).ToList();
         }
-        #endregion
-
-        #region CreateQuestionItem(多載方法??)
-        public static void CreateQuestionItem(int DetailID, Guid SuveryID, string Item1, string Item2, string Item3, string Item4, int ItemCount)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                @" 
-                    INSERT INTO [dbo].[ItemDetail]
-                               ([DetailID]
-                               ,[SuveryID]
-                               ,[Item1]
-                               ,[Item2]
-                               ,[Item3]
-                               ,[Item4]
-                               ,[ItemCount])
-                         VALUES
-                               (@DetailTitle
-                               , @SuveryID      
-                               ,@Item1       
-                               ,@Item2            
-                               ,@Item3            
-                               ,@Item4            
-                               ,@ItemCount)    
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@DetailTitle", DetailID));
-            list.Add(new SqlParameter("@SuveryID", SuveryID));
-            list.Add(new SqlParameter("@Item1", Item1));
-            list.Add(new SqlParameter("@Item2", Item2));
-            list.Add(new SqlParameter("@Item3", Item3));
-            list.Add(new SqlParameter("@Item4", Item4));
-            list.Add(new SqlParameter("@ItemCount", ItemCount));
-            try
-            {
-                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-            }
-        }
-        #endregion
-        /// <summary>清除問題資料表內的內容</summary>
-        /// <param name="guid"></param>
-        public static void RemoveQuestionDetail(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                @" 
-                    DELETE FROM [dbo].[SuveryDetail]
-                    WHERE [SuveryID] = @SuveryID
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@SuveryID", guid));
-            try
-            {
-                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-            }
-        }      /// <summary>清除問題項目資料表內的內容</summary>
-               /// <param name="guid"></param>
-        public static void RemoveItemDetail(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                @" 
-                    DELETE FROM [dbo].[ItemDetail]
-                    WHERE [SuveryID] = @SuveryID
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@SuveryID", guid));
-            try
-            {
-                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-            }
-        }
-
-        /// <summary>確認此ID的問卷有無填答內容 若有 在管理者編輯問題內容時提示使用者可能會造成資料對不上進而造成系統跳出EX</summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public static DataTable CheckAnsExistOrNot(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                 @" 
-                    SELECT * FROM [SuverySystem].[dbo].[AnswerDetail]
-                    WHERE [AnswerDetail].[SuveryID]= @Guid
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            try
-            {
-                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-
-        /// <summary>取得問題、項目明細</summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public static DataTable GetQuestionDetail(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                 @" 
-                    SELECT 
-                        [SuveryDetail].[DetailID],
-                        [SuveryDetail].[DetailTitle],
-                        [SuveryDetail].[DetailType],
-                        [SuveryDetail].[DetailMustKeyin],
-                        [SuveryDetail].[SuveryID],
-                        [ItemDetail].[Item1],
-                        [ItemDetail].[Item2],
-                        [ItemDetail].[Item3],
-                        [ItemDetail].[Item4],
-                        [ItemDetail].[ItemCount]
-                    FROM  [SuveryDetail]
-                    LEFT JOIN [ItemDetail] ON [SuveryDetail].[DetailID]=[ItemDetail].[DetailID]
-                    WHERE SuveryDetail.[SuveryID]= @Guid
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            try
-            {
-                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-        /// <summary>讀取DB內現存之問卷、問題資料</summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public static DataRow GetSuveryMaster(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                   @" 
-                    SELECT * FROM [SuverySystem].[dbo].[SuveryMaster]
-                    WHERE [SuveryID] = @SuveryID
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@SuveryID", guid));
-
-            try
-            {
-                return DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-
-        /// <summary>取得問卷資料用於觀看細節</summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public static DataTable GetUserInfoForSeeDetail(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                @" 
-                    SELECT * FROM [SuverySystem].[dbo].[UserInfo]
-                    WHERE [SuveryID] = @SuveryID
-                    ORDER BY [No] DESC
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@SuveryID", guid));
-
-            try
-            {
-                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-
-        public static int GetQuestionDetailID(Guid SuveryID, string DetailTitle)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                @" 
-                    SELECT * FROM [SuverySystem].[dbo].[SuveryDetail]
-                    WHERE SuveryID= @SuveryID AND DetailTitle= @DetailTitle                  
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@SuveryID", SuveryID));
-            list.Add(new SqlParameter("@DetailTitle", DetailTitle));
-
-            try
-            {
-                var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-                return (int)dr["DetailID"];
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return 0;
-            }
-        }
-        public static void CreateNewQuestion(Guid SuveryID, string DetailTitle, string DetailType, string DetailMustKeyIn)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                @" 
-                    INSERT INTO [dbo].[SuveryDetail]
-                               ([SuveryID]
-                               ,[DetailTitle]
-                               ,[DetailType]
-                               ,[DetailMustKeyin])
-                         VALUES
-                               (@SuveryID
-                               ,@DetailTitle
-                               ,@DetailType
-                               ,@DetailMustKeyIn)
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@SuveryID", SuveryID));
-            list.Add(new SqlParameter("@DetailTitle", DetailTitle));
-            list.Add(new SqlParameter("@DetailType", DetailType));
-            list.Add(new SqlParameter("@DetailMustKeyIn", DetailMustKeyIn));
-            try
-            {
-                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-            }
-        }
-        /// <summary>根據使用者輸入值新增問卷資料</summary>
-        /// <param name="guid"></param>
-        /// <param name="Title"></param>
-        /// <param name="Summary"></param>
-        /// <param name="StartDate"></param>
-        /// <param name="EndDate"></param>
-        /// <param name="Status"></param>
-        public static void CreateNewSuvery(Guid guid, string Title, string Summary, string StartDate, string EndDate, string Status)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                @" 
-                    INSERT INTO [dbo].[SuveryMaster]
-                               ([SuveryID]
-                               ,[Title]
-                               ,[StartDate]
-                               ,[EndDate]
-                               ,[Status]
-                               ,[Summary])
-                         VALUES
-                               (@Guid
-                               ,@Title
-                               ,@StartDate
-                               ,@EndDate
-                               ,@Status
-                               ,@Summary)
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            list.Add(new SqlParameter("@Title", Title));
-            list.Add(new SqlParameter("@Summary", Summary));
-            list.Add(new SqlParameter("@StartDate", StartDate));
-            list.Add(new SqlParameter("@EndDate", EndDate));
-            list.Add(new SqlParameter("@Status", Status));
-            try
-            {
-                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-            }
-        }
-        public static void UpdateSuveryDate(Guid guid, string Title, string Summary, string StartDate, string EndDate, string Status)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                @" 
-                        UPDATE [dbo].[SuveryMaster]
-                           SET 
-                               [Title] = @Title
-                              ,[StartDate] = @StartDate
-                              ,[EndDate] = @EndDate
-                              ,[Status] = @Status
-                              ,[Summary] = @Summary
-                         WHERE [SuveryID] = @Guid
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            list.Add(new SqlParameter("@Title", Title));
-            list.Add(new SqlParameter("@Summary", Summary));
-            list.Add(new SqlParameter("@StartDate", StartDate));
-            list.Add(new SqlParameter("@EndDate", EndDate));
-            list.Add(new SqlParameter("@Status", Status));
-            try
-            {
-                int effectRows = DBHelper.ModifyData(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-            }
-        }
-
-        public static DataTable GetQuestionTemplate()
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                @" 
-                    SELECT * FROM [SuverySystem].[dbo].[QuestionTemplateDetail]
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            try
-            {
-                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-
-        public static DataRow GetQuestionTemplateDrDetail(string QuestionTemplateName)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-               @" 
-                    SELECT * FROM [SuverySystem].[dbo].[QuestionTemplateDetail]
-                    WHERE QuestionTemplateName = @QuestionTemplateName
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@QuestionTemplateName", QuestionTemplateName));
-            try
-            {
-                return DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-        #region 匯出CSV所需的Method
-        public static DataTable GetAnswerUserInfoCount(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                 @"
-                    SELECT 
-	                    UserInfo
-                      FROM 
-                      dbo.[AnswerDetail]
-                      WHERE  [AnswerDetail].[SuveryID]=@Guid
-                      GROUP BY dbo.[AnswerDetail].[UserInfo]
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            try
-            {
-                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-        /// <summary>取得匯出CSV檔案需要的資料</summary>
-        /// <param name="guid"></param>
-        /// <param name="UserInfo"></param>
-        /// <returns></returns>
-
-        public static DataTable GetSingleUserAnswerDetail(string Userinfo)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                 @"
-                SELECT 
-	                [AnswerDetail].[UserInfo],
-	                [SuveryDetail].[DetailTitle],
-	                [AnswerDetail].[Answer]
-                  FROM 
-                  dbo.[AnswerDetail]
-                  JOIN dbo.[SuveryDetail] ON dbo.[AnswerDetail].DetailID =dbo.[SuveryDetail].[DetailID]
-                  WHERE  [AnswerDetail].[UserInfo]=@Userinfo
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Userinfo", Userinfo));
-            try
-            {
-                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-
-        #endregion
-
-        #region 統計頁面區
-        /// <summary>取得問卷基本資料</summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        public static DataRow GetSuveryMasterData(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                 @" SELECT  * FROM [SuverySystem].[dbo].[SuveryMaster]
-                     WHERE SuveryID = @Guid
-                    
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            try
-            {
-                return DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-
-
-        //
-        public static DataTable GetQuestionDetailAndItemDetail(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                 @" SELECT  * FROM 
-                            [SuverySystem].[dbo].[SuveryDetail]
-					  LEFT JOIN 
-                            [SuverySystem].[dbo].[ItemDetail] 
-                        ON 
-                        [SuverySystem].[dbo].[SuveryDetail].[DetailID] =  [SuverySystem].[dbo].[ItemDetail].[DetailID]
-                     WHERE [SuverySystem].[dbo].[SuveryDetail].[SuveryID] = @Guid
-                    ORDER BY [SuverySystem].[dbo].[SuveryDetail].[DetailID]
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            try
-            {
-                return DBHelper.ReadDataTable(connectionString, dbCommandString, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-        //單選用
-        public static string GetItemSelectedCount(string ItemName, int DetailID)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                          @" SELECT COUNT([SuverySystem].[dbo].[AnswerDetail].[Answer]) AS SelectedCount
-                                FROM  AnswerDetail 
-                            WHERE Answer LIKE @ItemName AND [DetailID] = @DetailID
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@ItemName",ItemName));
-            list.Add(new SqlParameter("@DetailID", DetailID));
-            try
-            {
-                var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-                string ItemSelectedCount = dr["SelectedCount"].ToString();
-                return ItemSelectedCount;
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-        //多選用
-        public static string GetItemSelectedCount(string ItemName)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                          @" SELECT COUNT([SuverySystem].[dbo].[AnswerDetail].[Answer]) AS SelectedCount
-                                FROM  AnswerDetail 
-                            WHERE Answer LIKE @ItemName 
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@ItemName", "%" + ItemName + "%"));
-            try
-            {
-                var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-                string ItemSelectedCount = dr["SelectedCount"].ToString();
-                return ItemSelectedCount;
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-        #endregion
         #endregion
         #region DDL_SelectedIndexChange
         protected void QTypeddl_SelectedIndexChanged(object sender, EventArgs e)
@@ -957,7 +417,7 @@ namespace SuverySystem.SystemAdmin
         protected void TemplateQddl_SelectedIndexChanged(object sender, EventArgs e)
         {
             string QuestionTemplateName = this.TemplateQddl.SelectedItem.Text;
-            var QuestionTemplateDrDetail = GetQuestionTemplateDrDetail(QuestionTemplateName);
+            var QuestionTemplateDrDetail = BackgroundMethod.GetQuestionTemplateDrDetail(QuestionTemplateName);
             string QName = QuestionTemplateDrDetail["QuestionTemplateName"].ToString();
             string QType = QuestionTemplateDrDetail["QuestionTemplateType"].ToString();
             string QMustKeyIn = QuestionTemplateDrDetail["QuestionTemplateMustKeyIn"].ToString();
@@ -1004,18 +464,17 @@ namespace SuverySystem.SystemAdmin
             }
         }
         #endregion
-
         protected void btnCSVDownload_Click(object sender, EventArgs e)
         {
             string SuveryID = Request.QueryString["ID"].ToString();
             Guid guid = Guid.Parse(SuveryID);
 
-            string SuveryTitle = GetSuveryTitle(guid);
+            string SuveryTitle = BackgroundMethod.GetSuveryTitle(guid);
 
             List<CSVDownloadModel> CSVlist = new List<CSVDownloadModel>();
 
 
-            var UserInfoDT = GetAnswerUserInfoCount(guid);
+            var UserInfoDT = BackgroundMethod.GetAnswerUserInfoCount(guid);
             for (int i = 0; i < UserInfoDT.Rows.Count; i++)
             {
                 CSVDownloadModel model = new CSVDownloadModel();
@@ -1025,7 +484,7 @@ namespace SuverySystem.SystemAdmin
                 var UserInfoDR = UserInfoDT.Rows[i];
                 //
                 string UserInfoString = UserInfoDR["UserInfo"].ToString();
-                var SingleUserAnswerDT = GetSingleUserAnswerDetail(UserInfoString);
+                var SingleUserAnswerDT = BackgroundMethod.GetSingleUserAnswerDetail(UserInfoString);
 
                 string[] UserInfoArray = UserInfoString.Split(',');
                 string InfoString = "姓名:" + UserInfoArray[0] + " 電話:" + UserInfoArray[1] + " 信箱:" + UserInfoArray[2] + " 年齡:" + UserInfoArray[3];
@@ -1069,31 +528,5 @@ namespace SuverySystem.SystemAdmin
             Response.End();
             //
         }
-
-        public static string GetSuveryTitle(Guid guid)
-        {
-            string connectionString = DBHelper.GetConnectionString();
-            string dbCommandString =
-                          @" 
-                        SELECT 
-                             [SuveryMaster].[Title]
-                          FROM [SuverySystem].[dbo].[SuveryMaster]
-                          WHERE [SuveryMaster].[SuveryID]=@Guid
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@Guid", guid));
-            try
-            {
-                var dr = DBHelper.ReadDataRow(connectionString, dbCommandString, list);
-                string Title = dr["Title"].ToString();
-                return Title;
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-
     }
 }
